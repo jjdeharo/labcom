@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Combinatoria</title>
+<!-- KaTeX local (funciona sin conexión). Si falta la carpeta vendor/, el script de abajo recurre al CDN. -->
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+<script>
+// Fallback: si los recursos locales de KaTeX no cargan, recurre al CDN para no perder las fórmulas estando online.
+window.addEventListener('load', function () {
+  if (window.renderMathInElement) return; // KaTeX local cargó correctamente
+  var CDN = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/';
+  var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = CDN + 'katex.min.css';
+  document.head.appendChild(css);
+  var k = document.createElement('script'); k.src = CDN + 'katex.min.js';
+  k.onload = function () {
+    var ar = document.createElement('script'); ar.src = CDN + 'contrib/auto-render.min.js';
+    ar.onload = function () { if (window.renderKatex) renderKatex(); };
+    document.head.appendChild(ar);
+  };
+  document.head.appendChild(k);
+});
+</script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+  --green:#2d7a4f;--green-light:#e6f4ed;
+  --orange:#b85c1e;--orange-light:#fdf0e8;
+  --purple:#6b3d9e;--purple-light:#f0e8f9;
+  --red:#9e3d3d;--red-light:#f9e8e8;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --green:#4aad72;--green-light:#0f2018;
+  --orange:#e07840;--orange-light:#251508;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+  --red:#d47a7a;--red-light:#280f0f;
+}}
+:root[data-theme="dark"]{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --green:#4aad72;--green-light:#0f2018;
+  --orange:#e07840;--orange-light:#251508;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+  --red:#d47a7a;--red-light:#280f0f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:0}
+.logo{font-size:1.05rem;font-weight:700;color:var(--accent);padding:14px 0;margin-right:20px;white-space:nowrap}
+nav{display:flex;gap:2px;overflow-x:auto;flex:1}
+nav button{background:none;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;color:var(--text2);white-space:nowrap;transition:all .15s}
+nav button:hover{background:var(--surface2);color:var(--text)}
+nav button.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+.lang-picker{display:flex;align-items:center;margin-left:12px}
+.lang-select-wrap{position:relative;display:flex;align-items:center;gap:5px}
+.lang-globe{font-size:1rem;line-height:1;pointer-events:none;flex-shrink:0}
+.lang-select{appearance:none;-webkit-appearance:none;background:var(--surface2);border:1.5px solid var(--border);border-radius:6px;padding:4px 22px 4px 7px;font-size:.78rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;background-size:8px}
+.lang-select:hover,.lang-select:focus{border-color:var(--accent);color:var(--accent);outline:none}
+.theme-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;padding:6px 8px;border-radius:8px;line-height:1;transition:background .15s;color:var(--text2);margin-left:4px;flex-shrink:0}
+.theme-btn:hover{background:var(--surface2)}
+main{max-width:900px;margin:0 auto;padding:28px 18px}
+.section{display:none}.section.active{display:block}
+h1{font-size:1.75rem;font-weight:700;margin-bottom:8px}
+h2{font-size:1.25rem;font-weight:600;margin-bottom:14px}
+h3{font-size:1.05rem;font-weight:600;margin-bottom:8px}
+p{margin-bottom:10px;color:var(--text2)}
+strong{color:var(--text)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card-accent{border-left:4px solid var(--accent)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;margin-bottom:6px}
+.badge-accent{background:var(--accent-light);color:var(--accent)}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-orange{background:var(--orange-light);color:var(--orange)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.btn{padding:9px 20px;border-radius:8px;border:2px solid transparent;cursor:pointer;font-size:.92rem;font-weight:600;color:var(--text);transition:all .15s}
+.btn-yes{background:var(--green-light);color:var(--green);border-color:var(--green)}
+.btn-yes:hover{background:var(--green);color:#fff}
+.btn-no{background:var(--red-light);color:var(--red);border-color:var(--red)}
+.btn-no:hover{background:var(--red);color:#fff}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{background:var(--surface2);color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-ghost{background:none;border:none;color:var(--text2);cursor:pointer;font-size:.86rem;padding:4px 8px}
+.btn-ghost:hover{color:var(--accent)}
+/* Árbol */
+.tree-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;margin-bottom:14px;box-shadow:var(--shadow)}
+.tree-question{font-size:1.15rem;font-weight:600;margin-bottom:6px}
+.tree-hint{font-size:.88rem;color:var(--text2);margin-bottom:18px}
+.tree-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.tree-progress{display:flex;gap:8px;margin-bottom:22px}
+.tree-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .2s}
+.tree-dot.done{background:var(--accent)}.tree-dot.current{background:var(--accent);opacity:.4}
+.result-card{background:var(--accent-light);border:2px solid var(--accent);border-radius:var(--radius);padding:26px;animation:fadeIn .3s ease}
+.result-card.green{background:var(--green-light);border-color:var(--green)}
+.result-card.orange{background:var(--orange-light);border-color:var(--orange)}
+.result-card.purple{background:var(--purple-light);border-color:var(--purple)}
+.result-card.red{background:var(--red-light);border-color:var(--red)}
+.result-title{font-size:1.45rem;font-weight:700;margin-bottom:8px}
+.formula-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;font-size:1.05rem;margin:10px 0}
+.example-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin:10px 0;font-size:.9rem}
+.breadcrumb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.crumb{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:.82rem;color:var(--text2)}
+.crumb span{color:var(--text);font-weight:600}
+.step-indicator{font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+/* Laboratorio */
+.lab-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:500px){.lab-controls{grid-template-columns:1fr}}
+.control-group label{display:block;font-weight:600;margin-bottom:5px;font-size:.88rem}
+.slider-row{display:flex;align-items:center;gap:10px}
+input[type=range]{flex:1;accent-color:var(--accent);height:6px}
+.slider-val{font-size:1.25rem;font-weight:700;color:var(--accent);min-width:26px;text-align:center}
+.toggle-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toggle-btn{padding:7px 16px;border-radius:8px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;font-size:.86rem;font-weight:600;color:var(--text2);transition:all .15s}
+.toggle-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.lab-result{background:var(--surface2);border-radius:var(--radius);padding:22px}
+.lab-type{font-size:1.15rem;font-weight:700;margin-bottom:3px}
+.lab-number{font-size:2.4rem;font-weight:800;color:var(--accent);margin:6px 0}
+.lab-grid{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.lab-grid-item{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:.78rem;font-family:monospace;color:var(--accent)}
+/* Lección */
+.lesson-progress{display:flex;gap:5px;margin-bottom:26px}
+.lesson-step-bar{flex:1;height:4px;background:var(--border);border-radius:2px;transition:background .3s}
+.lesson-step-bar.done{background:var(--accent)}.lesson-step-bar.current{background:var(--accent);opacity:.4}
+.lesson-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;margin-bottom:14px;box-shadow:var(--shadow);animation:fadeIn .3s ease}
+.situation-box{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:8px;padding:14px 18px;margin-bottom:18px;font-style:italic}
+.chairs-row{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0;justify-content:center}
+.chair{width:70px;min-height:70px;border:2px dashed var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.74rem;color:var(--text2);text-align:center;padding:5px;transition:all .2s}
+.chair.filled{border-style:solid;border-color:var(--accent);background:var(--accent-light)}
+.chair .count{font-size:1.5rem;font-weight:800;color:var(--accent)}
+.chair .lbl{font-size:.7rem;color:var(--text2);margin-top:2px}
+.persons-pool{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;justify-content:center}
+.person-chip{background:var(--surface2);border:2px solid var(--border);border-radius:30px;padding:7px 15px;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;user-select:none;font-family:inherit;color:var(--text)}
+.person-chip:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.person-chip:disabled{cursor:default}
+.person-chip.placed{opacity:.3;pointer-events:none}
+.mult-chain{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.mult-num{background:var(--accent-light);color:var(--accent);border-radius:8px;padding:7px 13px;font-weight:700;font-size:1.05rem;border:2px solid var(--accent)}
+.mult-op{color:var(--text2);font-size:1.15rem;font-weight:300}
+.mult-eq{background:var(--green-light);color:var(--green);border-radius:8px;padding:7px 13px;font-weight:800;font-size:1.1rem;border:2px solid var(--green)}
+.quiz-options{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.quiz-opt{padding:11px 16px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.92rem;background:var(--surface2);color:var(--text);transition:all .15s;text-align:left}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.quiz-opt:disabled{cursor:default}
+.feedback-box{border-radius:8px;padding:12px 16px;margin-top:10px;font-size:.91rem;animation:fadeIn .2s}
+.feedback-box.ok{background:var(--green-light);color:var(--green);border:1px solid var(--green)}
+.feedback-box.err{background:var(--red-light);color:var(--red);border:1px solid var(--red)}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px;flex-wrap:wrap}
+.orderings-grid{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.ord-item{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.82rem;font-family:monospace;cursor:default}
+.ord-item:hover{border-color:var(--accent);background:var(--accent-light)}
+/* Práctica */
+.practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.progress-bar-outer{background:var(--border);border-radius:10px;height:8px;flex:1;min-width:140px;max-width:260px}
+.progress-bar-inner{height:100%;border-radius:10px;background:var(--accent);transition:width .4s}
+.practice-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);animation:fadeIn .3s ease}
+.practice-context{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:8px;padding:14px 18px;margin-bottom:18px;font-style:italic;font-size:.96rem}
+.classify-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+@media(max-width:500px){.classify-grid{grid-template-columns:1fr}}
+.classify-btn{padding:12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;background:var(--surface2);color:var(--text);transition:all .15s;text-align:center}
+.classify-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.classify-btn.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.classify-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.classify-btn:disabled{cursor:default}
+.score-circle{width:80px;height:80px;border-radius:50%;background:var(--accent-light);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:var(--accent);margin:16px auto}
+/* Inicio */
+.route-intro{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:8px;padding:13px 16px;margin-bottom:20px;font-size:.93rem;line-height:1.55}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+@media(max-width:560px){.home-grid{grid-template-columns:1fr}}
+.home-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);font-family:inherit;color:inherit;text-align:left;width:100%;display:block}
+.home-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.home-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.home-icon{font-size:1.9rem}
+.step-badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.7rem;font-weight:700;padding:2px 9px;white-space:nowrap;flex-shrink:0}
+.home-card h3{margin-bottom:5px}
+.home-card p{font-size:.86rem;margin:0}
+.hero{text-align:center;padding:16px 0 6px}
+.hero h1{font-size:2.1rem}
+.hero p{font-size:1.02rem;max-width:500px;margin:10px auto 0}
+.divider{height:1px;background:var(--border);margin:26px 0}
+.stat-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.84rem}
+.stat-chip strong{color:var(--accent)}
+.summary-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.summary-table th,.summary-table td{border:1px solid var(--border);padding:8px 10px;text-align:center}
+.summary-table th{background:var(--surface2);color:var(--text2);font-weight:600;font-size:.82rem}
+.summary-table td:first-child,.summary-table th:first-child{text-align:left}
+.summary-table tbody tr:nth-child(even){background:var(--surface2)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Combinatoria</div>
+  <nav id="main-nav"></nav>
+  <div id="theme-btn-wrap"></div>
+  <div class="lang-picker" id="lang-picker"></div>
+</header>
+
+<main>
+  <div id="inicio" class="section active"></div>
+  <div id="arbol" class="section"></div>
+  <div id="laboratorio" class="section"></div>
+  <div id="leccion" class="section"></div>
+  <div id="practica" class="section"></div>
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// i18n  ── añade más idiomas aquí; la UI los detecta sola
+// ══════════════════════════════════════════════════════════════
+const LANG = {
+
+  // ─────────────────────────────────────────────────────────────
+  es: {
+    htmlLang: 'es',
+    locale: 'es-ES',
+    // Cabecera
+    logo: 'Combinatoria',
+    nav: ['Inicio', 'Lecciones', '¿Qué tipo?', 'Práctica', 'Laboratorio'],
+
+    // Inicio
+    heroTitle: 'Laboratorio de Combinatoria',
+    heroSubtitle: 'Aprende a contar posibilidades tomando decisiones, no memorizando fórmulas.',
+    homeCards: [
+      { icon:'🌿', title:'¿Qué tipo de problema tengo?',     desc:'Responde tres preguntas y el programa identifica el tipo y la fórmula.' },
+      { icon:'🔬', title:'Laboratorio',                       desc:'Ajusta <em>n</em> y <em>k</em>, elige las opciones y ve el resultado en tiempo real.' },
+      { icon:'📖', title:'Lecciones guiadas',                 desc:'Aprende los seis tipos paso a paso, desde una situación real hasta la fórmula.' },
+      { icon:'🏆', title:'Práctica: Clasifica problemas',     desc:'Lee un enunciado real y decide qué tipo de problema es antes de ver el cálculo.' }
+    ],
+    homeIntro: 'Si es tu primera vez, <strong>empieza por las Lecciones</strong> para entender cada tipo de problema paso a paso. Después usa <strong>¿Qué tipo?</strong> cuando tengas un enunciado real y no sepas qué fórmula aplicar. La Práctica mide lo que has aprendido y el Laboratorio te permite explorar libremente.',
+    homeStep: 'Paso',
+    threeQuestionsTitle: 'Tres preguntas clave',
+    threeQuestionsIntro: 'Antes de usar ninguna fórmula, hazte siempre estas preguntas:',
+    threeQ: [
+      { q:'¿Importa el orden?', hint:'¿Chocolate-fresa es lo mismo que fresa-chocolate?' },
+      { q:'¿Se pueden repetir elementos?', hint:'¿Puedo elegir el mismo elemento más de una vez?' },
+      { q:'¿Uso todos los elementos o solo algunos?', hint:'¿Los ordeno todos o elijo un subconjunto?' }
+    ],
+    statLesson: 'Lección <strong>completada</strong>',
+    statLessons: (done, total) => `<strong>${done}/${total}</strong> lecciones`,
+    statBest: 'Mejor puntuación',
+    statTree: 'Árbol usado',
+    statTreeTimes: (n) => `${n}×`,
+
+    // Árbol
+    treeTitle: '¿Qué tipo de problema tengo?',
+    treeSubtitle: 'Responde las preguntas y el programa te dirá qué fórmula usar.',
+    treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
+    treeBtnYes: 'Sí',
+    treeBtnNo: 'No',
+    treeBtnBack: '← Atrás',
+    treeBtnRestart: 'Empezar de nuevo',
+    treeBtnLab: 'Probar en el laboratorio →',
+    treeNoLabNote: 'Este caso requiere indicar cuántos elementos se repiten de cada tipo, así que no encaja en el laboratorio básico de n y k.',
+    treeSteps: [
+      { id:'order',   question:'¿Importa el orden?',                        hint:'Si cambias el orden de los elementos, ¿obtienes un resultado diferente?', yes:'all',    no:'rep2' },
+      { id:'all',     question:'¿Usas todos los elementos disponibles?',     hint:'Si tienes n elementos, ¿los usas todos o solo eliges k de ellos?',          yes:'repAll', no:'rep1' },
+      { id:'repAll',  question:'¿Hay elementos repetidos (iguales entre sí)?',hint:'¿Algún elemento aparece más de una vez en el conjunto original?',           yes:'permutationRep', no:'permutation' },
+      { id:'rep1',    question:'¿Se puede repetir el mismo elemento?',       hint:'¿Puede aparecer el mismo elemento más de una vez en el resultado?',           yes:'variationRep', no:'variation' },
+      { id:'rep2',    question:'¿Se puede repetir el mismo elemento?',       hint:'¿Puede aparecer el mismo elemento más de una vez en el grupo elegido?',        yes:'combinationRep', no:'combination' }
+    ],
+
+    // Tipos combinatorios
+    exampleLabel: 'Ejemplo:',
+    types: {
+      permutation:    { name:'Permutación',                    color:'green',  badge:'badge-green',  desc:'Ordenas <strong>todos</strong> los elementos. El orden importa, sin repetición.',              formula:'$P_n = n!$',                                  exText:'¿De cuántas formas pueden sentarse 4 personas en una fila?',             exCalc:'$P_4 = 4! = 24$' },
+      permutationRep: { name:'Permutación con repetición',     color:'green',  badge:'badge-green',  desc:'Ordenas <strong>todos</strong> los elementos pero algunos son iguales.',                       formula:'$P = \\dfrac{n!}{a! \\cdot b! \\cdots}$',     exText:'¿Cuántas palabras distintas con las letras de MAMA?',                    exCalc:'$\\dfrac{4!}{2! \\cdot 2!} = 6$' },
+      variation:      { name:'Variación',                      color:'',       badge:'badge-accent', desc:'Eliges <strong>k</strong> de <strong>n</strong> elementos, el orden importa, sin repetición.', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',             exText:'Podios (oro, plata, bronce) en una carrera de 5 personas:',              exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
+      variationRep:   { name:'Variación con repetición',       color:'orange', badge:'badge-orange', desc:'Eliges <strong>k</strong> de <strong>n</strong> elementos, el orden importa, con repetición.', formula:'$VR_{n,k} = n^k$',                            exText:'Contraseñas de 4 cifras (0–9):',                                         exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
+      combination:    { name:'Combinación',                    color:'purple', badge:'badge-purple', desc:'Eliges <strong>k</strong> de <strong>n</strong>, el orden <strong>no</strong> importa, sin repetición.',formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$',exText:'¿Cuántos grupos de 2 se forman con 5 alumnos?',                    exCalc:'$C_{5,2} = 10$' },
+      combinationRep: { name:'Combinación con repetición',     color:'red',    badge:'badge-red',    desc:'Eliges <strong>k</strong> de <strong>n</strong>, el orden <strong>no</strong> importa, con repetición.',  formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',            exText:'Copas de 3 bolas con 4 sabores (puedes repetir):',                       exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+    },
+
+    // Laboratorio
+    labTitle: 'Laboratorio de combinatoria',
+    labSubtitle: 'Ajusta los parámetros y observa cómo cambia el resultado al instante.',
+    labParamsTitle: 'Parámetros',
+    labLabelN: 'n — total de elementos distintos',
+    labLabelK: 'k — posiciones o elementos elegidos',
+    labLabelOrder: '¿Importa el orden?',
+    labBtnOrderYes: 'Sí importa',
+    labBtnOrderNo: 'No importa',
+    labLabelRep: '¿Se pueden repetir elementos?',
+    labBtnRepYes: 'Sí, con repetición',
+    labBtnRepNo: 'No, sin repetición',
+    labWith: (n, k) => `Con n = ${n} elementos, eligiendo k = ${k}`,
+    labCalcLabel: 'Cálculo:',
+    labTotalLabel: 'Total de posibilidades:',
+    labShowAll: 'Mostrar todas las posibilidades →',
+    labHideAll: 'Ocultar lista',
+    labAllLabel: (n, pool) => `Todas las posibilidades (${n}) con elementos: ${pool}`,
+    // Nombres de tipos en el laboratorio
+    labTypeNames: {
+      permutation:    'Permutación',
+      variation:      'Variación (sin repetición)',
+      variationRep:   'Variación con repetición',
+      combination:    'Combinación (sin repetición)',
+      combinationRep: 'Combinación con repetición'
+    },
+
+    // Lección
+    // Lecciones guiadas
+    lessonHub: {
+      title: 'Lecciones guiadas',
+      subtitle: 'Aprende cada tipo paso a paso: de una situación real al porqué de la fórmula.',
+      choose: 'Elige una lección:',
+      done: 'Hecha'
+    },
+    lessonUI: {
+      stepLabels: ['Situación','Construir','Patrón','Fórmula','Explorar','Ejercicio','Fin'],
+      btnBack: '← Atrás', btnNext: 'Siguiente →', btnHub: '← Lecciones',
+      buildTitle: 'Construye una posibilidad',
+      patternTitle: 'El patrón',
+      formulaTitle: 'La fórmula',
+      formulaSub: 'Con nuestros números:',
+      quizTitle: 'Ejercicio',
+      exploreTitle: 'Todas las posibilidades',
+      exploreNote: 'Cada casilla es una posibilidad distinta',
+      estimatePrompt: 'Antes de calcular, intenta estimarlo:',
+      pickNext: 'Pulsa un elemento para colocarlo ↑',
+      slotLabel: (i) => `Puesto ${i+1}`,
+      scoopsLeft: (n) => `Te quedan <strong>${n}</strong> por repartir`,
+      reset: '↺ Reiniciar',
+      doneTitle: '¡Lección completada!',
+      doneDesc: 'Has entendido de dónde sale la fórmula, no solo cuál es.',
+      btnRepeat: 'Repetir', btnOther: 'Otra lección →', btnLab: 'Laboratorio →', btnPractice: 'Practicar →'
+    },
+    lessons: {
+      permutation: {
+        icon:'🎬', title:'Permutaciones', subtitle:'Ordenar todos los elementos (sin repetir).',
+        mode:'permutation', n:4, k:4, symbols:['Ana','Biel','Carla','Dani'],
+        situation:{ desc:'Cuatro amigos quieren hacerse una foto en fila. ¿De cuántas formas distintas pueden colocarse?',
+          options:['Máximo 10','Unas 12','24','Más de 100'], correctIdx:2,
+          feedbackOk:'¡Exacto! Son 24. Vamos a ver por qué.', feedbackErr:'Son 24. Lo descubrirás al construir una.' },
+        build:{ desc:'Coloca a las 4 personas en la fila. Fíjate en cuántas opciones te quedan en cada puesto.' },
+        buildDone:'En cada puesto tenías una opción menos: <strong>4 × 3 × 2 × 1 = 24</strong>.',
+        pattern:{ html:'Usas <strong>todos</strong> los elementos y el orden importa, así que multiplicas opciones que decrecen de una en una. Ese producto es el <strong>factorial</strong>.' },
+        formula:{ general:'P_n = n!', sub:'P_4 = 4! = 4\\cdot3\\cdot2\\cdot1 = 24' },
+        quiz:{ context:'En un concurso hay <strong>6 finalistas</strong> y se sortea el orden de salida. ¿De cuántas formas pueden salir?',
+          options:['30','36','720','46 656'], correctIdx:2,
+          feedbackOk:'¡Correcto! $6! = 720$.', feedbackErr:'Es $6! = 720$: ordenas todos los elementos.' },
+        explore:{ desc:'Las 24 ordenaciones posibles de las 4 personas.' }
+      },
+      variation: {
+        icon:'🏅', title:'Variaciones', subtitle:'Elegir k y ordenarlos (sin repetir).',
+        mode:'variation', n:4, k:3, symbols:['Ari','Bea','Cid','Dux'],
+        situation:{ desc:'En una carrera de 4 atletas se reparten oro, plata y bronce. ¿De cuántas maneras puede quedar el podio?',
+          options:['12','24','36','64'], correctIdx:1,
+          feedbackOk:'¡Sí! Son 24.', feedbackErr:'Son 24. Lo verás al repartir las medallas.' },
+        build:{ desc:'Reparte oro, plata y bronce eligiendo 3 de los 4 atletas. Las opciones decrecen, pero te detienes en 3.' },
+        buildDone:'<strong>4 × 3 × 2 = 24</strong>. Eliges 3 de 4 y el orden importa, pero no usas a todos.',
+        pattern:{ html:'Como en las permutaciones las opciones decrecen, pero <strong>te detienes al elegir k = 3</strong> (no usas todos los elementos).' },
+        formula:{ general:'V_{n,k} = \\dfrac{n!}{(n-k)!}', sub:'V_{4,3} = \\dfrac{4!}{1!} = 4\\cdot3\\cdot2 = 24' },
+        quiz:{ context:'En una carrera de <strong>8 atletas</strong>, ¿de cuántas formas se reparten oro, plata y bronce?',
+          options:['56','336','512','40 320'], correctIdx:1,
+          feedbackOk:'¡Correcto! $V_{8,3} = 8\\cdot7\\cdot6 = 336$.', feedbackErr:'Es $V_{8,3} = 8\\cdot7\\cdot6 = 336$.' },
+        explore:{ desc:'Los 24 podios posibles (oro-plata-bronce).' }
+      },
+      variationRep: {
+        icon:'🔢', title:'Variaciones con repetición', subtitle:'Ordenar k con repetición permitida.',
+        mode:'variationRep', n:3, k:2, symbols:['🔴','🟢','🔵'],
+        situation:{ desc:'Un candado tiene 3 botones de color y el código son 2 pulsaciones (puedes repetir color). ¿Cuántos códigos distintos hay?',
+          options:['3','6','9','27'], correctIdx:2,
+          feedbackOk:'¡Exacto! Son 9.', feedbackErr:'Son 9. Lo verás al marcar un código.' },
+        build:{ desc:'Marca un código de 2 pulsaciones. Como puedes repetir, en cada posición siempre tienes 3 opciones (n = 3 colores, k = 2 posiciones).' },
+        buildDone:'<strong>3 × 3 = 3² = 9</strong>. En cada posición vuelves a tener las 3 opciones porque se puede repetir. La base es n = 3 (colores) y el exponente es k = 2 (posiciones).',
+        pattern:{ html:'Al permitir repetición, cada posición vuelve a tener las <strong>n</strong> opciones completas: multiplicas n por sí mismo k veces.' },
+        formula:{ general:'VR_{n,k} = n^k', sub:'VR_{3,2} = 3^2 = 9' },
+        quiz:{ context:'Una contraseña tiene <strong>4 caracteres</strong>, cada uno una letra de la A a la F (6 letras), con repetición. ¿Cuántas hay?',
+          options:['360','1 296','4 096','46 656'], correctIdx:1,
+          feedbackOk:'¡Correcto! $6^4 = 1\\,296$.', feedbackErr:'Es $6^4 = 1\\,296$.' },
+        explore:{ desc:'Los 9 códigos posibles (3 colores, 2 pulsaciones).' }
+      },
+      combination: {
+        icon:'👥', title:'Combinaciones', subtitle:'Elegir k sin importar el orden (sin repetir).',
+        mode:'combination', n:4, k:2, symbols:['Ana','Bru','Cal','Dan'],
+        situation:{ desc:'De 4 amigos eliges 2 para un equipo. ¿Cuántos equipos distintos hay? (Ana-Bru es el mismo equipo que Bru-Ana.)',
+          options:['4','6','8','12'], correctIdx:1,
+          feedbackOk:'¡Sí! Son 6.', feedbackErr:'Son 6. Lo verás al construir y corregir el orden.' },
+        build:{ desc:'Elige 2 personas, primero como si el orden importara (4 × 3).' },
+        buildDone:'Ordenado serían <strong>4 × 3 = 12</strong>. Pero {Ana, Bru} y {Bru, Ana} son el mismo equipo: cada uno se contó 2! = 2 veces. <strong>12 ÷ 2 = 6</strong>.',
+        pattern:{ html:'Cuentas como una variación (orden importa) y luego <strong>divides por k!</strong>, porque cada grupo aparece en todos sus órdenes posibles.' },
+        formula:{ general:'C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!\\,(n-k)!}', sub:'C_{4,2} = \\dfrac{4\\cdot3}{2!} = \\dfrac{12}{2} = 6' },
+        quiz:{ context:'De una clase de <strong>10 alumnos</strong> se elige un grupo de 4. ¿Cuántos grupos distintos hay?',
+          options:['40','210','840','5 040'], correctIdx:1,
+          feedbackOk:'¡Correcto! $C_{10,4} = 210$.', feedbackErr:'Es $C_{10,4} = 210$.' },
+        explore:{ desc:'Los 6 equipos posibles.' }
+      },
+      combinationRep: {
+        icon:'🍨', title:'Combinaciones con repetición', subtitle:'Elegir k sin orden y con repetición.',
+        mode:'combinationRep', n:3, k:2, symbols:['🍫','🍓','🍦'],
+        situation:{ desc:'Una copa lleva 2 bolas y hay 3 sabores. Puedes repetir sabor y el orden no importa. ¿Cuántas copas distintas hay?',
+          options:['3','6','8','9'], correctIdx:1,
+          feedbackOk:'¡Sí! Son 6.', feedbackErr:'Son 6. Lo verás con «estrellas y barras».' },
+        build:{ desc:'Reparte 2 bolas entre los 3 sabores (puedes poner varias del mismo sabor).' },
+        buildDone:'Cada copa es repartir 2 bolas (★) entre 3 sabores usando 2 barras (│). Eliges dónde van las 2 bolas entre 4 posiciones: <strong>C(4,2) = 6</strong>.',
+        pattern:{ html:'Truco de <strong>estrellas y barras</strong>: repartir k elementos iguales entre n tipos equivale a colocar las barras separadoras. Por eso aparece <strong>n + k − 1</strong>.' },
+        formula:{ general:'CR_{n,k} = \\dbinom{n+k-1}{k}', sub:'CR_{3,2} = \\dbinom{4}{2} = 6' },
+        quiz:{ context:'Compras <strong>3 croissants</strong> en una tienda con 4 tipos y puedes repetir. ¿Cuántas compras distintas hay?',
+          options:['12','20','24','64'], correctIdx:1,
+          feedbackOk:'¡Correcto! $CR_{4,3} = \\dbinom{6}{3} = 20$.', feedbackErr:'Es $CR_{4,3} = \\dbinom{6}{3} = 20$.' },
+        explore:{ desc:'Las 6 copas posibles (combinaciones de sabores).' }
+      },
+      permutationRep: {
+        icon:'🔤', title:'Permutaciones con repetición', subtitle:'Ordenar todos con elementos repetidos.',
+        mode:'permutationRep', n:4, k:4, symbols:['M','A','M','A'],
+        situation:{ desc:'¿Cuántas palabras distintas se forman usando todas las letras de MAMA?',
+          options:['4','6','12','24'], correctIdx:1,
+          feedbackOk:'¡Sí! Son 6.', feedbackErr:'Son 6. Lo verás al ordenar las fichas y corregir.' },
+        build:{ desc:'Ordena las 4 fichas. Como fichas distintas hay 4 × 3 × 2 × 1 = 24 ordenaciones.' },
+        buildDone:'Pero las dos <strong>M</strong> son iguales (y las dos <strong>A</strong> también): intercambiarlas no cambia la palabra. Cada palabra se contó 2!·2! = 4 veces. <strong>24 ÷ 4 = 6</strong>.',
+        pattern:{ html:'Ordenas todos los elementos (factorial) y <strong>divides por el factorial de cada grupo de elementos iguales</strong>, porque intercambiarlos da la misma disposición.' },
+        formula:{ general:'P = \\dfrac{n!}{a!\\,b!\\cdots}', sub:'\\dfrac{4!}{2!\\,2!} = \\dfrac{24}{4} = 6' },
+        quiz:{ context:'¿Cuántas palabras distintas se forman con todas las letras de <strong>LEVEL</strong>? (L×2, E×2)',
+          options:['20','30','60','120'], correctIdx:1,
+          feedbackOk:'¡Correcto! $\\dfrac{5!}{2!\\,2!} = 30$.', feedbackErr:'Es $\\dfrac{5!}{2!\\,2!} = 30$.' },
+        explore:{ desc:'Las 6 palabras distintas con las letras de MAMA.' }
+      }
+    },
+
+    // Práctica
+    practiceTitle: 'Clasifica el problema',
+    practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
+    practiceQuestion: '¿Qué tipo de problema es?',
+    practiceNext: 'Siguiente problema →',
+    practiceFinish: 'Ver resultados →',
+    practiceScoreMsg: (pct) => pct>=80 ? '¡Excelente! Dominas la clasificación de problemas.' : pct>=60 ? 'Bien. Repasa los tipos que fallaste.' : 'Sigue practicando. La clave está en las tres preguntas iniciales.',
+    practiceBestMark: (best, total) => `Tu mejor marca: <strong>${best}/${total}</strong>`,
+    practiceAccuracy: (pct) => `Porcentaje de acierto: <strong>${pct}%</strong>`,
+    practiceBtnRepeat: 'Repetir práctica',
+    practiceBtnTree: '¿Qué tipo? →',
+    practiceFeedbackOk: (hint) => `<strong>¡Correcto!</strong> ${hint}`,
+    practiceFeedbackErr: (hint) => `<strong>No es ese tipo.</strong> ${hint}`,
+    practiceWhyTitle: 'Estas tres respuestas descartan los demás tipos:',
+    summary: {
+      title: 'Tabla resumen',
+      subtitle: 'Las tres preguntas que determinan el tipo. Respóndelas y la fila te da la fórmula.',
+      nkNote: '<strong>n</strong> = total de elementos distintos disponibles &nbsp;·&nbsp; <strong>k</strong> = cantidad de elementos elegidos o posiciones a rellenar',
+      colType: 'Tipo',
+      colOrder: '¿Importa el orden?',
+      colRep: '¿Hay repetición?',
+      colScope: '¿Cuántos usas?',
+      colFormula: 'Fórmula',
+      yes: 'Sí', no: 'No', all: 'Todos', some: 'Algunos'
+    },
+    typeLabels: {
+      permutation:    'Permutación',
+      permutationRep: 'Perm. con repetición',
+      variation:      'Variación',
+      variationRep:   'Var. con repetición',
+      combination:    'Combinación',
+      combinationRep: 'Comb. con repetición'
+    },
+    problems: [
+      { context:'¿De cuántas formas pueden ordenarse 5 libros en una estantería?', hint:'Se usan todos los libros y el orden sí importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
+      { context:'En una carrera de 8 atletas, ¿de cuántas formas distintas pueden quedar el 1.º, 2.º y 3.º puesto?', hint:'Solo se eligen 3 de 8 y el orden importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Una clave WiFi tiene 4 caracteres. Cada carácter puede ser cualquier letra de A a F (6 letras) y se puede repetir. ¿Cuántas claves distintas hay?', hint:'El orden importa (ABCD ≠ DCBA) y los caracteres se pueden repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
+      { context:'De una clase de 10 alumnos se quiere elegir un grupo de 4 para representar al centro. ¿Cuántos grupos distintos se pueden formar?', hint:'Un grupo es un conjunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'En una pizzería hay 5 ingredientes. Quieres pedir una pizza con exactamente 2 ingredientes distintos. ¿Cuántas pizzas diferentes puedes pedir?', hint:'Una pizza no tiene orden de ingredientes: {champiñón, queso} = {queso, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'Quieres comprar 3 croissants en una pastelería con 4 tipos. Puedes comprar varios del mismo tipo. ¿Cuántas compras distintas puedes hacer?', hint:'No importa el orden y se puede repetir: 2 de chocolate + 1 de jamón es válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
+      { context:'¿Cuántas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se pueden formar si el orden importa?', hint:'Se eligen 4 de 5 letras y el orden importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'¿Cuántas palabras distintas se pueden formar con todas las letras de la palabra LEVEL?', hint:'Se usan todas las letras, el orden importa, pero hay letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  en: {
+    htmlLang: 'en',
+    locale: 'en-US',
+    logo: 'Combinatorics',
+    nav: ['Home', 'Lessons', 'Which type?', 'Practice', 'Lab'],
+    heroTitle: 'Combinatorics Lab',
+    heroSubtitle: 'Learn to count possibilities by making decisions, not memorizing formulas.',
+    homeCards: [
+      { icon:'🌿', title:'Which type of problem do I have?', desc:'Answer three questions and the program identifies the type and the formula.' },
+      { icon:'🔬', title:'Lab',                               desc:'Adjust <em>n</em> and <em>k</em>, choose the options and see the result in real time.' },
+      { icon:'📖', title:'Guided lessons',                    desc:'Learn all six types step by step, from a real situation to the formula.' },
+      { icon:'🏆', title:'Practice: Classify problems',       desc:'Read a real problem and decide which type it is before seeing the calculation.' }
+    ],
+    homeIntro: 'If this is your first time, <strong>start with the Lessons</strong> to understand each problem type step by step. Then use <strong>Which type?</strong> when you have a real problem and are not sure which formula to apply. Practice measures what you have learned and the Lab lets you explore freely.',
+    homeStep: 'Step',
+    threeQuestionsTitle: 'Three key questions',
+    threeQuestionsIntro: 'Before using any formula, always ask yourself these questions:',
+    threeQ: [
+      { q:'Does the order matter?',               hint:'Is chocolate-strawberry the same as strawberry-chocolate?' },
+      { q:'Can elements be repeated?',             hint:'Can I choose the same element more than once?' },
+      { q:'Do I use all elements or just some?',  hint:'Do I order all of them or pick a subset?' }
+    ],
+    statLesson: 'Lesson <strong>completed</strong>',
+    statLessons: (done, total) => `<strong>${done}/${total}</strong> lessons`,
+    statBest: 'Best score',
+    statTree: 'Tree used',
+    statTreeTimes: (n) => `${n}×`,
+    treeTitle: 'Which type of problem do I have?',
+    treeSubtitle: 'Answer the questions and the program will tell you which formula to use.',
+    treeQuestion: (current, max) => `Question ${current} of ${max}`,
+    treeBtnYes: 'Yes',
+    treeBtnNo: 'No',
+    treeBtnBack: '← Back',
+    treeBtnRestart: 'Start over',
+    treeBtnLab: 'Try in the lab →',
+    treeNoLabNote: 'This case requires specifying how many elements repeat in each group, so it does not fit the basic n-and-k lab.',
+    treeSteps: [
+      { id:'order',   question:'Does the order matter?',                        hint:'If you change the order of elements, do you get a different result?',           yes:'all',    no:'rep2' },
+      { id:'all',     question:'Do you use all available elements?',             hint:'If you have n elements, do you use all of them or just pick k?',                yes:'repAll', no:'rep1' },
+      { id:'repAll',  question:'Are there repeated (identical) elements?',       hint:'Does any element appear more than once in the original set?',                   yes:'permutationRep', no:'permutation' },
+      { id:'rep1',    question:'Can the same element be repeated?',              hint:'Can the same element appear more than once in the result?',                      yes:'variationRep', no:'variation' },
+      { id:'rep2',    question:'Can the same element be repeated?',              hint:'Can the same element appear more than once in the chosen group?',                yes:'combinationRep', no:'combination' }
+    ],
+    exampleLabel: 'Example:',
+    types: {
+      permutation:    { name:'Permutation',              color:'green',  badge:'badge-green',  desc:'You arrange <strong>all</strong> elements. Order matters, no repetition.',                           formula:'$P_n = n!$',                                  exText:'In how many ways can 4 people sit in a row?',                            exCalc:'$P_4 = 4! = 24$' },
+      permutationRep: { name:'Permutation w/ repetition',color:'green',  badge:'badge-green',  desc:'You arrange <strong>all</strong> elements but some are identical.',                                  formula:'$P = \\dfrac{n!}{a! \\cdot b! \\cdots}$',     exText:'How many distinct words can be formed from the letters of MAMA?',         exCalc:'$\\dfrac{4!}{2! \\cdot 2!} = 6$' },
+      variation:      { name:'Variation',                color:'',       badge:'badge-accent', desc:'You choose <strong>k</strong> from <strong>n</strong> elements, order matters, no repetition.',      formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',             exText:'Podiums (gold, silver, bronze) in a race of 5 people:',                   exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
+      variationRep:   { name:'Variation w/ repetition',  color:'orange', badge:'badge-orange', desc:'You choose <strong>k</strong> from <strong>n</strong> elements, order matters, with repetition.',    formula:'$VR_{n,k} = n^k$',                            exText:'4-digit passwords (0–9):',                                                exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
+      combination:    { name:'Combination',              color:'purple', badge:'badge-purple', desc:'You choose <strong>k</strong> from <strong>n</strong>, order <strong>does not</strong> matter, no repetition.',formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$',exText:'How many pairs can be formed from 5 students?',               exCalc:'$C_{5,2} = 10$' },
+      combinationRep: { name:'Combination w/ repetition',color:'red',    badge:'badge-red',    desc:'You choose <strong>k</strong> from <strong>n</strong>, order <strong>does not</strong> matter, with repetition.',formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Ice cream cups of 3 scoops with 4 flavors (repeating allowed):',          exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+    },
+    labTitle: 'Combinatorics lab',
+    labSubtitle: 'Adjust the parameters and instantly see how the result changes.',
+    labParamsTitle: 'Parameters',
+    labLabelN: 'n — total number of distinct elements',
+    labLabelK: 'k — positions or elements chosen',
+    labLabelOrder: 'Does the order matter?',
+    labBtnOrderYes: 'Yes, it matters',
+    labBtnOrderNo: 'No, it does not',
+    labLabelRep: 'Can elements be repeated?',
+    labBtnRepYes: 'Yes, with repetition',
+    labBtnRepNo: 'No, without repetition',
+    labWith: (n, k) => `With n = ${n} elements, choosing k = ${k}`,
+    labCalcLabel: 'Calculation:',
+    labTotalLabel: 'Total possibilities:',
+    labShowAll: 'Show all possibilities →',
+    labHideAll: 'Hide list',
+    labAllLabel: (n, pool) => `All ${n} possibilities with elements: ${pool}`,
+    labTypeNames: {
+      permutation:    'Permutation',
+      variation:      'Variation (no repetition)',
+      variationRep:   'Variation with repetition',
+      combination:    'Combination (no repetition)',
+      combinationRep: 'Combination with repetition'
+    },
+    // Guided lessons
+    lessonHub: {
+      title: 'Guided lessons',
+      subtitle: 'Learn each type step by step: from a real situation to why the formula works.',
+      choose: 'Choose a lesson:',
+      done: 'Done'
+    },
+    lessonUI: {
+      stepLabels: ['Situation','Build','Pattern','Formula','Explore','Exercise','Done'],
+      btnBack: '← Back', btnNext: 'Next →', btnHub: '← Lessons',
+      buildTitle: 'Build one possibility',
+      patternTitle: 'The pattern',
+      formulaTitle: 'The formula',
+      formulaSub: 'With our numbers:',
+      quizTitle: 'Exercise',
+      exploreTitle: 'All possibilities',
+      exploreNote: 'Each box is a distinct possibility',
+      estimatePrompt: 'Before calculating, try to estimate:',
+      pickNext: 'Click an element to place it ↑',
+      slotLabel: (i) => `Slot ${i+1}`,
+      scoopsLeft: (n) => `<strong>${n}</strong> left to place`,
+      reset: '↺ Reset',
+      doneTitle: 'Lesson complete!',
+      doneDesc: 'You now understand where the formula comes from, not just what it is.',
+      btnRepeat: 'Repeat', btnOther: 'Another lesson →', btnLab: 'Lab →', btnPractice: 'Practice →'
+    },
+    lessons: {
+      permutation: {
+        icon:'🎬', title:'Permutations', subtitle:'Arrange all elements (no repetition).',
+        mode:'permutation', n:4, k:4, symbols:['Ana','Ben','Cara','Dan'],
+        situation:{ desc:'Four friends want to take a photo in a row. In how many distinct ways can they stand?',
+          options:['At most 10','About 12','24','More than 100'], correctIdx:2,
+          feedbackOk:'Exactly! There are 24. Let\'s see why.', feedbackErr:'There are 24. You\'ll discover it by building one.' },
+        build:{ desc:'Place the 4 people in the row. Notice how many options remain at each slot.' },
+        buildDone:'Each slot had one option fewer: <strong>4 × 3 × 2 × 1 = 24</strong>.',
+        pattern:{ html:'You use <strong>all</strong> elements and order matters, so you multiply options that decrease one by one. That product is the <strong>factorial</strong>.' },
+        formula:{ general:'P_n = n!', sub:'P_4 = 4! = 4\\cdot3\\cdot2\\cdot1 = 24' },
+        quiz:{ context:'A contest has <strong>6 finalists</strong> and their order is drawn by lot. In how many ways can they appear?',
+          options:['30','36','720','46 656'], correctIdx:2,
+          feedbackOk:'Correct! $6! = 720$.', feedbackErr:'It is $6! = 720$: you arrange all elements.' },
+        explore:{ desc:'The 24 possible orderings of the 4 people.' }
+      },
+      variation: {
+        icon:'🏅', title:'Variations', subtitle:'Choose k and order them (no repetition).',
+        mode:'variation', n:4, k:3, symbols:['Ari','Bea','Cid','Dux'],
+        situation:{ desc:'In a race of 4 athletes, gold, silver and bronze are awarded. In how many ways can the podium end up?',
+          options:['12','24','36','64'], correctIdx:1,
+          feedbackOk:'Yes! There are 24.', feedbackErr:'There are 24. You\'ll see it by awarding the medals.' },
+        build:{ desc:'Award gold, silver and bronze by choosing 3 of the 4 athletes. Options decrease, but you stop at 3.' },
+        buildDone:'<strong>4 × 3 × 2 = 24</strong>. You choose 3 of 4 and order matters, but you don\'t use them all.',
+        pattern:{ html:'As in permutations the options decrease, but you <strong>stop after choosing k = 3</strong> (you don\'t use every element).' },
+        formula:{ general:'V_{n,k} = \\dfrac{n!}{(n-k)!}', sub:'V_{4,3} = \\dfrac{4!}{1!} = 4\\cdot3\\cdot2 = 24' },
+        quiz:{ context:'In a race of <strong>8 athletes</strong>, in how many ways can gold, silver and bronze be awarded?',
+          options:['56','336','512','40 320'], correctIdx:1,
+          feedbackOk:'Correct! $V_{8,3} = 8\\cdot7\\cdot6 = 336$.', feedbackErr:'It is $V_{8,3} = 8\\cdot7\\cdot6 = 336$.' },
+        explore:{ desc:'The 24 possible podiums (gold-silver-bronze).' }
+      },
+      variationRep: {
+        icon:'🔢', title:'Variations with repetition', subtitle:'Order k with repetition allowed.',
+        mode:'variationRep', n:3, k:2, symbols:['🔴','🟢','🔵'],
+        situation:{ desc:'A lock has 3 colored buttons and the code is 2 presses (you may repeat a color). How many distinct codes are there?',
+          options:['3','6','9','27'], correctIdx:2,
+          feedbackOk:'Exactly! There are 9.', feedbackErr:'There are 9. You\'ll see it by entering a code.' },
+        build:{ desc:'Enter a code of 2 presses. Since you can repeat, each position always has 3 options (n = 3 colors, k = 2 positions).' },
+        buildDone:'<strong>3 × 3 = 3² = 9</strong>. Each position still has all 3 options because repetition is allowed. The base is n = 3 (colors) and the exponent is k = 2 (positions).',
+        pattern:{ html:'Allowing repetition, each position has all <strong>n</strong> options again: you multiply n by itself k times.' },
+        formula:{ general:'VR_{n,k} = n^k', sub:'VR_{3,2} = 3^2 = 9' },
+        quiz:{ context:'A password has <strong>4 characters</strong>, each a letter from A to F (6 letters), with repetition. How many are there?',
+          options:['360','1 296','4 096','46 656'], correctIdx:1,
+          feedbackOk:'Correct! $6^4 = 1\\,296$.', feedbackErr:'It is $6^4 = 1\\,296$.' },
+        explore:{ desc:'The 9 possible codes (3 colors, 2 presses).' }
+      },
+      combination: {
+        icon:'👥', title:'Combinations', subtitle:'Choose k, order doesn\'t matter (no repetition).',
+        mode:'combination', n:4, k:2, symbols:['Ana','Bru','Cal','Dan'],
+        situation:{ desc:'From 4 friends you pick 2 for a team. How many distinct teams are there? (Ana-Bru is the same team as Bru-Ana.)',
+          options:['4','6','8','12'], correctIdx:1,
+          feedbackOk:'Yes! There are 6.', feedbackErr:'There are 6. You\'ll see it by building and correcting for order.' },
+        build:{ desc:'Pick 2 people, first as if order mattered (4 × 3).' },
+        buildDone:'Ordered it would be <strong>4 × 3 = 12</strong>. But {Ana, Bru} and {Bru, Ana} are the same team: each was counted 2! = 2 times. <strong>12 ÷ 2 = 6</strong>.',
+        pattern:{ html:'You count like a variation (order matters) and then <strong>divide by k!</strong>, because each group appears in all its possible orders.' },
+        formula:{ general:'C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!\\,(n-k)!}', sub:'C_{4,2} = \\dfrac{4\\cdot3}{2!} = \\dfrac{12}{2} = 6' },
+        quiz:{ context:'From a class of <strong>10 students</strong>, a group of 4 is chosen. How many distinct groups are there?',
+          options:['40','210','840','5 040'], correctIdx:1,
+          feedbackOk:'Correct! $C_{10,4} = 210$.', feedbackErr:'It is $C_{10,4} = 210$.' },
+        explore:{ desc:'The 6 possible teams.' }
+      },
+      combinationRep: {
+        icon:'🍨', title:'Combinations with repetition', subtitle:'Choose k, no order, with repetition.',
+        mode:'combinationRep', n:3, k:2, symbols:['🍫','🍓','🍦'],
+        situation:{ desc:'A cup has 2 scoops and there are 3 flavors. You may repeat a flavor and order doesn\'t matter. How many distinct cups are there?',
+          options:['3','6','8','9'], correctIdx:1,
+          feedbackOk:'Yes! There are 6.', feedbackErr:'There are 6. You\'ll see it with «stars and bars».' },
+        build:{ desc:'Distribute 2 scoops among the 3 flavors (you may put several of the same flavor).' },
+        buildDone:'Each cup means distributing 2 scoops (★) among 3 flavors using 2 bars (│). You choose where the 2 scoops go among 4 positions: <strong>C(4,2) = 6</strong>.',
+        pattern:{ html:'The <strong>stars and bars</strong> trick: distributing k identical items among n types is the same as placing the separating bars. That\'s why <strong>n + k − 1</strong> appears.' },
+        formula:{ general:'CR_{n,k} = \\dbinom{n+k-1}{k}', sub:'CR_{3,2} = \\dbinom{4}{2} = 6' },
+        quiz:{ context:'You buy <strong>3 croissants</strong> from a shop with 4 types and may repeat. How many distinct purchases are there?',
+          options:['12','20','24','64'], correctIdx:1,
+          feedbackOk:'Correct! $CR_{4,3} = \\dbinom{6}{3} = 20$.', feedbackErr:'It is $CR_{4,3} = \\dbinom{6}{3} = 20$.' },
+        explore:{ desc:'The 6 possible cups (flavor combinations).' }
+      },
+      permutationRep: {
+        icon:'🔤', title:'Permutations with repetition', subtitle:'Arrange all with repeated elements.',
+        mode:'permutationRep', n:4, k:4, symbols:['M','A','M','A'],
+        situation:{ desc:'How many distinct words can be formed using all the letters of MAMA?',
+          options:['4','6','12','24'], correctIdx:1,
+          feedbackOk:'Yes! There are 6.', feedbackErr:'There are 6. You\'ll see it by ordering the tiles and correcting.' },
+        build:{ desc:'Order the 4 tiles. As distinct tiles there are 4 × 3 × 2 × 1 = 24 orderings.' },
+        buildDone:'But the two <strong>M</strong>s are identical (and the two <strong>A</strong>s too): swapping them doesn\'t change the word. Each word was counted 2!·2! = 4 times. <strong>24 ÷ 4 = 6</strong>.',
+        pattern:{ html:'You arrange all elements (factorial) and <strong>divide by the factorial of each group of identical elements</strong>, because swapping them gives the same arrangement.' },
+        formula:{ general:'P = \\dfrac{n!}{a!\\,b!\\cdots}', sub:'\\dfrac{4!}{2!\\,2!} = \\dfrac{24}{4} = 6' },
+        quiz:{ context:'How many distinct words can be formed with all the letters of <strong>LEVEL</strong>? (L×2, E×2)',
+          options:['20','30','60','120'], correctIdx:1,
+          feedbackOk:'Correct! $\\dfrac{5!}{2!\\,2!} = 30$.', feedbackErr:'It is $\\dfrac{5!}{2!\\,2!} = 30$.' },
+        explore:{ desc:'The 6 distinct words using the letters of MAMA.' }
+      }
+    },
+    practiceTitle: 'Classify the problem',
+    practiceProblemLabel: (i, total) => `Problem ${i} of ${total}`,
+    practiceQuestion: 'What type of problem is this?',
+    practiceNext: 'Next problem →',
+    practiceFinish: 'See results →',
+    practiceScoreMsg: (pct) => pct>=80 ? 'Excellent! You master problem classification.' : pct>=60 ? 'Good. Review the types you missed.' : 'Keep practicing. The key lies in the three initial questions.',
+    practiceBestMark: (best, total) => `Your best score: <strong>${best}/${total}</strong>`,
+    practiceAccuracy: (pct) => `Accuracy: <strong>${pct}%</strong>`,
+    practiceBtnRepeat: 'Repeat practice',
+    practiceBtnTree: 'Which type? →',
+    practiceFeedbackOk: (hint) => `<strong>Correct!</strong> ${hint}`,
+    practiceFeedbackErr: (hint) => `<strong>Not this type.</strong> ${hint}`,
+    practiceWhyTitle: 'These three answers rule out the other types:',
+    summary: {
+      title: 'Summary table',
+      subtitle: 'The three questions that determine the type. Answer them and the row gives you the formula.',
+      nkNote: '<strong>n</strong> = total distinct elements available &nbsp;·&nbsp; <strong>k</strong> = number of elements chosen or positions to fill',
+      colType: 'Type',
+      colOrder: 'Does order matter?',
+      colRep: 'Is repetition allowed?',
+      colScope: 'How many do you use?',
+      colFormula: 'Formula',
+      yes: 'Yes', no: 'No', all: 'All', some: 'Some'
+    },
+    typeLabels: {
+      permutation:    'Permutation',
+      permutationRep: 'Perm. w/ repetition',
+      variation:      'Variation',
+      variationRep:   'Var. w/ repetition',
+      combination:    'Combination',
+      combinationRep: 'Comb. w/ repetition'
+    },
+    problems: [
+      { context:'In how many ways can 5 books be arranged on a shelf?', hint:'All books are used and order matters (book A in position 1 ≠ position 3).', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
+      { context:'In a race with 8 athletes, in how many ways can 1st, 2nd and 3rd place be awarded?', hint:'Only 3 of 8 are chosen and order matters (1st ≠ 2nd ≠ 3rd).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'A WiFi password has 4 characters, each can be any letter from A to F (6 letters), repetition allowed. How many distinct passwords are there?', hint:'Order matters (ABCD ≠ DCBA) and characters can repeat.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
+      { context:'From a class of 10 students, a group of 4 is chosen to represent the school. How many distinct groups can be formed?', hint:'A group is a set; {Alice, Bob} = {Bob, Alice}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'A pizzeria has 5 toppings. You want to order a pizza with exactly 2 different toppings. How many different pizzas can you order?', hint:'A pizza has no topping order: {mushroom, cheese} = {cheese, mushroom}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'You want to buy 3 croissants from a bakery with 4 types. You can buy several of the same type. How many distinct purchases can you make?', hint:'Order does not matter and repetition is allowed: 2 chocolate + 1 ham is valid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
+      { context:'How many 4-letter license plates with distinct letters (from A, B, C, D, E — 5 letters) can be formed if order matters?', hint:'4 of 5 letters are chosen and order matters: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'How many distinct words can be formed using all the letters of the word LEVEL?', hint:'All letters are used, order matters, but some are repeated: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+    ]
+  },
+  // ─────────────────────────────────────────────────────────────
+  ca: {
+    htmlLang: 'ca', locale: 'ca-ES',
+    logo: 'Combinatòria',
+    nav: ['Inici', 'Lliçons', 'Quin tipus?', 'Pràctica', 'Laboratori'],
+    heroTitle: 'Laboratori de Combinatòria',
+    heroSubtitle: 'Aprèn a comptar possibilitats prenent decisions, no memoritzant fórmules.',
+    homeCards: [
+      { icon:'🌿', title:'Quin tipus de problema tinc?',    desc:'Respon tres preguntes i el programa identifica el tipus i la fórmula.' },
+      { icon:'🔬', title:'Laboratori',                       desc:'Ajusta <em>n</em> i <em>k</em>, tria les opcions i veu el resultat en temps real.' },
+      { icon:'📖', title:'Lliçons guiades',                  desc:'Aprèn els sis tipus pas a pas, des d\'una situació real fins a la fórmula.' },
+      { icon:'🏆', title:'Pràctica: Classifica problemes',   desc:'Llegeix un enunciat real i decideix quin tipus de problema és abans de veure el càlcul.' }
+    ],
+    homeIntro: 'Si és el teu primer cop, <strong>comença per les Lliçons</strong> per entendre cada tipus de problema pas a pas. Després usa <strong>Quin tipus?</strong> quan tinguis un enunciat real i no sàpigues quina fórmula aplicar. La Pràctica mesura el que has après i el Laboratori et permet explorar lliurement.',
+    homeStep: 'Pas',
+    threeQuestionsTitle: 'Tres preguntes clau',
+    threeQuestionsIntro: 'Abans d\'usar cap fórmula, fes-te sempre aquestes preguntes:',
+    threeQ: [
+      { q:'L\'ordre és important?',                             hint:'Xocolata-maduixa és el mateix que maduixa-xocolata?' },
+      { q:'Es poden repetir elements?',                        hint:'Puc triar el mateix element més d\'una vegada?' },
+      { q:'Faig servir tots els elements o només alguns?',     hint:'Els ordeno tots o trio un subconjunt?' }
+    ],
+    statLesson: 'Lliçó <strong>completada</strong>',
+    statLessons: (done, total) => `<strong>${done}/${total}</strong> lliçons`,
+    statBest: 'Millor puntuació', statTree: 'Arbre usat', statTreeTimes: (n) => `${n}×`,
+    treeTitle: 'Quin tipus de problema tinc?',
+    treeSubtitle: 'Respon les preguntes i el programa et dirà quina fórmula fer servir.',
+    treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
+    treeBtnYes: 'Sí', treeBtnNo: 'No', treeBtnBack: '← Enrere',
+    treeBtnRestart: 'Tornar a començar', treeBtnLab: 'Provar al laboratori →',
+    treeNoLabNote: 'Aquest cas requereix indicar quants elements es repeteixen de cada tipus i no encaixa al laboratori bàsic de n i k.',
+    treeSteps: [
+      { id:'order',  question:'L\'ordre és important?',                      hint:'Si canvies l\'ordre dels elements, obtens un resultat diferent?',        yes:'all',    no:'rep2' },
+      { id:'all',    question:'Fas servir tots els elements disponibles?',    hint:'Si tens n elements, els fas servir tots o només tries k?',               yes:'repAll', no:'rep1' },
+      { id:'repAll', question:'Hi ha elements repetits (iguals entre ells)?', hint:'Algun element apareix més d\'una vegada al conjunt original?',          yes:'permutationRep', no:'permutation' },
+      { id:'rep1',   question:'Es pot repetir el mateix element?',            hint:'Pot aparèixer el mateix element més d\'una vegada al resultat?',         yes:'variationRep', no:'variation' },
+      { id:'rep2',   question:'Es pot repetir el mateix element?',            hint:'Pot aparèixer el mateix element més d\'una vegada en el grup triat?',    yes:'combinationRep', no:'combination' }
+    ],
+    exampleLabel: 'Exemple:',
+    types: {
+      permutation:    { name:'Permutació',               color:'green',  badge:'badge-green',  desc:'Ordenes <strong>tots</strong> els elements. L\'ordre importa, sense repetició.',                   formula:'$P_n = n!$',                                 exText:'De quantes formes es poden asseure 4 persones en una fila?',           exCalc:'$P_4 = 4! = 24$' },
+      permutationRep: { name:'Permutació amb repetició', color:'green',  badge:'badge-green',  desc:'Ordenes <strong>tots</strong> els elements però alguns són iguals.',                                formula:'$P = \\dfrac{n!}{a! \\cdot b! \\cdots}$',   exText:'Quantes paraules distintes amb les lletres de MAMA?',                  exCalc:'$\\dfrac{4!}{2! \\cdot 2!} = 6$' },
+      variation:      { name:'Variació',                 color:'',       badge:'badge-accent', desc:'Tries <strong>k</strong> de <strong>n</strong> elements, l\'ordre importa, sense repetició.',       formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Pòdiums (or, plata, bronze) en una cursa de 5 persones:',              exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
+      variationRep:   { name:'Variació amb repetició',   color:'orange', badge:'badge-orange', desc:'Tries <strong>k</strong> de <strong>n</strong> elements, l\'ordre importa, amb repetició.',         formula:'$VR_{n,k} = n^k$',                          exText:'Contrasenyes de 4 xifres (0–9):',                                      exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
+      combination:    { name:'Combinació',               color:'purple', badge:'badge-purple', desc:'Tries <strong>k</strong> de <strong>n</strong>, l\'ordre <strong>no</strong> importa, sense repetició.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Quants grups de 2 es formen amb 5 alumnes?', exCalc:'$C_{5,2} = 10$' },
+      combinationRep: { name:'Combinació amb repetició', color:'red',    badge:'badge-red',    desc:'Tries <strong>k</strong> de <strong>n</strong>, l\'ordre <strong>no</strong> importa, amb repetició.',    formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Copes de 3 boles amb 4 sabors (pots repetir):',                        exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+    },
+    labTitle: 'Laboratori de combinatòria',
+    labSubtitle: 'Ajusta els paràmetres i observa com canvia el resultat a l\'instant.',
+    labParamsTitle: 'Paràmetres',
+    labLabelN: 'n — total d\'elements diferents', labLabelK: 'k — posicions o elements triats',
+    labLabelOrder: 'L\'ordre és important?', labBtnOrderYes: 'Sí, importa', labBtnOrderNo: 'No importa',
+    labLabelRep: 'Es poden repetir elements?', labBtnRepYes: 'Sí, amb repetició', labBtnRepNo: 'No, sense repetició',
+    labWith: (n, k) => `Amb n = ${n} elements, triant k = ${k}`,
+    labCalcLabel: 'Càlcul:', labTotalLabel: 'Total de possibilitats:',
+    labShowAll: 'Mostra totes les possibilitats →', labHideAll: 'Amaga la llista',
+    labAllLabel: (n, pool) => `Totes les possibilitats (${n}) amb elements: ${pool}`,
+    labTypeNames: { permutation:'Permutació', variation:'Variació (sense rep.)', variationRep:'Variació amb rep.', combination:'Combinació (sense rep.)', combinationRep:'Combinació amb rep.' },
+    lessonHub: { title:'Lliçons guiades', subtitle:'Aprèn cada tipus pas a pas: d\'una situació real al perquè de la fórmula.', choose:'Tria una lliçó:', done:'Feta' },
+    lessonUI: {
+      stepLabels: ['Situació','Construir','Patró','Fórmula','Explorar','Exercici','Fi'],
+      btnBack:'← Enrere', btnNext:'Següent →', btnHub:'← Lliçons',
+      buildTitle:'Construeix una possibilitat', patternTitle:'El patró', formulaTitle:'La fórmula', formulaSub:'Amb els nostres números:',
+      quizTitle:'Exercici', exploreTitle:'Totes les possibilitats', exploreNote:'Cada casella és una possibilitat diferent',
+      estimatePrompt:'Abans de calcular, intenta estimar-ho:', pickNext:'Prem un element per col·locar-lo ↑',
+      slotLabel: (i) => `Lloc ${i+1}`, scoopsLeft: (n) => `Et queden <strong>${n}</strong> per repartir`,
+      reset:'↺ Reiniciar', doneTitle:'Lliçó completada!', doneDesc:'Has entès d\'on surt la fórmula, no només quina és.',
+      btnRepeat:'Repetir', btnOther:'Altra lliçó →', btnLab:'Laboratori →', btnPractice:'Practicar →'
+    },
+    lessons: {
+      permutation: {
+        icon:'🎬', title:'Permutacions', subtitle:'Ordenar tots els elements (sense repetir).',
+        mode:'permutation', n:4, k:4, symbols:['Anna','Biel','Carla','Dani'],
+        situation:{ desc:'Quatre amics volen fer-se una foto en fila. De quantes formes distintes es poden col·locar?', options:['Màxim 10','Unes 12','24','Més de 100'], correctIdx:2, feedbackOk:'Exacte! Són 24. Anem a veure per què.', feedbackErr:'Són 24. Ho descobriràs construint-ne una.' },
+        build:{ desc:'Col·loca les 4 persones a la fila. Fixa\'t en quantes opcions et queden a cada lloc.' },
+        buildDone:'A cada lloc tenies una opció menys: <strong>4 × 3 × 2 × 1 = 24</strong>.',
+        pattern:{ html:'Fas servir <strong>tots</strong> els elements i l\'ordre importa, de manera que multipliques opcions que decreixen d\'una en una. Aquest producte és el <strong>factorial</strong>.' },
+        formula:{ general:'P_n = n!', sub:'P_4 = 4! = 4\\cdot3\\cdot2\\cdot1 = 24' },
+        quiz:{ context:'En un concurs hi ha <strong>6 finalistes</strong> i es sorteig l\'ordre de sortida. De quantes formes poden sortir?', options:['30','36','720','46 656'], correctIdx:2, feedbackOk:'Correcte! $6! = 720$.', feedbackErr:'És $6! = 720$: ordenes tots els elements.' },
+        explore:{ desc:'Les 24 ordenacions possibles de les 4 persones.' }
+      },
+      variation: {
+        icon:'🏅', title:'Variacions', subtitle:'Triar k i ordenar-los (sense repetir).',
+        mode:'variation', n:4, k:3, symbols:['Ari','Bea','Cid','Dux'],
+        situation:{ desc:'En una cursa de 4 atletes es reparteixen or, plata i bronze. De quantes maneres pot quedar el pòdium?', options:['12','24','36','64'], correctIdx:1, feedbackOk:'Sí! Són 24.', feedbackErr:'Són 24. Ho veuràs en repartir les medalles.' },
+        build:{ desc:'Reparteix or, plata i bronze triant 3 dels 4 atletes. Les opcions decreixen, però t\'atures en 3.' },
+        buildDone:'<strong>4 × 3 × 2 = 24</strong>. Tries 3 de 4 i l\'ordre importa, però no els fas servir tots.',
+        pattern:{ html:'Com en les permutacions les opcions decreixen, però <strong>t\'atures en triar k = 3</strong> (no fas servir tots els elements).' },
+        formula:{ general:'V_{n,k} = \\dfrac{n!}{(n-k)!}', sub:'V_{4,3} = \\dfrac{4!}{1!} = 4\\cdot3\\cdot2 = 24' },
+        quiz:{ context:'En una cursa de <strong>8 atletes</strong>, de quantes formes es reparteixen or, plata i bronze?', options:['56','336','512','40 320'], correctIdx:1, feedbackOk:'Correcte! $V_{8,3} = 8\\cdot7\\cdot6 = 336$.', feedbackErr:'És $V_{8,3} = 8\\cdot7\\cdot6 = 336$.' },
+        explore:{ desc:'Els 24 pòdiums possibles (or-plata-bronze).' }
+      },
+      variationRep: {
+        icon:'🔢', title:'Variacions amb repetició', subtitle:'Ordenar k amb repetició permesa.',
+        mode:'variationRep', n:3, k:2, symbols:['🔴','🟢','🔵'],
+        situation:{ desc:'Un cadenat té 3 botons de color i el codi són 2 pulsacions (pots repetir color). Quants codis distints hi ha?', options:['3','6','9','27'], correctIdx:2, feedbackOk:'Exacte! Són 9.', feedbackErr:'Són 9. Ho veuràs en marcar un codi.' },
+        build:{ desc:'Marca un codi de 2 pulsacions. Com pots repetir, a cada posició sempre tens 3 opcions (n = 3 colors, k = 2 posicions).' },
+        buildDone:'<strong>3 × 3 = 3² = 9</strong>. Cada posició segueix tenint les 3 opcions perquè es pot repetir. La base és n = 3 (colors) i l\'exponent és k = 2 (posicions).',
+        pattern:{ html:'En permetre repetició, cada posició torna a tenir les <strong>n</strong> opcions completes: multipliques n per ell mateix k vegades.' },
+        formula:{ general:'VR_{n,k} = n^k', sub:'VR_{3,2} = 3^2 = 9' },
+        quiz:{ context:'Una contrasenya té <strong>4 caràcters</strong>, cadascun una lletra de la A a la F (6 lletres), amb repetició. Quantes n\'hi ha?', options:['360','1 296','4 096','46 656'], correctIdx:1, feedbackOk:'Correcte! $6^4 = 1\\,296$.', feedbackErr:'És $6^4 = 1\\,296$.' },
+        explore:{ desc:'Els 9 codis possibles (3 colors, 2 pulsacions).' }
+      },
+      combination: {
+        icon:'👥', title:'Combinacions', subtitle:'Triar k sense importar l\'ordre (sense repetir).',
+        mode:'combination', n:4, k:2, symbols:['Anna','Bru','Cal','Dan'],
+        situation:{ desc:'De 4 amics tries 2 per a un equip. Quants equips distints hi ha? (Anna-Bru és el mateix que Bru-Anna.)', options:['4','6','8','12'], correctIdx:1, feedbackOk:'Sí! Són 6.', feedbackErr:'Són 6. Ho veuràs construint i corregint l\'ordre.' },
+        build:{ desc:'Tria 2 persones, primer com si l\'ordre importés (4 × 3).' },
+        buildDone:'Ordenat serien <strong>4 × 3 = 12</strong>. Però {Anna, Bru} i {Bru, Anna} són el mateix equip: cada un es va comptar 2! = 2 vegades. <strong>12 ÷ 2 = 6</strong>.',
+        pattern:{ html:'Comptes com una variació (l\'ordre importa) i després <strong>divideixes per k!</strong>, perquè cada grup apareix en tots els seus ordres possibles.' },
+        formula:{ general:'C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!\\,(n-k)!}', sub:'C_{4,2} = \\dfrac{4\\cdot3}{2!} = \\dfrac{12}{2} = 6' },
+        quiz:{ context:'D\'una classe de <strong>10 alumnes</strong> s\'elegeix un grup de 4. Quants grups distints hi ha?', options:['40','210','840','5 040'], correctIdx:1, feedbackOk:'Correcte! $C_{10,4} = 210$.', feedbackErr:'És $C_{10,4} = 210$.' },
+        explore:{ desc:'Els 6 equips possibles.' }
+      },
+      combinationRep: {
+        icon:'🍨', title:'Combinacions amb repetició', subtitle:'Triar k sense ordre i amb repetició.',
+        mode:'combinationRep', n:3, k:2, symbols:['🍫','🍓','🍦'],
+        situation:{ desc:'Una copa porta 2 boles i hi ha 3 sabors. Pots repetir sabor i l\'ordre no importa. Quantes copes distintes hi ha?', options:['3','6','8','9'], correctIdx:1, feedbackOk:'Sí! Són 6.', feedbackErr:'Són 6. Ho veuràs amb «estrelles i barres».' },
+        build:{ desc:'Reparteix 2 boles entre els 3 sabors (pots posar-ne diverses del mateix sabor).' },
+        buildDone:'Cada copa és repartir 2 boles (★) entre 3 sabors usant 2 barres (│). Tries on van les 2 boles entre 4 posicions: <strong>C(4,2) = 6</strong>.',
+        pattern:{ html:'Truc de les <strong>estrelles i barres</strong>: repartir k elements iguals entre n tipus equival a col·locar les barres separadores. Per això apareix <strong>n + k − 1</strong>.' },
+        formula:{ general:'CR_{n,k} = \\dbinom{n+k-1}{k}', sub:'CR_{3,2} = \\dbinom{4}{2} = 6' },
+        quiz:{ context:'Compres <strong>3 croissants</strong> en una pastisseria amb 4 tipus i pots repetir. Quantes compres distintes hi ha?', options:['12','20','24','64'], correctIdx:1, feedbackOk:'Correcte! $CR_{4,3} = \\dbinom{6}{3} = 20$.', feedbackErr:'És $CR_{4,3} = \\dbinom{6}{3} = 20$.' },
+        explore:{ desc:'Les 6 copes possibles (combinacions de sabors).' }
+      },
+      permutationRep: {
+        icon:'🔤', title:'Permutacions amb repetició', subtitle:'Ordenar tots amb elements repetits.',
+        mode:'permutationRep', n:4, k:4, symbols:['M','A','M','A'],
+        situation:{ desc:'Quantes paraules distintes es formen usant totes les lletres de MAMA?', options:['4','6','12','24'], correctIdx:1, feedbackOk:'Sí! Són 6.', feedbackErr:'Són 6. Ho veuràs en ordenar les fitxes i corregir.' },
+        build:{ desc:'Ordena les 4 fitxes. Com a fitxes distintes hi ha 4 × 3 × 2 × 1 = 24 ordenacions.' },
+        buildDone:'Però les dues <strong>M</strong> són iguals (i les dues <strong>A</strong> també): intercanviar-les no canvia la paraula. Cada paraula es va comptar 2!·2! = 4 vegades. <strong>24 ÷ 4 = 6</strong>.',
+        pattern:{ html:'Ordenes tots els elements (factorial) i <strong>divideixes pel factorial de cada grup d\'elements iguals</strong>, perquè intercanviar-los dóna la mateixa disposició.' },
+        formula:{ general:'P = \\dfrac{n!}{a!\\,b!\\cdots}', sub:'\\dfrac{4!}{2!\\,2!} = \\dfrac{24}{4} = 6' },
+        quiz:{ context:'Quantes paraules distintes es formen amb totes les lletres de <strong>LEVEL</strong>? (L×2, E×2)', options:['20','30','60','120'], correctIdx:1, feedbackOk:'Correcte! $\\dfrac{5!}{2!\\,2!} = 30$.', feedbackErr:'És $\\dfrac{5!}{2!\\,2!} = 30$.' },
+        explore:{ desc:'Les 6 paraules distintes amb les lletres de MAMA.' }
+      }
+    },
+    practiceTitle: 'Classifica el problema',
+    practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
+    practiceQuestion: 'Quin tipus de problema és?',
+    practiceNext: 'Problema següent →', practiceFinish: 'Veure resultats →',
+    practiceScoreMsg: (pct) => pct>=80 ? 'Excel·lent! Domines la classificació de problemes.' : pct>=60 ? 'Bé. Repassa els tipus que has fallat.' : 'Continua practicant. La clau és en les tres preguntes inicials.',
+    practiceBestMark: (best, total) => `La teva millor marca: <strong>${best}/${total}</strong>`,
+    practiceAccuracy: (pct) => `Percentatge d\'encert: <strong>${pct}%</strong>`,
+    practiceBtnRepeat: 'Repetir pràctica', practiceBtnTree: 'Quin tipus? →',
+    practiceFeedbackOk: (hint) => `<strong>Correcte!</strong> ${hint}`,
+    practiceFeedbackErr: (hint) => `<strong>No és aquest tipus.</strong> ${hint}`,
+    practiceWhyTitle: 'Aquestes tres respostes descarten els altres tipus:',
+    summary: { title:'Taula resum', subtitle:'Les tres preguntes que determinen el tipus. Respon-les i la fila et dóna la fórmula.', nkNote:'<strong>n</strong> = total d\'elements distints disponibles &nbsp;·&nbsp; <strong>k</strong> = quantitat d\'elements triats o posicions a omplir', colType:'Tipus', colOrder:'L\'ordre importa?', colRep:'Hi ha repetició?', colScope:'Quants en fas servir?', colFormula:'Fórmula', yes:'Sí', no:'No', all:'Tots', some:'Alguns' },
+    typeLabels: { permutation:'Permutació', permutationRep:'Perm. amb rep.', variation:'Variació', variationRep:'Var. amb rep.', combination:'Combinació', combinationRep:'Comb. amb rep.' },
+    problems: [
+      { context:'De quantes formes es poden ordenar 5 llibres en una estanteria?', hint:'Es fan servir tots els llibres i l\'ordre importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
+      { context:'En una cursa de 8 atletes, de quantes formes distintes poden quedar el 1r, 2n i 3r lloc?', hint:'Només es trien 3 de 8 i l\'ordre importa (1r ≠ 2n ≠ 3r).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Una clau WiFi té 4 caràcters, cadascun qualsevol lletra de A a F (6 lletres), amb repetició. Quantes claus distintes hi ha?', hint:'L\'ordre importa (ABCD ≠ DCBA) i es pot repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
+      { context:'D\'una classe de 10 alumnes es vol elegir un grup de 4 per representar el centre. Quants grups distints es poden formar?', hint:'Un grup és un conjunt; {Anna, Biel} = {Biel, Anna}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'En una pizzeria hi ha 5 ingredients. Vols demanar una pizza amb exactament 2 ingredients distints. Quantes pizzes pots demanar?', hint:'Una pizza no té ordre d\'ingredients: {xampinyó, formatge} = {formatge, xampinyó}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'Vols comprar 3 croissants en una pastisseria amb 4 tipus i pots repetir. Quantes compres distintes pots fer?', hint:'L\'ordre no importa i es pot repetir: 2 de xocolata + 1 de pernil és vàlid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
+      { context:'Quantes matrícules de 4 lletres distintes (A, B, C, D, E — 5 lletres) es poden formar si l\'ordre importa?', hint:'Es trien 4 de 5 lletres i l\'ordre importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Quantes paraules distintes es poden formar amb totes les lletres de la paraula LEVEL?', hint:'Es fan servir totes les lletres, l\'ordre importa, però n\'hi ha de repetides: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  ga: {
+    htmlLang: 'gl', locale: 'gl-ES',
+    logo: 'Combinatoria',
+    nav: ['Inicio', 'Leccións', 'Que tipo?', 'Práctica', 'Laboratorio'],
+    heroTitle: 'Laboratorio de Combinatoria',
+    heroSubtitle: 'Aprende a contar posibilidades tomando decisións, non memorizando fórmulas.',
+    homeCards: [
+      { icon:'🌿', title:'Que tipo de problema teño?',     desc:'Responde tres preguntas e o programa identifica o tipo e a fórmula.' },
+      { icon:'🔬', title:'Laboratorio',                     desc:'Axusta <em>n</em> e <em>k</em>, escolle as opcións e ve o resultado en tempo real.' },
+      { icon:'📖', title:'Leccións guiadas',                desc:'Aprende os seis tipos paso a paso, desde unha situación real até a fórmula.' },
+      { icon:'🏆', title:'Práctica: Clasifica problemas',   desc:'Le un enunciado real e decide que tipo de problema é antes de ver o cálculo.' }
+    ],
+    homeIntro: 'Se é a túa primeira vez, <strong>comeza polas Leccións</strong> para entender cada tipo de problema paso a paso. Despois usa <strong>Que tipo?</strong> cando teñas un enunciado real e non saibas que fórmula aplicar. A Práctica mide o que aprendiches e o Laboratorio permíteche explorar libremente.',
+    homeStep: 'Paso',
+    threeQuestionsTitle: 'Tres preguntas clave',
+    threeQuestionsIntro: 'Antes de usar ningunha fórmula, fáite sempre estas preguntas:',
+    threeQ: [
+      { q:'Importa a orde?',                                hint:'Chocolate-fresa é o mesmo que fresa-chocolate?' },
+      { q:'Pódense repetir elementos?',                     hint:'Podo escoller o mesmo elemento máis dunha vez?' },
+      { q:'Uso todos os elementos ou só algúns?',           hint:'Ordénaos todos ou escolla un subconxunto?' }
+    ],
+    statLesson: 'Lección <strong>completada</strong>',
+    statLessons: (done, total) => `<strong>${done}/${total}</strong> leccións`,
+    statBest: 'Mellor puntuación', statTree: 'Árbore usada', statTreeTimes: (n) => `${n}×`,
+    treeTitle: 'Que tipo de problema teño?',
+    treeSubtitle: 'Responde as preguntas e o programa dirache que fórmula usar.',
+    treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
+    treeBtnYes: 'Si', treeBtnNo: 'Non', treeBtnBack: '← Atrás',
+    treeBtnRestart: 'Comezar de novo', treeBtnLab: 'Probar no laboratorio →',
+    treeNoLabNote: 'Este caso require indicar cantos elementos se repiten de cada tipo, polo que non encaixa no laboratorio básico de n e k.',
+    treeSteps: [
+      { id:'order',  question:'Importa a orde?',                        hint:'Se cambias a orde dos elementos, obtés un resultado diferente?',       yes:'all',    no:'rep2' },
+      { id:'all',    question:'Usas todos os elementos dispoñibles?',    hint:'Se tes n elementos, usas todos ou só escolles k?',                     yes:'repAll', no:'rep1' },
+      { id:'repAll', question:'Hai elementos repetidos (iguais entre si)?', hint:'Algún elemento aparece máis dunha vez no conxunto orixinal?',      yes:'permutationRep', no:'permutation' },
+      { id:'rep1',   question:'Pódese repetir o mesmo elemento?',        hint:'Pode aparecer o mesmo elemento máis dunha vez no resultado?',          yes:'variationRep', no:'variation' },
+      { id:'rep2',   question:'Pódese repetir o mesmo elemento?',        hint:'Pode aparecer o mesmo elemento máis dunha vez no grupo escollido?',    yes:'combinationRep', no:'combination' }
+    ],
+    exampleLabel: 'Exemplo:',
+    types: {
+      permutation:    { name:'Permutación',               color:'green',  badge:'badge-green',  desc:'Ordenas <strong>todos</strong> os elementos. A orde importa, sen repetición.',                  formula:'$P_n = n!$',                                 exText:'De cantas formas poden sentarse 4 persoas nunha fila?',                exCalc:'$P_4 = 4! = 24$' },
+      permutationRep: { name:'Permutación con repetición',color:'green',  badge:'badge-green',  desc:'Ordenas <strong>todos</strong> os elementos pero algúns son iguais.',                            formula:'$P = \\dfrac{n!}{a! \\cdot b! \\cdots}$',   exText:'Cantas palabras distintas coas letras de MAMA?',                       exCalc:'$\\dfrac{4!}{2! \\cdot 2!} = 6$' },
+      variation:      { name:'Variación',                 color:'',       badge:'badge-accent', desc:'Escolles <strong>k</strong> de <strong>n</strong> elementos, a orde importa, sen repetición.',   formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Pódiums (ouro, prata, bronce) nunha carreira de 5 persoas:',           exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
+      variationRep:   { name:'Variación con repetición',  color:'orange', badge:'badge-orange', desc:'Escolles <strong>k</strong> de <strong>n</strong> elementos, a orde importa, con repetición.',   formula:'$VR_{n,k} = n^k$',                          exText:'Contrasinais de 4 cifras (0–9):',                                      exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
+      combination:    { name:'Combinación',               color:'purple', badge:'badge-purple', desc:'Escolles <strong>k</strong> de <strong>n</strong>, a orde <strong>non</strong> importa, sen repetición.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Cantos grupos de 2 se forman con 5 alumnos?', exCalc:'$C_{5,2} = 10$' },
+      combinationRep: { name:'Combinación con repetición',color:'red',    badge:'badge-red',    desc:'Escolles <strong>k</strong> de <strong>n</strong>, a orde <strong>non</strong> importa, con repetición.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'Copas de 3 bolas con 4 sabores (podes repetir):',                      exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+    },
+    labTitle: 'Laboratorio de combinatoria',
+    labSubtitle: 'Axusta os parámetros e observa como cambia o resultado ao instante.',
+    labParamsTitle: 'Parámetros',
+    labLabelN: 'n — total de elementos distintos', labLabelK: 'k — posicións ou elementos escollidos',
+    labLabelOrder: 'Importa a orde?', labBtnOrderYes: 'Si importa', labBtnOrderNo: 'Non importa',
+    labLabelRep: 'Pódense repetir elementos?', labBtnRepYes: 'Si, con repetición', labBtnRepNo: 'Non, sen repetición',
+    labWith: (n, k) => `Con n = ${n} elementos, escollendo k = ${k}`,
+    labCalcLabel: 'Cálculo:', labTotalLabel: 'Total de posibilidades:',
+    labShowAll: 'Mostrar todas as posibilidades →', labHideAll: 'Ocultar lista',
+    labAllLabel: (n, pool) => `Todas as posibilidades (${n}) con elementos: ${pool}`,
+    labTypeNames: { permutation:'Permutación', variation:'Variación (sen rep.)', variationRep:'Variación con rep.', combination:'Combinación (sen rep.)', combinationRep:'Combinación con rep.' },
+    lessonHub: { title:'Leccións guiadas', subtitle:'Aprende cada tipo paso a paso: dunha situación real ao porqué da fórmula.', choose:'Escolle unha lección:', done:'Feita' },
+    lessonUI: {
+      stepLabels: ['Situación','Construír','Patrón','Fórmula','Explorar','Exercicio','Fin'],
+      btnBack:'← Atrás', btnNext:'Seguinte →', btnHub:'← Leccións',
+      buildTitle:'Constrúe unha posibilidade', patternTitle:'O patrón', formulaTitle:'A fórmula', formulaSub:'Cos nosos números:',
+      quizTitle:'Exercicio', exploreTitle:'Todas as posibilidades', exploreNote:'Cada cela é unha posibilidade distinta',
+      estimatePrompt:'Antes de calcular, intenta estimalo:', pickNext:'Preme un elemento para colocalo ↑',
+      slotLabel: (i) => `Posto ${i+1}`, scoopsLeft: (n) => `Quédanche <strong>${n}</strong> por repartir`,
+      reset:'↺ Reiniciar', doneTitle:'Lección completada!', doneDesc:'Entendiche de onde sae a fórmula, non só cal é.',
+      btnRepeat:'Repetir', btnOther:'Outra lección →', btnLab:'Laboratorio →', btnPractice:'Practicar →'
+    },
+    lessons: {
+      permutation: {
+        icon:'🎬', title:'Permutacións', subtitle:'Ordenar todos os elementos (sen repetir).',
+        mode:'permutation', n:4, k:4, symbols:['Ana','Biel','Carla','Dani'],
+        situation:{ desc:'Catro amigos queren facerse unha foto en fila. De cantas formas distintas se poden colocar?', options:['Máximo 10','Unhas 12','24','Máis de 100'], correctIdx:2, feedbackOk:'Exacto! Son 24. Imos ver por que.', feedbackErr:'Son 24. Descubriralo ao construír unha.' },
+        build:{ desc:'Coloca as 4 persoas na fila. Fixa no número de opcións que che quedan en cada posto.' },
+        buildDone:'En cada posto tiñas unha opción menos: <strong>4 × 3 × 2 × 1 = 24</strong>.',
+        pattern:{ html:'Usas <strong>todos</strong> os elementos e a orde importa, así que multiplicas opcións que decrecen dunha en unha. Ese produto é o <strong>factorial</strong>.' },
+        formula:{ general:'P_n = n!', sub:'P_4 = 4! = 4\\cdot3\\cdot2\\cdot1 = 24' },
+        quiz:{ context:'Nun concurso hai <strong>6 finalistas</strong> e sortéase a orde de saída. De cantas formas poden saír?', options:['30','36','720','46 656'], correctIdx:2, feedbackOk:'Correcto! $6! = 720$.', feedbackErr:'É $6! = 720$: ordenas todos os elementos.' },
+        explore:{ desc:'As 24 ordenacións posibles das 4 persoas.' }
+      },
+      variation: {
+        icon:'🏅', title:'Variacións', subtitle:'Elixir k e ordenalos (sen repetir).',
+        mode:'variation', n:4, k:3, symbols:['Ari','Bea','Cid','Dux'],
+        situation:{ desc:'Nunha carreira de 4 atletas repártense ouro, prata e bronce. De cantas maneiras pode quedar o pódium?', options:['12','24','36','64'], correctIdx:1, feedbackOk:'Si! Son 24.', feedbackErr:'Son 24. Veralo ao repartir as medallas.' },
+        build:{ desc:'Reparte ouro, prata e bronce escollendo 3 dos 4 atletas. As opcións decrecen, pero paras en 3.' },
+        buildDone:'<strong>4 × 3 × 2 = 24</strong>. Escolles 3 de 4 e a orde importa, pero non os usas todos.',
+        pattern:{ html:'Como nas permutacións as opcións decrecen, pero <strong>paras ao elixir k = 3</strong> (non usas todos os elementos).' },
+        formula:{ general:'V_{n,k} = \\dfrac{n!}{(n-k)!}', sub:'V_{4,3} = \\dfrac{4!}{1!} = 4\\cdot3\\cdot2 = 24' },
+        quiz:{ context:'Nunha carreira de <strong>8 atletas</strong>, de cantas formas se reparten ouro, prata e bronce?', options:['56','336','512','40 320'], correctIdx:1, feedbackOk:'Correcto! $V_{8,3} = 8\\cdot7\\cdot6 = 336$.', feedbackErr:'É $V_{8,3} = 8\\cdot7\\cdot6 = 336$.' },
+        explore:{ desc:'Os 24 pódiums posibles (ouro-prata-bronce).' }
+      },
+      variationRep: {
+        icon:'🔢', title:'Variacións con repetición', subtitle:'Ordenar k con repetición permitida.',
+        mode:'variationRep', n:3, k:2, symbols:['🔴','🟢','🔵'],
+        situation:{ desc:'Un cadeado ten 3 botóns de cor e o código son 2 pulsacións (podes repetir cor). Cantos códigos distintos hai?', options:['3','6','9','27'], correctIdx:2, feedbackOk:'Exacto! Son 9.', feedbackErr:'Son 9. Veralo ao marcar un código.' },
+        build:{ desc:'Marca un código de 2 pulsacións. Como podes repetir, en cada posición sempre tes 3 opcións (n = 3 cores, k = 2 posicións).' },
+        buildDone:'<strong>3 × 3 = 3² = 9</strong>. Cada posición segue tendo as 3 opcións porque se pode repetir. A base é n = 3 (cores) e o expoñente é k = 2 (posicións).',
+        pattern:{ html:'Ao permitir repetición, cada posición volve ter as <strong>n</strong> opcións completas: multiplicas n por si mesmo k veces.' },
+        formula:{ general:'VR_{n,k} = n^k', sub:'VR_{3,2} = 3^2 = 9' },
+        quiz:{ context:'Un contrasinal ten <strong>4 caracteres</strong>, cada un unha letra da A á F (6 letras), con repetición. Cantos hai?', options:['360','1 296','4 096','46 656'], correctIdx:1, feedbackOk:'Correcto! $6^4 = 1\\,296$.', feedbackErr:'É $6^4 = 1\\,296$.' },
+        explore:{ desc:'Os 9 códigos posibles (3 cores, 2 pulsacións).' }
+      },
+      combination: {
+        icon:'👥', title:'Combinacións', subtitle:'Elixir k sen importar a orde (sen repetir).',
+        mode:'combination', n:4, k:2, symbols:['Ana','Bru','Cal','Dan'],
+        situation:{ desc:'De 4 amigos escolles 2 para un equipo. Cantos equipos distintos hai? (Ana-Bru é o mesmo equipo que Bru-Ana.)', options:['4','6','8','12'], correctIdx:1, feedbackOk:'Si! Son 6.', feedbackErr:'Son 6. Veralo ao construír e corrixir a orde.' },
+        build:{ desc:'Escolle 2 persoas, primeiro como se a orde importase (4 × 3).' },
+        buildDone:'Ordenado serían <strong>4 × 3 = 12</strong>. Pero {Ana, Bru} e {Bru, Ana} son o mesmo equipo: cada un contouse 2! = 2 veces. <strong>12 ÷ 2 = 6</strong>.',
+        pattern:{ html:'Contas como unha variación (a orde importa) e logo <strong>divides por k!</strong>, porque cada grupo aparece en todas as súas ordes posibles.' },
+        formula:{ general:'C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!\\,(n-k)!}', sub:'C_{4,2} = \\dfrac{4\\cdot3}{2!} = \\dfrac{12}{2} = 6' },
+        quiz:{ context:'Dunha clase de <strong>10 alumnos</strong> elíxese un grupo de 4. Cantos grupos distintos hai?', options:['40','210','840','5 040'], correctIdx:1, feedbackOk:'Correcto! $C_{10,4} = 210$.', feedbackErr:'É $C_{10,4} = 210$.' },
+        explore:{ desc:'Os 6 equipos posibles.' }
+      },
+      combinationRep: {
+        icon:'🍨', title:'Combinacións con repetición', subtitle:'Elixir k sen orde e con repetición.',
+        mode:'combinationRep', n:3, k:2, symbols:['🍫','🍓','🍦'],
+        situation:{ desc:'Unha copa leva 2 bolas e hai 3 sabores. Podes repetir sabor e a orde non importa. Cantas copas distintas hai?', options:['3','6','8','9'], correctIdx:1, feedbackOk:'Si! Son 6.', feedbackErr:'Son 6. Veralo con «estrelas e barras».' },
+        build:{ desc:'Reparte 2 bolas entre os 3 sabores (podes poñer varias do mesmo sabor).' },
+        buildDone:'Cada copa é repartir 2 bolas (★) entre 3 sabores usando 2 barras (│). Escolles onde van as 2 bolas entre 4 posicións: <strong>C(4,2) = 6</strong>.',
+        pattern:{ html:'Truco de <strong>estrelas e barras</strong>: repartir k elementos iguais entre n tipos equivale a colocar as barras separadoras. Por iso aparece <strong>n + k − 1</strong>.' },
+        formula:{ general:'CR_{n,k} = \\dbinom{n+k-1}{k}', sub:'CR_{3,2} = \\dbinom{4}{2} = 6' },
+        quiz:{ context:'Compras <strong>3 croissants</strong> nunha panadaría con 4 tipos e podes repetir. Cantas compras distintas podes facer?', options:['12','20','24','64'], correctIdx:1, feedbackOk:'Correcto! $CR_{4,3} = \\dbinom{6}{3} = 20$.', feedbackErr:'É $CR_{4,3} = \\dbinom{6}{3} = 20$.' },
+        explore:{ desc:'As 6 copas posibles (combinacións de sabores).' }
+      },
+      permutationRep: {
+        icon:'🔤', title:'Permutacións con repetición', subtitle:'Ordenar todos con elementos repetidos.',
+        mode:'permutationRep', n:4, k:4, symbols:['M','A','M','A'],
+        situation:{ desc:'Cantas palabras distintas se forman usando todas as letras de MAMA?', options:['4','6','12','24'], correctIdx:1, feedbackOk:'Si! Son 6.', feedbackErr:'Son 6. Veralo ao ordenar as fichas e corrixir.' },
+        build:{ desc:'Ordena as 4 fichas. Como fichas distintas hai 4 × 3 × 2 × 1 = 24 ordenacións.' },
+        buildDone:'Pero as dúas <strong>M</strong> son iguais (e as dúas <strong>A</strong> tamén): intercambialas non cambia a palabra. Cada palabra contouse 2!·2! = 4 veces. <strong>24 ÷ 4 = 6</strong>.',
+        pattern:{ html:'Ordenas todos os elementos (factorial) e <strong>divides polo factorial de cada grupo de elementos iguais</strong>, porque intercambialos dá a mesma disposición.' },
+        formula:{ general:'P = \\dfrac{n!}{a!\\,b!\\cdots}', sub:'\\dfrac{4!}{2!\\,2!} = \\dfrac{24}{4} = 6' },
+        quiz:{ context:'Cantas palabras distintas se forman con todas as letras de <strong>LEVEL</strong>? (L×2, E×2)', options:['20','30','60','120'], correctIdx:1, feedbackOk:'Correcto! $\\dfrac{5!}{2!\\,2!} = 30$.', feedbackErr:'É $\\dfrac{5!}{2!\\,2!} = 30$.' },
+        explore:{ desc:'As 6 palabras distintas coas letras de MAMA.' }
+      }
+    },
+    practiceTitle: 'Clasifica o problema',
+    practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
+    practiceQuestion: 'Que tipo de problema é?',
+    practiceNext: 'Seguinte problema →', practiceFinish: 'Ver resultados →',
+    practiceScoreMsg: (pct) => pct>=80 ? 'Excelente! Dominas a clasificación de problemas.' : pct>=60 ? 'Ben. Repasa os tipos que fallaches.' : 'Continúa practicando. A clave está nas tres preguntas iniciais.',
+    practiceBestMark: (best, total) => `A túa mellor marca: <strong>${best}/${total}</strong>`,
+    practiceAccuracy: (pct) => `Porcentaxe de acerto: <strong>${pct}%</strong>`,
+    practiceBtnRepeat: 'Repetir práctica', practiceBtnTree: 'Que tipo? →',
+    practiceFeedbackOk: (hint) => `<strong>Correcto!</strong> ${hint}`,
+    practiceFeedbackErr: (hint) => `<strong>Non é ese tipo.</strong> ${hint}`,
+    practiceWhyTitle: 'Estas tres respostas descartan os demais tipos:',
+    summary: { title:'Táboa resumo', subtitle:'As tres preguntas que determinan o tipo. Respóndeas e a fila dáche a fórmula.', nkNote:'<strong>n</strong> = total de elementos distintos dispoñibles &nbsp;·&nbsp; <strong>k</strong> = cantidade de elementos escollidos ou posicións a cubrir', colType:'Tipo', colOrder:'Importa a orde?', colRep:'Hai repetición?', colScope:'Cantos usas?', colFormula:'Fórmula', yes:'Si', no:'Non', all:'Todos', some:'Algúns' },
+    typeLabels: { permutation:'Permutación', permutationRep:'Perm. con rep.', variation:'Variación', variationRep:'Var. con rep.', combination:'Combinación', combinationRep:'Comb. con rep.' },
+    problems: [
+      { context:'De cantas formas se poden ordenar 5 libros nunha estante?', hint:'Úsanse todos os libros e a orde importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
+      { context:'Nunha carreira de 8 atletas, de cantas formas distintas poden quedar o 1.º, 2.º e 3.º posto?', hint:'Só se escolhen 3 de 8 e a orde importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Unha clave WiFi ten 4 caracteres, cada un calquera letra de A a F (6 letras), con repetición. Cantas claves distintas hai?', hint:'A orde importa (ABCD ≠ DCBA) e os caracteres pódense repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
+      { context:'Dunha clase de 10 alumnos quérese elixir un grupo de 4 para representar ao centro. Cantos grupos distintos se poden formar?', hint:'Un grupo é un conxunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'Nunha pizzería hai 5 ingredientes. Queres pedir unha pizza con exactamente 2 ingredientes distintos. Cantas pizzas podes pedir?', hint:'Unha pizza non ten orde de ingredientes: {champiñón, queixo} = {queixo, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'Queres comprar 3 croissants nunha panadaría con 4 tipos e podes repetir. Cantas compras distintas podes facer?', hint:'A orde non importa e pódese repetir: 2 de chocolate + 1 de xamón é válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
+      { context:'Cantas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se poden formar se a orde importa?', hint:'Escolléronse 4 de 5 letras e a orde importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Cantas palabras distintas se poden formar con todas as letras da palabra LEVEL?', hint:'Úsanse todas as letras, a orde importa, pero hai letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  eu: {
+    htmlLang: 'eu', locale: 'eu-ES',
+    logo: 'Konbinatoria',
+    nav: ['Hasiera', 'Ikasgaiak', 'Zer mota?', 'Praktika', 'Laborategia'],
+    heroTitle: 'Konbinatoriaren Laborategia',
+    heroSubtitle: 'Ikasi posibilitateak zenbatzen erabakiak hartuz, ez formulak buruz ikasiz.',
+    homeCards: [
+      { icon:'🌿', title:'Zer mota problema dut?',         desc:'Erantzun hiru galdera eta programak mota eta formula identifikatuko ditu.' },
+      { icon:'🔬', title:'Laborategia',                     desc:'Doitu <em>n</em> eta <em>k</em>, aukeratu ezarpenak eta ikusi emaitza denbora errealean.' },
+      { icon:'📖', title:'Ikasgai gidatuak',                desc:'Ikasi sei motak pausoz pauso, egoera erreal batetik formulara arte.' },
+      { icon:'🏆', title:'Praktika: Sailkatu problemak',    desc:'Irakurri enuntziatu erreal bat eta erabaki zer mota den kalkulua ikusi aurretik.' }
+    ],
+    homeIntro: 'Lehen aldiz bazara, <strong>hasi Ikasgaiekin</strong> arazo mota bakoitza pausoz pauso ulertzeko. Ondoren erabili <strong>Zer mota?</strong> arazo erreal bat duzunean eta ez dakizunean zein formula aplikatu. Praktikak ikasitakoa neurtzen du eta Laborategia libreki esploratzeko da.',
+    homeStep: 'Urrats',
+    threeQuestionsTitle: 'Hiru galdera nagusi',
+    threeQuestionsIntro: 'Edozein formula erabili aurretik, beti egin iezaiozu zure buruari galdera hauek:',
+    threeQ: [
+      { q:'Garrantzitsua al da ordena?',                    hint:'Txokolate-marrubia eta marrubia-txokolate gauza bera al dira?' },
+      { q:'Elementuak errepika daitezke?',                  hint:'Elementu bera behin baino gehiagotan aukera dezaket?' },
+      { q:'Elementu guztiak erabiltzen al ditut, ala batzuk soilik?', hint:'Denak ordenatzen ditut ala azpimultzo bat aukeratzen dut?' }
+    ],
+    statLesson: 'Ikasgaia <strong>osatuta</strong>',
+    statLessons: (done, total) => `<strong>${done}/${total}</strong> ikasgai`,
+    statBest: 'Puntuazio onena', statTree: 'Zuhaitza erabilia', statTreeTimes: (n) => `${n}×`,
+    treeTitle: 'Zer mota problema dut?',
+    treeSubtitle: 'Erantzun galderak eta programak esango dizu zer formula erabili.',
+    treeQuestion: (current, max) => `${current}. galdera ${max}tik`,
+    treeBtnYes: 'Bai', treeBtnNo: 'Ez', treeBtnBack: '← Atzera',
+    treeBtnRestart: 'Berriz hasi', treeBtnLab: 'Laborategian probatu →',
+    treeNoLabNote: 'Kasu honek mota bakoitzetik zenbat elementu errepikatu adierazi behar du eta ez dago n eta k-ren oinarrizko laborategian sartzen.',
+    treeSteps: [
+      { id:'order',  question:'Garrantzitsua al da ordena?',                        hint:'Elementuen ordena aldatzen baduzu, emaitza ezberdina lortzen al duzu?',    yes:'all',    no:'rep2' },
+      { id:'all',    question:'Erabilgarri dauden elementu guztiak erabiltzen al dituzu?', hint:'n elementu badituzu, denak erabiltzen dituzu ala k bakarrik aukeratzen?', yes:'repAll', no:'rep1' },
+      { id:'repAll', question:'Errepikaturiko elementuak (berdinak) daude?',         hint:'Elementuren bat jatorrizko multzoan behin baino gehiagotan agertzen al da?', yes:'permutationRep', no:'permutation' },
+      { id:'rep1',   question:'Elementu bera errepika daiteke?',                     hint:'Elementu bera emaitzean behin baino gehiagotan ager daiteke?',               yes:'variationRep', no:'variation' },
+      { id:'rep2',   question:'Elementu bera errepika daiteke?',                     hint:'Elementu bera hautatutako taldean behin baino gehiagotan ager daiteke?',     yes:'combinationRep', no:'combination' }
+    ],
+    exampleLabel: 'Adibidea:',
+    types: {
+      permutation:    { name:'Permutazioa',                   color:'green',  badge:'badge-green',  desc:'<strong>Elementu guztiak</strong> ordenatzen dituzu. Ordena garrantzitsua da, errepikapenik gabe.',          formula:'$P_n = n!$',                                 exText:'Zenbat modutan eser daitezke 4 pertsona ilaran?',                      exCalc:'$P_4 = 4! = 24$' },
+      permutationRep: { name:'Permutazioa errepikapenarekin', color:'green',  badge:'badge-green',  desc:'<strong>Elementu guztiak</strong> ordenatzen dituzu baina batzuk berdinak dira.',                             formula:'$P = \\dfrac{n!}{a! \\cdot b! \\cdots}$',   exText:'Zenbat hitz ezberdin MAMA hitzaren letrekin?',                         exCalc:'$\\dfrac{4!}{2! \\cdot 2!} = 6$' },
+      variation:      { name:'Bariazioa',                     color:'',       badge:'badge-accent', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena garrantzitsua, errepikapenik gabe.',          formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Podiumak (urre, zilar, brontze) 5 pertsonako lasterketa batean:',       exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
+      variationRep:   { name:'Bariazioa errepikapenarekin',   color:'orange', badge:'badge-orange', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena garrantzitsua, errepikapenarekin.',            formula:'$VR_{n,k} = n^k$',                          exText:'4 zifrako pasahitzak (0–9):',                                          exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
+      combination:    { name:'Konbinazioa',                   color:'purple', badge:'badge-purple', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena <strong>ez</strong> da garrantzitsua, errepikapenik gabe.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Zenbat 2ko talde sor daiteke 5 ikaslerekin?', exCalc:'$C_{5,2} = 10$' },
+      combinationRep: { name:'Konbinazioa errepikapenarekin', color:'red',    badge:'badge-red',    desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena <strong>ez</strong> da garrantzitsua, errepikapenarekin.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'3 bolazko kopak 4 zaporerekin (errepika daiteke):',                    exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+    },
+    labTitle: 'Konbinatoriaren laborategia',
+    labSubtitle: 'Doitu parametroak eta ikusi emaitza nola aldatzen den berehala.',
+    labParamsTitle: 'Parametroak',
+    labLabelN: 'n — elementu ezberdin guztiak', labLabelK: 'k — hautatutako posizio edo elementuak',
+    labLabelOrder: 'Garrantzitsua al da ordena?', labBtnOrderYes: 'Bai, garrantzitsua', labBtnOrderNo: 'Ez da garrantzitsua',
+    labLabelRep: 'Elementuak errepika daitezke?', labBtnRepYes: 'Bai, errepikapenarekin', labBtnRepNo: 'Ez, errepikapenik gabe',
+    labWith: (n, k) => `n = ${n} elementurekin, k = ${k} aukeratuz`,
+    labCalcLabel: 'Kalkulua:', labTotalLabel: 'Posibilitate kopurua:',
+    labShowAll: 'Erakutsi posibilitate guztiak →', labHideAll: 'Ezkutatu zerrenda',
+    labAllLabel: (n, pool) => `Posibilitate guztiak (${n}) elementuekin: ${pool}`,
+    labTypeNames: { permutation:'Permutazioa', variation:'Bariazioa (errepikapenik gabe)', variationRep:'Bariazioa errepikapenarekin', combination:'Konbinazioa (errepikapenik gabe)', combinationRep:'Konbinazioa errepikapenarekin' },
+    lessonHub: { title:'Ikasgai gidatuak', subtitle:'Ikasi mota bakoitza pausoz pauso: egoera erreal batetik formularen zergatira.', choose:'Aukeratu ikasgai bat:', done:'Egina' },
+    lessonUI: {
+      stepLabels: ['Egoera','Eraiki','Eredua','Formula','Esploratu','Ariketa','Amaiera'],
+      btnBack:'← Atzera', btnNext:'Hurrengoa →', btnHub:'← Ikasgaiak',
+      buildTitle:'Eraiki posibilitate bat', patternTitle:'Eredua', formulaTitle:'Formula', formulaSub:'Gure zenbakiekin:',
+      quizTitle:'Ariketa', exploreTitle:'Posibilitate guztiak', exploreNote:'Lauki bakoitza posibilitate ezberdin bat da',
+      estimatePrompt:'Kalkulatu aurretik, saiatu estimatzen:', pickNext:'Sakatu elementu bat kokatzeko ↑',
+      slotLabel: (i) => `${i+1}. lekua`, scoopsLeft: (n) => `<strong>${n}</strong> banatzen ditut oraindik`,
+      reset:'↺ Berrabiarazi', doneTitle:'Ikasgaia osatuta!', doneDesc:'Orain ulertu duzu formulatik non datorren, ez soilik zein den.',
+      btnRepeat:'Errepikatu', btnOther:'Beste ikasgai bat →', btnLab:'Laborategia →', btnPractice:'Praktikatu →'
+    },
+    lessons: {
+      permutation: {
+        icon:'🎬', title:'Permutazioak', subtitle:'Elementu guztiak ordenatu (errepikapenik gabe).',
+        mode:'permutation', n:4, k:4, symbols:['Ana','Biel','Carla','Dani'],
+        situation:{ desc:'Lau lagun argazki bat atera nahi dute ilaran. Zenbat modu ezberdinetan jar daitezke?', options:['10 arte','12 inguru','24','100 baino gehiago'], correctIdx:2, feedbackOk:'Hain zuzen! 24 dira. Ikus dezagun zergatik.', feedbackErr:'24 dira. Bat eraikitzerakoan aurkituko duzu.' },
+        build:{ desc:'Jarri 4 pertsonak ilaran. Begiratu zenbat aukera duzun toki bakoitzean.' },
+        buildDone:'Toki bakoitzean aukera bat gutxiago zegoen: <strong>4 × 3 × 2 × 1 = 24</strong>.',
+        pattern:{ html:'<strong>Elementu guztiak</strong> erabiltzen dituzu eta ordena garrantzitsua da, beraz murrizten diren aukerak biderkatu. Produktu hori <strong>faktoriala</strong> da.' },
+        formula:{ general:'P_n = n!', sub:'P_4 = 4! = 4\\cdot3\\cdot2\\cdot1 = 24' },
+        quiz:{ context:'Lehiaketa batean <strong>6 finalista</strong> daude eta irteera-ordena zozketa bidez aukeratzen da. Zenbat modutan atera daitezke?', options:['30','36','720','46 656'], correctIdx:2, feedbackOk:'Zuzena! $6! = 720$.', feedbackErr:'$6! = 720$ da: elementu guztiak ordenatzen dituzu.' },
+        explore:{ desc:'4 pertsonaren 24 ordenazio posibleak.' }
+      },
+      variation: {
+        icon:'🏅', title:'Bariazioak', subtitle:'k aukeratu eta ordenatu (errepikapenik gabe).',
+        mode:'variation', n:4, k:3, symbols:['Ari','Bea','Cid','Dux'],
+        situation:{ desc:'4 atletako lasterketa batean urrea, zilarra eta brontzea banatzen dira. Zenbat modutan gera daiteke podiuma?', options:['12','24','36','64'], correctIdx:1, feedbackOk:'Bai! 24 dira.', feedbackErr:'24 dira. Dominekin banatzean ikusiko duzu.' },
+        build:{ desc:'Banatu urrea, zilarra eta brontzea 4 atletatik 3 aukeratuz. Aukerak murrizten dira, baina 3an gelditzen zara.' },
+        buildDone:'<strong>4 × 3 × 2 = 24</strong>. 4tik 3 aukeratzen dituzu eta ordena garrantzitsua da, baina ez dituzu denak erabiltzen.',
+        pattern:{ html:'Permutazioetan bezala aukerak murrizten dira, baina <strong>k = 3 aukeratzerakoan gelditzen zara</strong> (ez dituzu elementu guztiak erabiltzen).' },
+        formula:{ general:'V_{n,k} = \\dfrac{n!}{(n-k)!}', sub:'V_{4,3} = \\dfrac{4!}{1!} = 4\\cdot3\\cdot2 = 24' },
+        quiz:{ context:'<strong>8 atletako</strong> lasterketa batean, zenbat modutan banatzen dira urrea, zilarra eta brontzea?', options:['56','336','512','40 320'], correctIdx:1, feedbackOk:'Zuzena! $V_{8,3} = 8\\cdot7\\cdot6 = 336$.', feedbackErr:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$ da.' },
+        explore:{ desc:'24 podiuma posible (urrea-zilarra-brontzea).' }
+      },
+      variationRep: {
+        icon:'🔢', title:'Bariazioak errepikapenarekin', subtitle:'k ordenatu errepikapenarekin.',
+        mode:'variationRep', n:3, k:2, symbols:['🔴','🟢','🔵'],
+        situation:{ desc:'Giltza batek 3 kolore-botoi ditu eta kodea 2 sakaketa da (kolorea errepika dezakezu). Zenbat kode ezberdin daude?', options:['3','6','9','27'], correctIdx:2, feedbackOk:'Hain zuzen! 9 dira.', feedbackErr:'9 dira. Kode bat markatzerakoan ikusiko duzu.' },
+        build:{ desc:'Markatu 2 sakaketako kode bat. Errepika dezakezunez, toki bakoitzean beti 3 aukera dituzu (n = 3 kolore, k = 2 posizio).' },
+        buildDone:'<strong>3 × 3 = 3² = 9</strong>. Toki bakoitzak 3 aukera ditu oraindik errepika daitekeelako. Oinarria n = 3 (koloreak) da eta berretzailea k = 2 (posizioak).',
+        pattern:{ html:'Errepikapena onartuz, toki bakoitzak berriro <strong>n</strong> aukera guztiak ditu: n bere buruaz k aldiz biderkatzen duzu.' },
+        formula:{ general:'VR_{n,k} = n^k', sub:'VR_{3,2} = 3^2 = 9' },
+        quiz:{ context:'Pasahitz batek <strong>4 karaktere</strong> ditu, bakoitza A-tik F-rako letra bat (6 letra), errepikapenarekin. Zenbat daude?', options:['360','1 296','4 096','46 656'], correctIdx:1, feedbackOk:'Zuzena! $6^4 = 1\\,296$.', feedbackErr:'$6^4 = 1\\,296$ da.' },
+        explore:{ desc:'9 kode posibleak (3 kolore, 2 sakaketa).' }
+      },
+      combination: {
+        icon:'👥', title:'Konbinazioak', subtitle:'k aukeratu ordena kontuan hartu gabe (errepikapenik gabe).',
+        mode:'combination', n:4, k:2, symbols:['Ana','Bru','Cal','Dan'],
+        situation:{ desc:'4 laguntik 2 aukeratzen dituzu talde baterako. Zenbat talde ezberdin daude? (Ana-Bru eta Bru-Ana talde bera dira.)', options:['4','6','8','12'], correctIdx:1, feedbackOk:'Bai! 6 dira.', feedbackErr:'6 dira. Eraikitzerakoan eta ordena zuzenduz ikusiko duzu.' },
+        build:{ desc:'Aukeratu 2 pertsona, lehenik ordena garrantzitsua balitz bezala (4 × 3).' },
+        buildDone:'Ordenatuta <strong>4 × 3 = 12</strong> lirateke. Baina {Ana, Bru} eta {Bru, Ana} talde bera dira: bakoitza 2! = 2 aldiz zenbatu zen. <strong>12 ÷ 2 = 6</strong>.',
+        pattern:{ html:'Bariazioa bezala zenbatzen duzu (ordena garrantzitsua) eta gero <strong>k!z zatitzen duzu</strong>, talde bakoitza bere ordena posible guztietan agertzen delako.' },
+        formula:{ general:'C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!\\,(n-k)!}', sub:'C_{4,2} = \\dfrac{4\\cdot3}{2!} = \\dfrac{12}{2} = 6' },
+        quiz:{ context:'<strong>10 ikasleko</strong> gela batetik 4ko talde bat aukeratzen da. Zenbat talde ezberdin daude?', options:['40','210','840','5 040'], correctIdx:1, feedbackOk:'Zuzena! $C_{10,4} = 210$.', feedbackErr:'$C_{10,4} = 210$ da.' },
+        explore:{ desc:'6 talde posibleak.' }
+      },
+      combinationRep: {
+        icon:'🍨', title:'Konbinazioak errepikapenarekin', subtitle:'k aukeratu ordenatu gabe eta errepikapenarekin.',
+        mode:'combinationRep', n:3, k:2, symbols:['🍫','🍓','🍦'],
+        situation:{ desc:'Kopa batek 2 bola ditu eta 3 zapore daude. Zapore bera errepika dezakezu eta ordena ez da garrantzitsua. Zenbat kopa ezberdin daude?', options:['3','6','8','9'], correctIdx:1, feedbackOk:'Bai! 6 dira.', feedbackErr:'6 dira. «Izarrak eta barrak» metodoarekin ikusiko duzu.' },
+        build:{ desc:'Banatu 2 bola 3 zaporeren artean (zapore bereko hainbat jar dezakezu).' },
+        buildDone:'Kopa bakoitza 2 bola (★) 3 zaporen artean 2 barra (│) erabiliz banatzea da. Aukeratu non dauden 2 bolak 4 posiziotan: <strong>C(4,2) = 6</strong>.',
+        pattern:{ html:'<strong>Izarrak eta barrak</strong> trukua: k elementu berdin n moten artean banatzea bereizte-barrak non jarri aukeratzea da. Horregatik agertzen da <strong>n + k − 1</strong>.' },
+        formula:{ general:'CR_{n,k} = \\dbinom{n+k-1}{k}', sub:'CR_{3,2} = \\dbinom{4}{2} = 6' },
+        quiz:{ context:'<strong>3 croissant</strong> erosten dituzu 4 mota dituen denda batean eta errepika dezakezu. Zenbat erosketa ezberdin egin ditzakezu?', options:['12','20','24','64'], correctIdx:1, feedbackOk:'Zuzena! $CR_{4,3} = \\dbinom{6}{3} = 20$.', feedbackErr:'$CR_{4,3} = \\dbinom{6}{3} = 20$ da.' },
+        explore:{ desc:'6 kopa posibleak (zapore konbinazioak).' }
+      },
+      permutationRep: {
+        icon:'🔤', title:'Permutazioak errepikapenarekin', subtitle:'Elementu errepikaturekin ordenatu.',
+        mode:'permutationRep', n:4, k:4, symbols:['M','A','M','A'],
+        situation:{ desc:'Zenbat hitz ezberdin sor daitezke MAMA hitzaren letra guztiak erabiliz?', options:['4','6','12','24'], correctIdx:1, feedbackOk:'Bai! 6 dira.', feedbackErr:'6 dira. Txartelak ordenatuz eta zuzenduz ikusiko duzu.' },
+        build:{ desc:'Ordenatu 4 txartelak. Txartel ezberdinak bezala 4 × 3 × 2 × 1 = 24 ordenazio daude.' },
+        buildDone:'Baina bi <strong>M</strong>ak berdinak dira (eta bi <strong>A</strong>k ere): aldatzeak ez du hitza aldatzen. Hitz bakoitza 2!·2! = 4 aldiz zenbatu zen. <strong>24 ÷ 4 = 6</strong>.',
+        pattern:{ html:'Elementu guztiak ordenatu (faktoriala) eta <strong>elementu berdineko talde bakoitzaren faktorialaz zatitu</strong>, aldatzeak disposizio bera ematen duelako.' },
+        formula:{ general:'P = \\dfrac{n!}{a!\\,b!\\cdots}', sub:'\\dfrac{4!}{2!\\,2!} = \\dfrac{24}{4} = 6' },
+        quiz:{ context:'Zenbat hitz ezberdin sor daitezke <strong>LEVEL</strong> hitzaren letra guztiekin? (L×2, E×2)', options:['20','30','60','120'], correctIdx:1, feedbackOk:'Zuzena! $\\dfrac{5!}{2!\\,2!} = 30$.', feedbackErr:'$\\dfrac{5!}{2!\\,2!} = 30$ da.' },
+        explore:{ desc:'MAMA hitzaren letrekin 6 hitz ezberdinak.' }
+      }
+    },
+    practiceTitle: 'Sailkatu problema',
+    practiceProblemLabel: (i, total) => `${i}. problema ${total}tik`,
+    practiceQuestion: 'Zer mota problema da?',
+    practiceNext: 'Hurrengo problema →', practiceFinish: 'Ikusi emaitzak →',
+    practiceScoreMsg: (pct) => pct>=80 ? 'Bikain! Problemak sailkatzen jakintsu zara.' : pct>=60 ? 'Ondo. Berrikusi huts egin dituzun motak.' : 'Jarraitu praktikatzen. Gakoa hiru hasierako galderetan dago.',
+    practiceBestMark: (best, total) => `Zure puntuazio onena: <strong>${best}/${total}</strong>`,
+    practiceAccuracy: (pct) => `Asmaketa ehunekoa: <strong>${pct}%</strong>`,
+    practiceBtnRepeat: 'Praktika errepikatu', practiceBtnTree: 'Zer mota? →',
+    practiceFeedbackOk: (hint) => `<strong>Zuzena!</strong> ${hint}`,
+    practiceFeedbackErr: (hint) => `<strong>Ez da mota hori.</strong> ${hint}`,
+    practiceWhyTitle: 'Hiru erantzun hauek gainerako motak baztertzen dituzte:',
+    summary: { title:'Laburpen taula', subtitle:'Mota zehazten duten hiru galderak. Erantzun eta errenkadak formula emango dizu.', nkNote:'<strong>n</strong> = erabilgarri dauden elementu ezberdin guztiak &nbsp;·&nbsp; <strong>k</strong> = aukeratutako elementu kopurua edo bete beharreko posizioak', colType:'Mota', colOrder:'Ordena garrantzitsua?', colRep:'Errepikapena?', colScope:'Zenbat erabiltzen dituzu?', colFormula:'Formula', yes:'Bai', no:'Ez', all:'Guztiak', some:'Batzuk' },
+    typeLabels: { permutation:'Permutazioa', permutationRep:'Perm. errepikapenarekin', variation:'Bariazioa', variationRep:'Bar. errepikapenarekin', combination:'Konbinazioa', combinationRep:'Konb. errepikapenarekin' },
+    problems: [
+      { context:'Zenbat modutan ordenatu daitezke 5 liburu apalategian?', hint:'Liburu guztiak erabiltzen dira eta ordena garrantzitsua da.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
+      { context:'8 atletako lasterketa batean, zenbat modutan gera daitezke 1., 2. eta 3. postuak?', hint:'8tik 3 bakarrik aukeratzen dira eta ordena garrantzitsua da (1. ≠ 2. ≠ 3.).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'WiFi giltza batek 4 karaktere ditu, bakoitza A-tik F-rako edozein letra (6 letra), errepikapenarekin. Zenbat giltza ezberdin daude?', hint:'Ordena garrantzitsua da (ABCD ≠ DCBA) eta karaktereak errepika daitezke.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
+      { context:'10 ikasleko gela batetik 4ko talde bat aukeratu nahi da zentroa ordezkatzeko. Zenbat talde ezberdin sor daitezke?', hint:'Taldea multzo bat da; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'Pizzategi batean 5 osagai daude. 2 osagai ezberdin dituen pizza bat eskatu nahi duzu. Zenbat pizza ezberdin eska ditzakezu?', hint:'Pizzak ez du osagaien ordenarik: {perretxiko, gazta} = {gazta, perretxiko}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
+      { context:'3 croissant erosi nahi dituzu 4 mota dituen gozotegi batean eta errepika dezakezu. Zenbat erosketa ezberdin egin ditzakezu?', hint:'Ordena ez da garrantzitsua eta errepikatu daiteke: 2 txokolate + 1 urdaiazpiko baliozkoa da.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
+      { context:'Zenbat 4 letra ezberdineko matrikula (A, B, C, D, E — 5 letra) sor daitezke ordena garrantzitsua bada?', hint:'5etik 4 letra aukeratzen dira eta ordena garrantzitsua da: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
+      { context:'Zenbat hitz ezberdin sor daitezke LEVEL hitzaren letra guztiekin?', hint:'Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina errepikapenak daude: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+    ]
+  }
+  // ── Para añadir un idioma: duplica el bloque 'en' y traduce los valores ──
+};
+
+// ══════════════════════════════════════════════════════════════
+// i18n runtime
+// ══════════════════════════════════════════════════════════════
+const storedLang = localStorage.getItem('comb_lang');
+let currentLang;
+if (LANG[storedLang]) {
+  currentLang = storedLang;
+} else {
+  const browserLangs = navigator.languages || [navigator.language || 'es'];
+  currentLang = 'es';
+  for (const bl of browserLangs) {
+    const code = bl.split('-')[0].toLowerCase();
+    if (LANG[code]) { currentLang = code; break; }
+  }
+}
+
+function t(key) {
+  const parts = key.split('.');
+  let obj = LANG[currentLang];
+  for (const p of parts) { if (obj == null) break; obj = obj[p]; }
+  if (obj == null) {
+    obj = LANG['es'];
+    for (const p of parts) { if (obj == null) break; obj = obj[p]; }
+  }
+  return obj ?? key;
+}
+
+function getLocale() {
+  return LANG[currentLang]?.locale || LANG.es.locale || 'es-ES';
+}
+
+function fmtNumber(value) {
+  return new Intl.NumberFormat(getLocale()).format(value);
+}
+
+// ══════════════════════════════════════════════════════════════
+// Tema (dark / light / auto)
+// ══════════════════════════════════════════════════════════════
+let currentTheme = localStorage.getItem('comb_theme') || 'auto';
+(function initTheme(){
+  if(currentTheme==='auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',currentTheme);
+})();
+function applyTheme(theme){
+  currentTheme=theme;
+  if(theme==='auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',theme);
+  try{localStorage.setItem('comb_theme',theme);}catch{}
+  buildThemeBtn();
+}
+function cycleTheme(){
+  applyTheme(currentTheme==='auto'?'dark':currentTheme==='dark'?'light':'auto');
+}
+const THEME_ICONS={auto:'🌓',dark:'🌙',light:'☀️'};
+function buildThemeBtn(){
+  const wrap=document.getElementById('theme-btn-wrap');
+  if(!wrap)return;
+  wrap.innerHTML=`<button class="theme-btn" onclick="cycleTheme()" aria-label="Cambiar tema">${THEME_ICONS[currentTheme]}</button>`;
+}
+
+function setLang(lang) {
+  if (!LANG[lang]) return;
+  currentLang = lang;
+  try { localStorage.setItem('comb_lang', lang); } catch {}
+  document.documentElement.lang = LANG[lang].htmlLang;
+  buildNav();
+  buildLangPicker();
+  const active = document.querySelector('.section.active');
+  const id = active ? active.id : 'inicio';
+  // Cambio de idioma: re-traduce la cáscara SIN reiniciar el estado de la actividad.
+  rerenderSection(id);
+}
+
+// ══════════════════════════════════════════════════════════════
+// Utilidades matemáticas
+// ══════════════════════════════════════════════════════════════
+function factorial(n){if(n<0)return null;let r=1;for(let i=2;i<=n;i++)r*=i;return r}
+function variations(n,k){return factorial(n)/factorial(n-k)}
+function variationsRep(n,k){return Math.pow(n,k)}
+function combinations(n,k){if(k>n)return 0;return factorial(n)/(factorial(k)*factorial(n-k))}
+function combinationsRep(n,k){return combinations(n+k-1,k)}
+
+function renderKatex(){
+  if(window.renderMathInElement)
+    renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+}
+
+// ══════════════════════════════════════════════════════════════
+// Progreso (localStorage)
+// ══════════════════════════════════════════════════════════════
+function loadProgress(){try{return JSON.parse(localStorage.getItem('comb_progress')||'{}')}catch{return{}}}
+function saveProgress(obj){localStorage.setItem('comb_progress',JSON.stringify({...loadProgress(),...obj}))}
+
+// ══════════════════════════════════════════════════════════════
+// Cabecera dinámica
+// ══════════════════════════════════════════════════════════════
+const SECTIONS = ['inicio','leccion','arbol','practica','laboratorio'];
+
+function buildNav() {
+  const nav = document.getElementById('main-nav');
+  const navLabels = t('nav');
+  const active = document.querySelector('.section.active');
+  const activeId = active ? active.id : 'inicio';
+  nav.innerHTML = SECTIONS.map((id,i)=>
+    `<button onclick="showSection('${id}')" class="${id===activeId?'active':''}">${navLabels[i]}</button>`
+  ).join('');
+}
+
+const LANG_LABELS = { es:'Español', en:'English', ca:'Català', ga:'Galego', eu:'Euskera' };
+function buildLangPicker() {
+  const picker = document.getElementById('lang-picker');
+  const opts = Object.keys(LANG).map(l =>
+    `<option value="${l}"${l===currentLang?' selected':''}>${LANG_LABELS[l]||l.toUpperCase()}</option>`
+  ).join('');
+  picker.innerHTML = `<div class="lang-select-wrap">
+    <span class="lang-globe" aria-hidden="true">🌐</span>
+    <select class="lang-select" onchange="setLang(this.value)" aria-label="Idioma">${opts}</select>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// Navegación
+// ══════════════════════════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  buildNav();
+  renderSection(id);
+  window.scrollTo(0,0);
+}
+
+function sample(arr, count) {
+  const pool = [...arr];
+  const out = [];
+  const max = Math.min(count, pool.length);
+  for (let i = 0; i < max; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    out.push(pool.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
+function renderSection(id) {
+  if(id==='inicio')    renderInicio();
+  if(id==='arbol')     initTree();
+  if(id==='laboratorio') updateLab();
+  if(id==='leccion')   initLesson();
+  if(id==='practica')  initPractice();
+}
+
+// Re-renderiza la sección activa preservando su estado (usado al cambiar de idioma).
+// A diferencia de renderSection, NO reinicia el progreso ni incrementa contadores.
+function rerenderSection(id) {
+  if(id==='inicio'){ renderInicio(); }
+  else if(id==='arbol'){ buildTreeShell(); renderTree(); }
+  else if(id==='laboratorio'){
+    const nEl=document.getElementById('lab-n'), kEl=document.getElementById('lab-k');
+    const savedN=nEl?nEl.value:null, savedK=kEl?kEl.value:null;
+    renderLabShell();
+    if(savedN!==null){ document.getElementById('lab-n').value=savedN; document.getElementById('lab-k').value=savedK; }
+    updateLab();
+  }
+  else if(id==='leccion'){ rerenderLesson(); }
+  else if(id==='practica'){ buildPracticeShell(); renderPractice(); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// INICIO
+// ══════════════════════════════════════════════════════════════
+function renderInicio() {
+  const p = loadProgress();
+  const cards = t('homeCards');
+  // targets fijos alineados con homeCards: [árbol, laboratorio, lecciones, práctica]
+  const targets = ['arbol','laboratorio','leccion','practica'];
+  // Orden pedagógico: Lecciones(2) → Árbol(0) → Práctica(3) → Laboratorio(1)
+  const ORDER = [2, 0, 3, 1];
+  const stepLabel = t('homeStep');
+  const threeQ = t('threeQ');
+  const nums = ['1️⃣','2️⃣','3️⃣'];
+  const stats = [];
+  const lessonsDoneCount = Object.values(p.lessonsDone||{}).filter(Boolean).length;
+  if(lessonsDoneCount>0) stats.push(`<div class="stat-chip">📖 ${t('statLessons')(lessonsDoneCount, LESSON_KEYS.length)}</div>`);
+  if(p.practiceBest!=null) stats.push(`<div class="stat-chip">🏆 ${t('statBest')} <strong>${p.practiceBest}/${t('problems').length}</strong></div>`);
+  if(p.treeUses) stats.push(`<div class="stat-chip">🌿 ${t('statTree')} <strong>${t('statTreeTimes')(p.treeUses)}</strong></div>`);
+
+  document.getElementById('inicio').innerHTML = `
+    <div class="hero">
+      <h1>${t('heroTitle')}</h1>
+      <p>${t('heroSubtitle')}</p>
+    </div>
+    <div class="stat-chips">${stats.join('')}</div>
+    <div class="route-intro">${t('homeIntro')}</div>
+    <div class="home-grid">
+      ${ORDER.map((ci, stepIdx)=>`
+        <button type="button" class="home-card" onclick="showSection('${targets[ci]}')">
+          <div class="home-card-top">
+            <div class="home-icon">${cards[ci].icon}</div>
+            <span class="step-badge">${stepLabel} ${stepIdx+1}</span>
+          </div>
+          <h3>${cards[ci].title}</h3>
+          <p>${cards[ci].desc}</p>
+        </button>`).join('')}
+    </div>
+    <div class="divider"></div>
+    <div class="card card-accent">
+      <h3>${t('threeQuestionsTitle')}</h3>
+      <p>${t('threeQuestionsIntro')}</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+        ${threeQ.map((q,i)=>`
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:1.3rem">${nums[i]}</span>
+            <div><strong>${q.q}</strong><br>
+            <span style="color:var(--text2);font-size:.88rem">${q.hint}</span></div>
+          </div>`).join('')}
+      </div>
+    </div>
+    ${renderSummaryTable()}`;
+  renderKatex();
+}
+
+// ══════════════════════════════════════════════════════════════
+// ÁRBOL DE DECISIÓN
+// ══════════════════════════════════════════════════════════════
+let treeState = [];
+
+function buildTreeShell() {
+  document.getElementById('arbol').innerHTML = `
+    <h1>${t('treeTitle')}</h1>
+    <p>${t('treeSubtitle')}</p>
+    <div id="tree-progress" class="tree-progress"></div>
+    <div id="breadcrumb" class="breadcrumb"></div>
+    <div id="tree-content"></div>`;
+}
+
+function initTree() {
+  const p = loadProgress();
+  saveProgress({treeUses:(p.treeUses||0)+1});
+  treeState = [];
+  buildTreeShell();
+  renderTree();
+}
+
+function treeGetStep(id){ return t('treeSteps').find(s=>s.id===id); }
+
+function treeAnswer(answer){
+  const id = treeState.length===0 ? 'order' : treeState[treeState.length-1].next;
+  const step = treeGetStep(id);
+  treeState.push({stepId:id, answer, next: answer?step.yes:step.no});
+  renderTree();
+}
+function treeBack(){ treeState.pop(); renderTree(); }
+
+function renderTree(){
+  const prog=document.getElementById('tree-progress');
+  const bc=document.getElementById('breadcrumb');
+  const ct=document.getElementById('tree-content');
+  if(!prog)return;
+  const maxSteps=3;
+  prog.innerHTML='';
+  for(let i=0;i<maxSteps;i++){
+    const d=document.createElement('div');
+    d.className='tree-dot'+(i<treeState.length?' done':i===treeState.length?' current':'');
+    prog.appendChild(d);
+  }
+  bc.innerHTML = treeState.map(s=>{
+    const st=treeGetStep(s.stepId);
+    return `<div class="crumb">${st.question.replace(/[¿?]/g,'').trim()} → <span>${s.answer?t('treeBtnYes'):t('treeBtnNo')}</span></div>`;
+  }).join('');
+
+  const currentId = treeState.length===0 ? 'order' : treeState[treeState.length-1].next;
+  const typeData = t('types')[currentId];
+  if(typeData){
+    const labAction = currentId==='permutationRep'
+      ? `<div style="margin-top:12px;font-size:.88rem;color:var(--text2)">${t('treeNoLabNote')}</div>`
+      : `<button class="btn btn-primary" onclick="showSection('laboratorio')">${t('treeBtnLab')}</button>`;
+    ct.innerHTML=`
+      <div class="result-card ${typeData.color}">
+        <div class="badge ${typeData.badge}">${typeData.name}</div>
+        <div class="result-title">${typeData.name}</div>
+        <p>${typeData.desc}</p>
+        <div class="formula-box">${typeData.formula}</div>
+        <div class="example-box"><strong>${t('exampleLabel')}</strong> ${typeData.exText}<div style="margin-top:7px">${typeData.exCalc}</div></div>
+        <div style="margin-top:18px;display:flex;gap:9px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="initTree()">${t('treeBtnRestart')}</button>
+          ${labAction}
+        </div>
+      </div>`;
+    renderKatex();return;
+  }
+  const step=treeGetStep(currentId);
+  if(!step)return;
+  ct.innerHTML=`
+    <div class="tree-step">
+      <div class="step-indicator">${t('treeQuestion')(treeState.length+1, maxSteps)}</div>
+      <div class="tree-question">${step.question}</div>
+      <div class="tree-hint">${step.hint}</div>
+      <div class="tree-buttons">
+        <button class="btn btn-yes" onclick="treeAnswer(true)">${t('treeBtnYes')}</button>
+        <button class="btn btn-no" onclick="treeAnswer(false)">${t('treeBtnNo')}</button>
+        ${treeState.length>0?`<button class="btn btn-secondary" onclick="treeBack()">${t('treeBtnBack')}</button>`:''}
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// LABORATORIO
+// ══════════════════════════════════════════════════════════════
+let labOrder=true, labRep=false, labGridVisible=false;
+
+function setOrder(v){labOrder=v;labGridVisible=false;updateLab()}
+function setRep(v){labRep=v;labGridVisible=false;updateLab()}
+
+function generateAll(type,n,k,limit){
+  const pool=Array.from({length:n},(_,i)=>String.fromCharCode(65+i));
+  const results=[];
+  if(type==='permutation'){
+    (function pb(cur,used){
+      if(results.length>=limit)return;
+      if(cur.length===n){results.push(cur.join(''));return}
+      for(let i=0;i<pool.length;i++){if(used[i])continue;const u=[...used];u[i]=true;pb([...cur,pool[i]],u);if(results.length>=limit)return}
+    })([],new Array(n).fill(false));
+  }else if(type==='variationRep'){
+    (function vrb(cur){
+      if(results.length>=limit)return;
+      if(cur.length===k){results.push(cur.join(''));return}
+      for(let i=0;i<pool.length;i++){vrb([...cur,pool[i]]);if(results.length>=limit)return}
+    })([]);
+  }else if(type==='variation'){
+    (function vb(cur,used){
+      if(results.length>=limit)return;
+      if(cur.length===k){results.push(cur.join(''));return}
+      for(let i=0;i<pool.length;i++){if(used[i])continue;const u=[...used];u[i]=true;vb([...cur,pool[i]],u);if(results.length>=limit)return}
+    })([],new Array(n).fill(false));
+  }else if(type==='combination'){
+    (function cb(start,cur){
+      if(results.length>=limit)return;
+      if(cur.length===k){results.push(cur.join(''));return}
+      for(let i=start;i<pool.length;i++){cb(i+1,[...cur,pool[i]]);if(results.length>=limit)return}
+    })(0,[]);
+  }else if(type==='combinationRep'){
+    (function crb(start,cur){
+      if(results.length>=limit)return;
+      if(cur.length===k){results.push(cur.join(''));return}
+      for(let i=start;i<pool.length;i++){crb(i,[...cur,pool[i]]);if(results.length>=limit)return}
+    })(0,[]);
+  }
+  return results;
+}
+
+function updateLab(){
+  const sec = document.getElementById('laboratorio');
+  if(!sec.classList.contains('active')){ renderLabShell(); return; }
+  if(!document.getElementById('lab-n')) renderLabShell();
+
+  const nSlider=document.getElementById('lab-n');
+  const kSlider=document.getElementById('lab-k');
+  let n=parseInt(nSlider.value);
+  let k=parseInt(kSlider.value);
+  if(!labRep&&k>n){k=n;kSlider.value=n}
+  kSlider.max=labRep?12:n;
+  document.getElementById('lab-n-val').textContent=n;
+  document.getElementById('lab-k-val').textContent=k;
+  document.getElementById('order-yes').classList.toggle('active',labOrder);
+  document.getElementById('order-no').classList.toggle('active',!labOrder);
+  document.getElementById('rep-yes').classList.toggle('active',labRep);
+  document.getElementById('rep-no').classList.toggle('active',!labRep);
+  document.getElementById('order-yes').textContent=t('labBtnOrderYes');
+  document.getElementById('order-no').textContent=t('labBtnOrderNo');
+  document.getElementById('rep-yes').textContent=t('labBtnRepYes');
+  document.getElementById('rep-no').textContent=t('labBtnRepNo');
+
+  let type,name,formula,calc,value;
+  const typeNames=t('labTypeNames');
+  if(labOrder&&!labRep&&k===n){
+    type='permutation';name=typeNames.permutation;formula='$P_n = n!$';
+    value=factorial(n);calc=`$P_{${n}} = ${n}! = ${fmtNumber(value)}$`;
+  }else if(labOrder&&!labRep){
+    type='variation';name=typeNames.variation;formula='$V_{n,k} = \\dfrac{n!}{(n-k)!}$';
+    value=variations(n,k);calc=`$V_{${n},${k}} = \\dfrac{${n}!}{${n-k}!} = ${fmtNumber(value)}$`;
+  }else if(labOrder&&labRep){
+    type='variationRep';name=typeNames.variationRep;formula='$VR_{n,k} = n^k$';
+    value=variationsRep(n,k);calc=`$VR_{${n},${k}} = ${n}^{${k}} = ${fmtNumber(value)}$`;
+  }else if(!labOrder&&!labRep){
+    type='combination';name=typeNames.combination;formula='$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$';
+    value=combinations(n,k);calc=`$C_{${n},${k}} = \\dfrac{${n}!}{${k}!\\cdot${n-k}!} = ${fmtNumber(value)}$`;
+  }else{
+    type='combinationRep';name=typeNames.combinationRep;formula='$CR_{n,k} = \\dbinom{n+k-1}{k}$';
+    value=combinationsRep(n,k);calc=`$CR_{${n},${k}} = \\dbinom{${n+k-1}}{${k}} = ${fmtNumber(value)}$`;
+  }
+
+  const canGenerate=n<=8&&value<=200;
+  const poolLabel=n<=8?Array.from({length:n},(_,i)=>String.fromCharCode(65+i)).join(', '):'A…';
+  let gridHTML='';
+  if(canGenerate){
+    if(labGridVisible){
+      const all=generateAll(type,n,k,value+1);
+      gridHTML=`<div style="margin-top:14px">
+        <div style="font-size:.86rem;color:var(--text2);margin-bottom:7px">${t('labAllLabel')(all.length,poolLabel)}</div>
+        <div class="lab-grid">${all.map(e=>`<div class="lab-grid-item">${e}</div>`).join('')}</div>
+        <button class="btn btn-ghost" style="margin-top:8px;font-size:.82rem" onclick="labGridVisible=false;updateLab()">${t('labHideAll')}</button>
+      </div>`;
+    }else{
+      gridHTML=`<button class="btn btn-ghost" style="margin-top:10px;font-size:.82rem" onclick="labGridVisible=true;updateLab()">${t('labShowAll')}</button>`;
+    }
+  }
+
+  document.getElementById('lab-result').innerHTML=`
+    <div class="lab-type">${name}</div>
+    <div style="color:var(--text2);font-size:.86rem;margin-bottom:10px">${t('labWith')(n,k)}</div>
+    <div class="formula-box">${formula}</div>
+    <div style="color:var(--text2);margin:8px 0 3px;font-size:.86rem">${t('labCalcLabel')}</div>
+    <div class="formula-box">${calc}</div>
+    <div style="font-size:.86rem;color:var(--text2);margin-top:12px;margin-bottom:2px">${t('labTotalLabel')}</div>
+    <div class="lab-number">${fmtNumber(value)}</div>
+    ${gridHTML}`;
+  renderKatex();
+}
+
+function renderLabShell(){
+  document.getElementById('laboratorio').innerHTML=`
+    <h1>${t('labTitle')}</h1>
+    <p>${t('labSubtitle')}</p>
+    <div class="card">
+      <h2>${t('labParamsTitle')}</h2>
+      <div class="lab-controls">
+        <div class="control-group">
+          <label id="lab-n-label">${t('labLabelN')}</label>
+          <div class="slider-row">
+            <input type="range" id="lab-n" min="1" max="12" value="5" oninput="updateLab()">
+            <div class="slider-val" id="lab-n-val">5</div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label id="lab-k-label">${t('labLabelK')}</label>
+          <div class="slider-row">
+            <input type="range" id="lab-k" min="1" max="12" value="3" oninput="updateLab()">
+            <div class="slider-val" id="lab-k-val">3</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:7px;font-weight:600;font-size:.88rem">${t('labLabelOrder')}</div>
+      <div class="toggle-row" style="margin-bottom:18px">
+        <button class="toggle-btn active" id="order-yes" onclick="setOrder(true)">${t('labBtnOrderYes')}</button>
+        <button class="toggle-btn" id="order-no" onclick="setOrder(false)">${t('labBtnOrderNo')}</button>
+      </div>
+      <div style="margin-bottom:7px;font-weight:600;font-size:.88rem">${t('labLabelRep')}</div>
+      <div class="toggle-row">
+        <button class="toggle-btn" id="rep-yes" onclick="setRep(true)">${t('labBtnRepYes')}</button>
+        <button class="toggle-btn active" id="rep-no" onclick="setRep(false)">${t('labBtnRepNo')}</button>
+      </div>
+    </div>
+    <div class="card lab-result" id="lab-result"></div>`;
+  updateLab();
+}
+
+// ══════════════════════════════════════════════════════════════
+// LECCIÓN
+// ══════════════════════════════════════════════════════════════
+// Motor data-driven para los 6 tipos. La idea unificadora: principio de
+// multiplicación + corrección del sobreconteo (dividir cuando el orden no
+// importa o hay elementos iguales; estrellas y barras para repetición sin orden).
+const LESSON_KEYS = ['permutation','variation','variationRep','combination','combinationRep','permutationRep'];
+const LESSON_STEPS = ['situation','build','pattern','formula','explore','quiz','done'];
+let currentLesson = null;   // clave del tipo, o null = menú de lecciones
+let lessonStep = 0;
+let lessonBuild = null;     // estado del paso "construir"
+let lessonAnswered = false; // gating de situación / ejercicio
+
+function initLesson(){ currentLesson = null; renderLessonHub(); }
+function rerenderLesson(){ if(currentLesson) renderLesson(); else renderLessonHub(); }
+
+function renderLessonHub(){
+  const hub = t('lessonHub');
+  const L = t('lessons');
+  const done = loadProgress().lessonsDone || {};
+  document.getElementById('leccion').innerHTML = `
+    <h1>${hub.title}</h1>
+    <p>${hub.subtitle}</p>
+    <p style="font-weight:600;margin-top:10px">${hub.choose}</p>
+    <div class="home-grid" style="margin-top:14px">
+      ${LESSON_KEYS.map(key=>{
+        const c = L[key];
+        const tag = done[key] ? `<span class="badge badge-green" style="font-size:.68rem;margin-left:6px">✓ ${hub.done}</span>` : '';
+        return `<button type="button" class="home-card" onclick="startLesson('${key}')">
+          <div class="home-icon">${c.icon}</div>
+          <h3>${c.title}${tag}</h3>
+          <p>${c.subtitle}</p>
+        </button>`;
+      }).join('')}
+    </div>`;
+  renderKatex();
+}
+
+function startLesson(key){ currentLesson = key; lessonStep = 0; renderLesson(); }
+function lessonContent(){ return document.getElementById('lesson-content'); }
+
+function renderLesson(){
+  const L = t('lessons')[currentLesson];
+  const ui = t('lessonUI');
+  document.getElementById('leccion').innerHTML = `
+    <div style="margin-bottom:6px"><button class="btn-ghost" onclick="initLesson()">${ui.btnHub}</button></div>
+    <h1>${L.icon} ${L.title}</h1>
+    <p>${L.subtitle}</p>
+    <div class="lesson-progress" id="lesson-progress"></div>
+    <div id="lesson-content"></div>`;
+  const prog = document.getElementById('lesson-progress');
+  for(let i=0;i<LESSON_STEPS.length;i++){
+    const d = document.createElement('div');
+    d.className = 'lesson-step-bar'+(i<lessonStep?' done':i===lessonStep?' current':'');
+    prog.appendChild(d);
+  }
+  const step = LESSON_STEPS[lessonStep];
+  if(step==='situation')   renderStepSituation(L,ui);
+  else if(step==='build')  renderStepBuild(L,ui);
+  else if(step==='pattern')renderStepPattern(L,ui);
+  else if(step==='formula')renderStepFormula(L,ui);
+  else if(step==='quiz')   renderStepQuiz(L,ui);
+  else if(step==='explore')renderStepExplore(L,ui);
+  else if(step==='done')   renderStepDone(L,ui);
+  renderKatex();
+}
+
+function lessonNavRow(){
+  const ui = t('lessonUI');
+  return `<div class="nav-row">
+    <button class="btn btn-secondary" onclick="lessonStep--;renderLesson()">${ui.btnBack}</button>
+    <button class="btn btn-primary" onclick="lessonStep++;renderLesson()">${ui.btnNext}</button>
+  </div>`;
+}
+function lessonGatedNav(){
+  const ui = t('lessonUI');
+  const back = lessonStep>0 ? `<button class="btn btn-secondary" onclick="lessonStep--;renderLesson()">${ui.btnBack}</button>` : '<span></span>';
+  return `<div class="nav-row" id="lesson-nav" style="display:none">${back}
+    <button class="btn btn-primary" onclick="lessonStep++;renderLesson()">${ui.btnNext}</button></div>`;
+}
+
+// ── Paso 1: situación + estimación ──
+function renderStepSituation(L,ui){
+  lessonAnswered = false;
+  const s = L.situation;
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[0]}</div>
+      <h2>${L.title}</h2>
+      <div class="situation-box">${s.desc}</div>
+      <p>${ui.estimatePrompt}</p>
+      <div class="quiz-options" id="lesson-est">
+        ${s.options.map((o,i)=>`<button class="quiz-opt" onclick="lessonEstimate(this,${i===s.correctIdx})">${o}</button>`).join('')}
+      </div>
+      <div id="lesson-fb"></div>
+      ${lessonGatedNav()}
+    </div>`;
+}
+function lessonEstimate(btn,correct){
+  if(lessonAnswered) return;
+  lessonAnswered = true;
+  const s = t('lessons')[currentLesson].situation;
+  document.querySelectorAll('#lesson-est .quiz-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){
+    const ct = s.options[s.correctIdx];
+    document.querySelectorAll('#lesson-est .quiz-opt').forEach(b=>{ if(b.textContent===ct) b.classList.add('correct'); });
+  }
+  document.getElementById('lesson-fb').innerHTML = `<div class="feedback-box ${correct?'ok':'err'}">${correct?s.feedbackOk:s.feedbackErr}</div>`;
+  document.getElementById('lesson-nav').style.display='flex';
+  renderKatex();
+}
+
+// ── Paso 2: construir una posibilidad ──
+function renderStepBuild(L,ui){
+  if(L.mode==='combinationRep'){ renderBuildBins(L,ui); return; }
+  const consume = L.mode!=='variationRep';
+  const slots = (L.mode==='permutation'||L.mode==='permutationRep') ? L.symbols.length : L.k;
+  lessonBuild = { consume, slots, pool: L.symbols.slice(), placed: [] };
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[1]}</div>
+      <h2>${ui.buildTitle}</h2>
+      <p>${L.build.desc}</p>
+      <div class="chairs-row" id="lb-slots"></div>
+      <div class="persons-pool" id="lb-pool" role="group" aria-label="${ui.buildTitle}"></div>
+      <div id="lb-status" role="status" aria-live="polite" style="text-align:center;color:var(--text2);margin:8px 0">${ui.pickNext}</div>
+      <div class="mult-chain" id="lb-chain"></div>
+      <div id="lb-reveal"></div>
+      ${lessonGatedNav()}
+    </div>`;
+  renderSlots(L,ui);
+}
+function renderSlots(L,ui){
+  const b = lessonBuild;
+  const slotsEl = document.getElementById('lb-slots');
+  slotsEl.innerHTML = '';
+  for(let i=0;i<b.slots;i++){
+    const filled = i < b.placed.length;
+    const isNext = i === b.placed.length;
+    const opts = b.consume ? (b.pool.length - i) : b.pool.length;
+    const div = document.createElement('div');
+    div.className = 'chair'+(filled?' filled':'');
+    div.innerHTML = filled
+      ? `<div style="font-weight:700;font-size:.95rem">${b.pool[b.placed[i]]}</div><div class="lbl">${ui.slotLabel(i)}</div>`
+      : `<div class="count">${isNext?opts:'?'}</div><div class="lbl">${ui.slotLabel(i)}</div>`;
+    slotsEl.appendChild(div);
+  }
+  document.getElementById('lb-pool').innerHTML = b.pool.map((sym,idx)=>{
+    const used = b.consume && b.placed.includes(idx);
+    return `<button type="button" class="person-chip${used?' placed':''}" ${used?'disabled':''} onclick="lessonPlace(${idx})">${sym}</button>`;
+  }).join('');
+  const nums = b.placed.map((_,i)=> b.consume ? b.pool.length - i : b.pool.length);
+  let chain = nums.map(x=>`<div class="mult-num">${x}</div>`).join('<div class="mult-op">×</div>');
+  if(nums.length>1){ const prod=nums.reduce((a,c)=>a*c,1); chain += `<div class="mult-op">=</div><div class="mult-eq">${prod}</div>`; }
+  document.getElementById('lb-chain').innerHTML = chain;
+  if(b.placed.length === b.slots){
+    document.getElementById('lb-status').innerHTML = `<strong>${b.placed.map(idx=>b.pool[idx]).join(' ')}</strong>`;
+    document.getElementById('lb-reveal').innerHTML = `<div class="feedback-box ok" style="margin-top:6px">${L.buildDone}</div>`;
+    document.getElementById('lesson-nav').style.display='flex';
+    renderKatex();
+  } else {
+    document.getElementById('lb-status').innerHTML = ui.pickNext;
+    if(b.placed.length>0){ const next=document.querySelector('#lb-pool .person-chip:not(:disabled)'); if(next) next.focus(); }
+  }
+}
+function lessonPlace(idx){
+  const b = lessonBuild;
+  if(!b || b.placed.length >= b.slots) return;
+  if(b.consume && b.placed.includes(idx)) return;
+  b.placed.push(idx);
+  renderSlots(t('lessons')[currentLesson], t('lessonUI'));
+}
+
+// ── Paso 2 (variante): estrellas y barras para combinación con repetición ──
+function renderBuildBins(L,ui){
+  lessonBuild = { bins: new Array(L.n).fill(0), k: L.k, symbols: L.symbols };
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[1]}</div>
+      <h2>${ui.buildTitle}</h2>
+      <p>${L.build.desc}</p>
+      <div class="chairs-row" id="lb-bins"></div>
+      <div class="persons-pool" id="lb-binbtns" role="group" aria-label="${ui.buildTitle}"></div>
+      <div id="lb-status" role="status" aria-live="polite" style="text-align:center;color:var(--text2);margin:8px 0"></div>
+      <div id="lb-reveal"></div>
+      ${lessonGatedNav()}
+    </div>`;
+  renderBins(L,ui);
+}
+function renderBins(L,ui){
+  const b = lessonBuild;
+  const total = b.bins.reduce((a,c)=>a+c,0);
+  document.getElementById('lb-bins').innerHTML = b.symbols.map((s,i)=>`
+    <div class="chair filled" style="min-width:84px">
+      <div style="font-size:1.5rem">${s}</div>
+      <div class="count" style="font-size:1.1rem">${'★'.repeat(b.bins[i]) || '·'}</div>
+    </div>`).join('');
+  document.getElementById('lb-binbtns').innerHTML =
+    b.symbols.map((s,i)=>`<button type="button" class="person-chip" ${total>=b.k?'disabled':''} onclick="lessonAddScoop(${i})">+ ${s}</button>`).join('')
+    + `<button type="button" class="btn-ghost" style="font-size:.82rem" onclick="lessonResetBins()">${ui.reset}</button>`;
+  if(total >= b.k){
+    const bars = b.bins.map(c=>'★'.repeat(c)).join(' │ ');
+    document.getElementById('lb-status').innerHTML = `<code style="font-size:1.15rem">${bars}</code>`;
+    document.getElementById('lb-reveal').innerHTML = `<div class="feedback-box ok" style="margin-top:6px">${L.buildDone}</div>`;
+    document.getElementById('lesson-nav').style.display='flex';
+    renderKatex();
+  } else {
+    document.getElementById('lb-status').innerHTML = ui.scoopsLeft(b.k - total);
+    document.getElementById('lb-reveal').innerHTML = '';
+    document.getElementById('lesson-nav').style.display='none';
+  }
+}
+function lessonAddScoop(i){
+  const b = lessonBuild; if(!b) return;
+  if(b.bins.reduce((a,c)=>a+c,0) >= b.k) return;
+  b.bins[i]++;
+  renderBins(t('lessons')[currentLesson], t('lessonUI'));
+}
+function lessonResetBins(){
+  if(!lessonBuild) return;
+  lessonBuild.bins = lessonBuild.bins.map(()=>0);
+  renderBins(t('lessons')[currentLesson], t('lessonUI'));
+}
+
+// ── Paso 3: patrón ──
+function renderStepPattern(L,ui){
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[2]}</div>
+      <h2>${ui.patternTitle}</h2>
+      <p>${L.pattern.html}</p>
+      ${lessonNavRow()}
+    </div>`;
+}
+
+// ── Paso 4: fórmula ──
+function renderStepFormula(L,ui){
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[3]}</div>
+      <h2>${ui.formulaTitle}</h2>
+      <div class="formula-box" style="margin:14px 0">$$${L.formula.general}$$</div>
+      <p>${ui.formulaSub}</p>
+      <div class="formula-box" style="margin:14px 0">$$${L.formula.sub}$$</div>
+      ${lessonNavRow()}
+    </div>`;
+}
+
+// ── Paso 5: ejercicio ──
+function renderStepQuiz(L,ui){
+  lessonAnswered = false;
+  const q = L.quiz;
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[4]}</div>
+      <h2>${ui.quizTitle}</h2>
+      <div class="situation-box">${q.context}</div>
+      <div class="quiz-options" id="lesson-quiz">
+        ${q.options.map((o,i)=>`<button class="quiz-opt" onclick="lessonQuizAnswer(this,${i===q.correctIdx})">${o}</button>`).join('')}
+      </div>
+      <div id="lesson-fb"></div>
+      ${lessonGatedNav()}
+    </div>`;
+}
+function lessonQuizAnswer(btn,correct){
+  if(lessonAnswered) return;
+  lessonAnswered = true;
+  const q = t('lessons')[currentLesson].quiz;
+  document.querySelectorAll('#lesson-quiz .quiz-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){
+    const ct = q.options[q.correctIdx];
+    document.querySelectorAll('#lesson-quiz .quiz-opt').forEach(b=>{ if(b.textContent===ct) b.classList.add('correct'); });
+  }
+  document.getElementById('lesson-fb').innerHTML = `<div class="feedback-box ${correct?'ok':'err'}">${correct?q.feedbackOk:q.feedbackErr}</div>`;
+  document.getElementById('lesson-nav').style.display='flex';
+  renderKatex();
+}
+
+// ── Paso 6: explorar todas las posibilidades ──
+function renderStepExplore(L,ui){
+  const items = lessonEnumerate(L);
+  lessonContent().innerHTML = `
+    <div class="lesson-card">
+      <div class="step-indicator">${ui.stepLabels[5]}</div>
+      <h2>${ui.exploreTitle}</h2>
+      <p>${L.explore.desc}</p>
+      <div class="orderings-grid">${items.map(x=>`<div class="ord-item">${x}</div>`).join('')}</div>
+      <p style="font-size:.84rem;color:var(--text2)">${ui.exploreNote} — <strong>${items.length}</strong></p>
+      ${lessonNavRow()}
+    </div>`;
+}
+function lessonEnumerate(L){
+  const sym = L.symbols, k = L.k, mode = L.mode, LIMIT = 60;
+  const out = [];
+  const sep = sym.some(s=>s.length>2) ? '·' : '';   // nombres → iniciales; letras/emoji → juntos
+  const disp = arr => arr.map(s => s.length>2 ? s[0] : s).join(sep);
+  if(mode==='permutation' || mode==='variation'){
+    const target = mode==='permutation' ? sym.length : k;
+    (function rec(cur,used){
+      if(out.length>=LIMIT) return;
+      if(cur.length===target){ out.push(disp(cur)); return; }
+      for(let i=0;i<sym.length;i++){ if(used[i])continue; const u=used.slice(); u[i]=true; rec(cur.concat(sym[i]),u); }
+    })([], new Array(sym.length).fill(false));
+  } else if(mode==='variationRep'){
+    (function rec(cur){
+      if(out.length>=LIMIT) return;
+      if(cur.length===k){ out.push(disp(cur)); return; }
+      for(let i=0;i<sym.length;i++) rec(cur.concat(sym[i]));
+    })([]);
+  } else if(mode==='combination'){
+    (function rec(start,cur){
+      if(out.length>=LIMIT) return;
+      if(cur.length===k){ out.push(disp(cur)); return; }
+      for(let i=start;i<sym.length;i++) rec(i+1,cur.concat(sym[i]));
+    })(0,[]);
+  } else if(mode==='combinationRep'){
+    (function rec(start,cur){
+      if(out.length>=LIMIT) return;
+      if(cur.length===k){ out.push(disp(cur)); return; }
+      for(let i=start;i<sym.length;i++) rec(i,cur.concat(sym[i]));
+    })(0,[]);
+  } else if(mode==='permutationRep'){
+    const seen = new Set();
+    (function rec(cur,used){
+      if(out.length>=LIMIT) return;
+      if(cur.length===sym.length){ const key=cur.join('|'); if(!seen.has(key)){ seen.add(key); out.push(disp(cur)); } return; }
+      for(let i=0;i<sym.length;i++){ if(used[i])continue; const u=used.slice(); u[i]=true; rec(cur.concat(sym[i]),u); }
+    })([], new Array(sym.length).fill(false));
+  }
+  return out;
+}
+
+// ── Paso 7: fin ──
+function renderStepDone(L,ui){
+  const done = loadProgress().lessonsDone || {};
+  done[currentLesson] = true;
+  saveProgress({lessonsDone: done});
+  lessonContent().innerHTML = `
+    <div class="lesson-card" style="text-align:center">
+      <div style="font-size:3rem;margin-bottom:10px">🎉</div>
+      <h2>${ui.doneTitle}</h2>
+      <p style="max-width:420px;margin:0 auto 18px">${ui.doneDesc}</p>
+      <div class="formula-box" style="display:inline-block;padding:14px 30px;margin-bottom:22px">$$${L.formula.general}$$</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-secondary" onclick="startLesson('${currentLesson}')">${ui.btnRepeat}</button>
+        <button class="btn btn-secondary" onclick="initLesson()">${ui.btnOther}</button>
+        <button class="btn btn-primary" onclick="showSection('laboratorio')">${ui.btnLab}</button>
+        <button class="btn btn-primary" onclick="showSection('practica')">${ui.btnPractice}</button>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// PRÁCTICA
+// ══════════════════════════════════════════════════════════════
+const ALL_TYPE_KEYS=['permutation','permutationRep','variation','variationRep','combination','combinationRep'];
+// Las tres decisiones que caracterizan cada tipo (orden / repetición / todos o algunos).
+const TYPE_DECISIONS={
+  permutation:    {order:true,  rep:false, scope:'all'},
+  permutationRep: {order:true,  rep:true,  scope:'all'},
+  variation:      {order:true,  rep:false, scope:'some'},
+  variationRep:   {order:true,  rep:true,  scope:'some'},
+  combination:    {order:false, rep:false, scope:'some'},
+  combinationRep: {order:false, rep:true,  scope:'some'}
+};
+function renderSummaryTable(){
+  const s=k=>t('summary.'+k);
+  const types=t('types');
+  const rows=ALL_TYPE_KEYS.map(k=>{
+    const d=TYPE_DECISIONS[k];
+    return `<tr>
+      <td><strong>${types[k].name}</strong></td>
+      <td>${d.order?s('yes'):s('no')}</td>
+      <td>${d.rep?s('yes'):s('no')}</td>
+      <td>${d.scope==='all'?s('all'):s('some')}</td>
+      <td>${types[k].formula}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="card">
+    <h3>${s('title')}</h3>
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:10px">${s('subtitle')}</p>
+    <div style="background:var(--surface2);border-radius:8px;padding:9px 14px;font-size:.86rem;margin-bottom:12px;color:var(--text2)">${s('nkNote')}</div>
+    <div style="overflow-x:auto">
+      <table class="summary-table">
+        <thead><tr>
+          <th>${s('colType')}</th><th>${s('colOrder')}</th><th>${s('colRep')}</th><th>${s('colScope')}</th><th>${s('colFormula')}</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+let pracIdx=0, pracScore=0, pracDone=false;
+
+function buildPracticeShell(){
+  document.getElementById('practica').innerHTML=`
+    <div class="practice-header">
+      <h1 style="margin:0">${t('practiceTitle')}</h1>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="prac-counter" style="font-size:.88rem;color:var(--text2)"></span>
+        <div class="progress-bar-outer"><div class="progress-bar-inner" id="prac-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="prac-content"></div>`;
+}
+
+function initPractice(){
+  pracIdx=0;pracScore=0;pracDone=false;
+  buildPracticeShell();
+  renderPractice();
+}
+
+function renderPractice(){
+  const problems=t('problems');
+  const total=problems.length;
+  const counter=document.getElementById('prac-counter');
+  const bar=document.getElementById('prac-bar');
+  if(counter) counter.textContent=`${pracIdx+1} / ${total}`;
+  if(bar) bar.style.width=`${(pracIdx/total)*100}%`;
+
+  if(pracDone){
+    const p=loadProgress();
+    const best=Math.max(pracScore,p.practiceBest||0);
+    saveProgress({practiceBest:best});
+    const pct=Math.round(pracScore/total*100);
+    document.getElementById('prac-content').innerHTML=`
+      <div class="practice-card" style="text-align:center">
+        <div class="score-circle">${pracScore}/${total}</div>
+        <div style="margin-bottom:16px">
+          <h2>${t('practiceScoreMsg')(pct)}</h2>
+          <p>${t('practiceAccuracy')(pct)}</p>
+          ${p.practiceBest!=null?`<p style="font-size:.86rem">${t('practiceBestMark')(best,total)}</p>`:''}
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="initPractice()">${t('practiceBtnRepeat')}</button>
+          <button class="btn btn-primary" onclick="showSection('arbol')">${t('practiceBtnTree')}</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const prob=problems[pracIdx];
+  const typeLabels=t('typeLabels');
+  const opts=shuffle([prob.answer,...sample(ALL_TYPE_KEYS.filter(o=>o!==prob.answer),3)]);
+
+  document.getElementById('prac-content').innerHTML=`
+    <div class="practice-card">
+      <div class="step-indicator">${t('practiceProblemLabel')(pracIdx+1,total)}</div>
+      <h2 style="margin-bottom:14px">${t('practiceQuestion')}</h2>
+      <div class="practice-context">${prob.context}</div>
+      <div class="classify-grid" id="prac-opts">
+        ${opts.map(o=>`<button class="classify-btn" onclick="pracAnswer('${o}')">${typeLabels[o]}</button>`).join('')}
+      </div>
+      <div id="prac-fb"></div>
+      <div class="nav-row" id="prac-nav" style="display:none">
+        <span></span>
+        <button class="btn btn-primary" onclick="pracNext()">
+          ${pracIdx<total-1?t('practiceNext'):t('practiceFinish')}
+        </button>
+      </div>
+    </div>`;
+}
+
+function pracAnswer(chosen){
+  const prob=t('problems')[pracIdx];
+  const correct=chosen===prob.answer;
+  const typeLabels=t('typeLabels');
+  document.querySelectorAll('#prac-opts .classify-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===typeLabels[chosen]) b.classList.add(correct?'correct':'wrong');
+    if(!correct&&b.textContent===typeLabels[prob.answer]) b.classList.add('correct');
+  });
+  if(correct)pracScore++;
+  const typeData=t('types')[prob.answer];
+  const fbText=correct?t('practiceFeedbackOk')(prob.hint):t('practiceFeedbackErr')(prob.hint);
+  const d=TYPE_DECISIONS[prob.answer];
+  const sw=k=>t('summary.'+k);
+  const whyBlock=`
+    <div style="margin-top:10px;font-size:.86rem">
+      <strong>${t('practiceWhyTitle')}</strong>
+      <ul style="margin:6px 0 0;padding-left:18px">
+        <li>${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong></li>
+        <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
+        <li>${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong></li>
+      </ul>
+    </div>`;
+  document.getElementById('prac-fb').innerHTML=`
+    <div class="feedback-box ${correct?'ok':'err'}">
+      ${fbText}
+      <div class="formula-box" style="margin-top:10px;text-align:center">${typeData.formula}</div>
+      <div style="margin-top:6px;text-align:center">${prob.calc}</div>
+      ${whyBlock}
+    </div>`;
+  document.getElementById('prac-nav').style.display='flex';
+  renderKatex();
+}
+
+function pracNext(){
+  pracIdx++;
+  if(pracIdx>=t('problems').length) pracDone=true;
+  renderPractice();
+}
+
+function shuffle(arr){
+  const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  document.documentElement.lang = LANG[currentLang].htmlLang;
+  buildNav();
+  buildLangPicker();
+  buildThemeBtn();
+  renderSection('inicio');
+});
+</script>
+</body>
+</html>
