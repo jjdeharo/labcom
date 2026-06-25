@@ -177,6 +177,26 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .classify-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
 .classify-btn:disabled{cursor:default}
 .score-circle{width:80px;height:80px;border-radius:50%;background:var(--accent-light);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:var(--accent);margin:16px auto}
+/* Práctica guiada */
+.prac-phase-label{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;margin:16px 0 8px}
+.prac-q-block{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:0 0 14px}
+.prac-q-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid var(--border)}
+.prac-q-row:last-child{border-bottom:none}
+.prac-q-text{font-size:.93rem;flex:1}
+.prac-q-btns{display:flex;gap:6px;flex-shrink:0}
+.prac-q-btn{background:var(--surface);border:2px solid var(--border);color:var(--text);border-radius:20px;padding:5px 15px;cursor:pointer;font-size:.84rem;font-weight:600;transition:all .15s;line-height:1.2}
+.prac-q-btn:hover:not(.sel-y):not(.sel-n){border-color:var(--accent);color:var(--accent)}
+.prac-q-btn.sel-y{background:var(--green);border-color:var(--green);color:#fff}
+.prac-q-btn.sel-n{background:var(--red);border-color:var(--red);color:#fff}
+.prac-nk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 14px}
+.prac-nk-card{border:2px solid var(--border);border-radius:10px;padding:14px 12px;text-align:center;background:var(--surface2);transition:border-color .2s}
+.prac-nk-card.valid{border-color:var(--green)}
+.prac-nk-card.invalid{border-color:var(--red)}
+.prac-nk-label{font-size:.74rem;color:var(--text2);margin-bottom:8px;line-height:1.4;display:block}
+.prac-nk-input{width:64px;font-size:1.4rem;font-weight:700;text-align:center;border:none;background:transparent;color:var(--text);-moz-appearance:textfield}
+.prac-nk-input:focus{outline:2px solid var(--accent);border-radius:6px}
+.prac-nk-input::-webkit-inner-spin-button,.prac-nk-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.prac-nk-static{font-size:1.1rem;font-weight:700;color:var(--text2);margin-top:4px}
 /* Inicio */
 .route-intro{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:8px;padding:13px 16px;margin-bottom:20px;font-size:.93rem;line-height:1.55}
 .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
@@ -460,6 +480,21 @@ const LANG = {
     practiceFeedbackOk: (hint) => `<strong>¡Correcto!</strong> ${hint}`,
     practiceFeedbackErr: (hint) => `<strong>No es ese tipo.</strong> ${hint}`,
     practiceWhyTitle: 'Estas tres respuestas descartan los demás tipos:',
+    practiceQ1: '¿Importa el orden?',
+    practiceQ2: '¿Hay repetición?',
+    practiceQ3: '¿Usas todos los elementos disponibles?',
+    practiceQYes: 'Sí', practiceQNo: 'No',
+    practiceCheckClassify: 'Comprobar tipo →',
+    practiceContinueNK: 'Continuar →',
+    practiceNKTitle: 'Identifica n y k',
+    practiceNNote: 'n — total de elementos disponibles',
+    practiceKNote: 'k — posiciones o elementos elegidos',
+    practiceKEqN: 'k = n (se usan todos)',
+    practiceCalcBtn: 'Calcular →',
+    practiceTypeOk: name => `¡Correcto! Es una <strong>${name}</strong>.`,
+    practiceTypeErr: name => `El tipo correcto es <strong>${name}</strong>.`,
+    practiceNKOk: '¡n y k correctos!',
+    practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
     summary: {
       title: 'Tabla resumen',
       subtitle: 'Las tres preguntas que determinan el tipo. Respóndelas y la fila te da la fórmula.',
@@ -480,14 +515,14 @@ const LANG = {
       combinationRep: 'Comb. con repetición'
     },
     problems: [
-      { context:'¿De cuántas formas pueden ordenarse 5 libros en una estantería?', hint:'Se usan todos los libros y el orden sí importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
-      { context:'En una carrera de 8 atletas, ¿de cuántas formas distintas pueden quedar el 1.º, 2.º y 3.º puesto?', hint:'Solo se eligen 3 de 8 y el orden importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Una clave WiFi tiene 4 caracteres. Cada carácter puede ser cualquier letra de A a F (6 letras) y se puede repetir. ¿Cuántas claves distintas hay?', hint:'El orden importa (ABCD ≠ DCBA) y los caracteres se pueden repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
-      { context:'De una clase de 10 alumnos se quiere elegir un grupo de 4 para representar al centro. ¿Cuántos grupos distintos se pueden formar?', hint:'Un grupo es un conjunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'En una pizzería hay 5 ingredientes. Quieres pedir una pizza con exactamente 2 ingredientes distintos. ¿Cuántas pizzas diferentes puedes pedir?', hint:'Una pizza no tiene orden de ingredientes: {champiñón, queso} = {queso, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'Quieres comprar 3 croissants en una pastelería con 4 tipos. Puedes comprar varios del mismo tipo. ¿Cuántas compras distintas puedes hacer?', hint:'No importa el orden y se puede repetir: 2 de chocolate + 1 de jamón es válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
-      { context:'¿Cuántas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se pueden formar si el orden importa?', hint:'Se eligen 4 de 5 letras y el orden importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'¿Cuántas palabras distintas se pueden formar con todas las letras de la palabra LEVEL?', hint:'Se usan todas las letras, el orden importa, pero hay letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+      { context:'¿De cuántas formas pueden ordenarse 5 libros en una estantería?', hint:'Se usan todos los libros y el orden sí importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
+      { context:'En una carrera de 8 atletas, ¿de cuántas formas distintas pueden quedar el 1.º, 2.º y 3.º puesto?', hint:'Solo se eligen 3 de 8 y el orden importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:8, k:3 },
+      { context:'Una clave WiFi tiene 4 caracteres. Cada carácter puede ser cualquier letra de A a F (6 letras) y se puede repetir. ¿Cuántas claves distintas hay?', hint:'El orden importa (ABCD ≠ DCBA) y los caracteres se pueden repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$', n:6, k:4 },
+      { context:'De una clase de 10 alumnos se quiere elegir un grupo de 4 para representar al centro. ¿Cuántos grupos distintos se pueden formar?', hint:'Un grupo es un conjunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:10, k:4 },
+      { context:'En una pizzería hay 5 ingredientes. Quieres pedir una pizza con exactamente 2 ingredientes distintos. ¿Cuántas pizzas diferentes puedes pedir?', hint:'Una pizza no tiene orden de ingredientes: {champiñón, queso} = {queso, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:5, k:2 },
+      { context:'Quieres comprar 3 croissants en una pastelería con 4 tipos. Puedes comprar varios del mismo tipo. ¿Cuántas compras distintas puedes hacer?', hint:'No importa el orden y se puede repetir: 2 de chocolate + 1 de jamón es válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
+      { context:'¿Cuántas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se pueden formar si el orden importa?', hint:'Se eligen 4 de 5 letras y el orden importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
+      { context:'¿Cuántas palabras distintas se pueden formar con todas las letras de la palabra LEVEL?', hint:'Se usan todas las letras, el orden importa, pero hay letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
     ]
   },
 
@@ -699,6 +734,21 @@ const LANG = {
     practiceFeedbackOk: (hint) => `<strong>Correct!</strong> ${hint}`,
     practiceFeedbackErr: (hint) => `<strong>Not this type.</strong> ${hint}`,
     practiceWhyTitle: 'These three answers rule out the other types:',
+    practiceQ1: 'Does the order matter?',
+    practiceQ2: 'Is repetition allowed?',
+    practiceQ3: 'Do you use all available elements?',
+    practiceQYes: 'Yes', practiceQNo: 'No',
+    practiceCheckClassify: 'Check classification →',
+    practiceContinueNK: 'Continue →',
+    practiceNKTitle: 'Identify n and k',
+    practiceNNote: 'n — total elements available',
+    practiceKNote: 'k — positions or elements chosen',
+    practiceKEqN: 'k = n (all are used)',
+    practiceCalcBtn: 'Calculate →',
+    practiceTypeOk: name => `Correct! It is a <strong>${name}</strong>.`,
+    practiceTypeErr: name => `The correct type is <strong>${name}</strong>.`,
+    practiceNKOk: 'n and k are correct!',
+    practiceNKErr: (n,k) => `Correct values: n = ${n}, k = ${k}.`,
     summary: {
       title: 'Summary table',
       subtitle: 'The three questions that determine the type. Answer them and the row gives you the formula.',
@@ -719,14 +769,14 @@ const LANG = {
       combinationRep: 'Comb. w/ repetition'
     },
     problems: [
-      { context:'In how many ways can 5 books be arranged on a shelf?', hint:'All books are used and order matters (book A in position 1 ≠ position 3).', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
-      { context:'In a race with 8 athletes, in how many ways can 1st, 2nd and 3rd place be awarded?', hint:'Only 3 of 8 are chosen and order matters (1st ≠ 2nd ≠ 3rd).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'A WiFi password has 4 characters, each can be any letter from A to F (6 letters), repetition allowed. How many distinct passwords are there?', hint:'Order matters (ABCD ≠ DCBA) and characters can repeat.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
-      { context:'From a class of 10 students, a group of 4 is chosen to represent the school. How many distinct groups can be formed?', hint:'A group is a set; {Alice, Bob} = {Bob, Alice}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'A pizzeria has 5 toppings. You want to order a pizza with exactly 2 different toppings. How many different pizzas can you order?', hint:'A pizza has no topping order: {mushroom, cheese} = {cheese, mushroom}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'You want to buy 3 croissants from a bakery with 4 types. You can buy several of the same type. How many distinct purchases can you make?', hint:'Order does not matter and repetition is allowed: 2 chocolate + 1 ham is valid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
-      { context:'How many 4-letter license plates with distinct letters (from A, B, C, D, E — 5 letters) can be formed if order matters?', hint:'4 of 5 letters are chosen and order matters: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'How many distinct words can be formed using all the letters of the word LEVEL?', hint:'All letters are used, order matters, but some are repeated: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+      { context:'In how many ways can 5 books be arranged on a shelf?', hint:'All books are used and order matters (book A in position 1 ≠ position 3).', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
+      { context:'In a race with 8 athletes, in how many ways can 1st, 2nd and 3rd place be awarded?', hint:'Only 3 of 8 are chosen and order matters (1st ≠ 2nd ≠ 3rd).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:8, k:3 },
+      { context:'A WiFi password has 4 characters, each can be any letter from A to F (6 letters), repetition allowed. How many distinct passwords are there?', hint:'Order matters (ABCD ≠ DCBA) and characters can repeat.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$', n:6, k:4 },
+      { context:'From a class of 10 students, a group of 4 is chosen to represent the school. How many distinct groups can be formed?', hint:'A group is a set; {Alice, Bob} = {Bob, Alice}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:10, k:4 },
+      { context:'A pizzeria has 5 toppings. You want to order a pizza with exactly 2 different toppings. How many different pizzas can you order?', hint:'A pizza has no topping order: {mushroom, cheese} = {cheese, mushroom}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:5, k:2 },
+      { context:'You want to buy 3 croissants from a bakery with 4 types. You can buy several of the same type. How many distinct purchases can you make?', hint:'Order does not matter and repetition is allowed: 2 chocolate + 1 ham is valid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
+      { context:'How many 4-letter license plates with distinct letters (from A, B, C, D, E — 5 letters) can be formed if order matters?', hint:'4 of 5 letters are chosen and order matters: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
+      { context:'How many distinct words can be formed using all the letters of the word LEVEL?', hint:'All letters are used, order matters, but some are repeated: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
     ]
   },
   // ─────────────────────────────────────────────────────────────
@@ -877,17 +927,32 @@ const LANG = {
     practiceFeedbackOk: (hint) => `<strong>Correcte!</strong> ${hint}`,
     practiceFeedbackErr: (hint) => `<strong>No és aquest tipus.</strong> ${hint}`,
     practiceWhyTitle: 'Aquestes tres respostes descarten els altres tipus:',
+    practiceQ1: "L'ordre importa?",
+    practiceQ2: 'Hi ha repetició?',
+    practiceQ3: 'Fas servir tots els elements disponibles?',
+    practiceQYes: 'Sí', practiceQNo: 'No',
+    practiceCheckClassify: 'Comprova el tipus →',
+    practiceContinueNK: 'Continua →',
+    practiceNKTitle: 'Identifica n i k',
+    practiceNNote: "n — total d'elements disponibles",
+    practiceKNote: 'k — posicions o elements triats',
+    practiceKEqN: 'k = n (es fan servir tots)',
+    practiceCalcBtn: 'Calcula →',
+    practiceTypeOk: name => `Correcte! És una <strong>${name}</strong>.`,
+    practiceTypeErr: name => `El tipus correcte és <strong>${name}</strong>.`,
+    practiceNKOk: 'n i k correctes!',
+    practiceNKErr: (n,k) => `Valors correctes: n = ${n}, k = ${k}.`,
     summary: { title:'Taula resum', subtitle:'Les tres preguntes que determinen el tipus. Respon-les i la fila et dóna la fórmula.', nkNote:'<strong>n</strong> = total d\'elements distints disponibles &nbsp;·&nbsp; <strong>k</strong> = quantitat d\'elements triats o posicions a omplir', colType:'Tipus', colOrder:'L\'ordre importa?', colRep:'Hi ha repetició?', colScope:'Quants en fas servir?', colFormula:'Fórmula', yes:'Sí', no:'No', all:'Tots', some:'Alguns' },
     typeLabels: { permutation:'Permutació', permutationRep:'Perm. amb rep.', variation:'Variació', variationRep:'Var. amb rep.', combination:'Combinació', combinationRep:'Comb. amb rep.' },
     problems: [
-      { context:'De quantes formes es poden ordenar 5 llibres en una estanteria?', hint:'Es fan servir tots els llibres i l\'ordre importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
-      { context:'En una cursa de 8 atletes, de quantes formes distintes poden quedar el 1r, 2n i 3r lloc?', hint:'Només es trien 3 de 8 i l\'ordre importa (1r ≠ 2n ≠ 3r).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Una clau WiFi té 4 caràcters, cadascun qualsevol lletra de A a F (6 lletres), amb repetició. Quantes claus distintes hi ha?', hint:'L\'ordre importa (ABCD ≠ DCBA) i es pot repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
-      { context:'D\'una classe de 10 alumnes es vol elegir un grup de 4 per representar el centre. Quants grups distints es poden formar?', hint:'Un grup és un conjunt; {Anna, Biel} = {Biel, Anna}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'En una pizzeria hi ha 5 ingredients. Vols demanar una pizza amb exactament 2 ingredients distints. Quantes pizzes pots demanar?', hint:'Una pizza no té ordre d\'ingredients: {xampinyó, formatge} = {formatge, xampinyó}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'Vols comprar 3 croissants en una pastisseria amb 4 tipus i pots repetir. Quantes compres distintes pots fer?', hint:'L\'ordre no importa i es pot repetir: 2 de xocolata + 1 de pernil és vàlid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
-      { context:'Quantes matrícules de 4 lletres distintes (A, B, C, D, E — 5 lletres) es poden formar si l\'ordre importa?', hint:'Es trien 4 de 5 lletres i l\'ordre importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Quantes paraules distintes es poden formar amb totes les lletres de la paraula LEVEL?', hint:'Es fan servir totes les lletres, l\'ordre importa, però n\'hi ha de repetides: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+      { context:'De quantes formes es poden ordenar 5 llibres en una estanteria?', hint:'Es fan servir tots els llibres i l\'ordre importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
+      { context:'En una cursa de 8 atletes, de quantes formes distintes poden quedar el 1r, 2n i 3r lloc?', hint:'Només es trien 3 de 8 i l\'ordre importa (1r ≠ 2n ≠ 3r).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:8, k:3 },
+      { context:'Una clau WiFi té 4 caràcters, cadascun qualsevol lletra de A a F (6 lletres), amb repetició. Quantes claus distintes hi ha?', hint:'L\'ordre importa (ABCD ≠ DCBA) i es pot repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$', n:6, k:4 },
+      { context:'D\'una classe de 10 alumnes es vol elegir un grup de 4 per representar el centre. Quants grups distints es poden formar?', hint:'Un grup és un conjunt; {Anna, Biel} = {Biel, Anna}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:10, k:4 },
+      { context:'En una pizzeria hi ha 5 ingredients. Vols demanar una pizza amb exactament 2 ingredients distints. Quantes pizzes pots demanar?', hint:'Una pizza no té ordre d\'ingredients: {xampinyó, formatge} = {formatge, xampinyó}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:5, k:2 },
+      { context:'Vols comprar 3 croissants en una pastisseria amb 4 tipus i pots repetir. Quantes compres distintes pots fer?', hint:'L\'ordre no importa i es pot repetir: 2 de xocolata + 1 de pernil és vàlid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
+      { context:'Quantes matrícules de 4 lletres distintes (A, B, C, D, E — 5 lletres) es poden formar si l\'ordre importa?', hint:'Es trien 4 de 5 lletres i l\'ordre importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
+      { context:'Quantes paraules distintes es poden formar amb totes les lletres de la paraula LEVEL?', hint:'Es fan servir totes les lletres, l\'ordre importa, però n\'hi ha de repetides: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
     ]
   },
 
@@ -1039,17 +1104,32 @@ const LANG = {
     practiceFeedbackOk: (hint) => `<strong>Correcto!</strong> ${hint}`,
     practiceFeedbackErr: (hint) => `<strong>Non é ese tipo.</strong> ${hint}`,
     practiceWhyTitle: 'Estas tres respostas descartan os demais tipos:',
+    practiceQ1: 'Importa a orde?',
+    practiceQ2: 'Hai repetición?',
+    practiceQ3: 'Usas todos os elementos dispoñibles?',
+    practiceQYes: 'Si', practiceQNo: 'Non',
+    practiceCheckClassify: 'Comprobar tipo →',
+    practiceContinueNK: 'Continuar →',
+    practiceNKTitle: 'Identifica n e k',
+    practiceNNote: 'n — total de elementos dispoñibles',
+    practiceKNote: 'k — posicións ou elementos escollidos',
+    practiceKEqN: 'k = n (úsanse todos)',
+    practiceCalcBtn: 'Calcular →',
+    practiceTypeOk: name => `Correcto! É unha <strong>${name}</strong>.`,
+    practiceTypeErr: name => `O tipo correcto é <strong>${name}</strong>.`,
+    practiceNKOk: 'n e k correctos!',
+    practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
     summary: { title:'Táboa resumo', subtitle:'As tres preguntas que determinan o tipo. Respóndeas e a fila dáche a fórmula.', nkNote:'<strong>n</strong> = total de elementos distintos dispoñibles &nbsp;·&nbsp; <strong>k</strong> = cantidade de elementos escollidos ou posicións a cubrir', colType:'Tipo', colOrder:'Importa a orde?', colRep:'Hai repetición?', colScope:'Cantos usas?', colFormula:'Fórmula', yes:'Si', no:'Non', all:'Todos', some:'Algúns' },
     typeLabels: { permutation:'Permutación', permutationRep:'Perm. con rep.', variation:'Variación', variationRep:'Var. con rep.', combination:'Combinación', combinationRep:'Comb. con rep.' },
     problems: [
-      { context:'De cantas formas se poden ordenar 5 libros nunha estante?', hint:'Úsanse todos os libros e a orde importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
-      { context:'Nunha carreira de 8 atletas, de cantas formas distintas poden quedar o 1.º, 2.º e 3.º posto?', hint:'Só se escolhen 3 de 8 e a orde importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Unha clave WiFi ten 4 caracteres, cada un calquera letra de A a F (6 letras), con repetición. Cantas claves distintas hai?', hint:'A orde importa (ABCD ≠ DCBA) e os caracteres pódense repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
-      { context:'Dunha clase de 10 alumnos quérese elixir un grupo de 4 para representar ao centro. Cantos grupos distintos se poden formar?', hint:'Un grupo é un conxunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'Nunha pizzería hai 5 ingredientes. Queres pedir unha pizza con exactamente 2 ingredientes distintos. Cantas pizzas podes pedir?', hint:'Unha pizza non ten orde de ingredientes: {champiñón, queixo} = {queixo, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'Queres comprar 3 croissants nunha panadaría con 4 tipos e podes repetir. Cantas compras distintas podes facer?', hint:'A orde non importa e pódese repetir: 2 de chocolate + 1 de xamón é válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
-      { context:'Cantas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se poden formar se a orde importa?', hint:'Escolléronse 4 de 5 letras e a orde importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Cantas palabras distintas se poden formar con todas as letras da palabra LEVEL?', hint:'Úsanse todas as letras, a orde importa, pero hai letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+      { context:'De cantas formas se poden ordenar 5 libros nunha estante?', hint:'Úsanse todos os libros e a orde importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
+      { context:'Nunha carreira de 8 atletas, de cantas formas distintas poden quedar o 1.º, 2.º e 3.º posto?', hint:'Só se escolhen 3 de 8 e a orde importa (1.º ≠ 2.º ≠ 3.º).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:8, k:3 },
+      { context:'Unha clave WiFi ten 4 caracteres, cada un calquera letra de A a F (6 letras), con repetición. Cantas claves distintas hai?', hint:'A orde importa (ABCD ≠ DCBA) e os caracteres pódense repetir.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$', n:6, k:4 },
+      { context:'Dunha clase de 10 alumnos quérese elixir un grupo de 4 para representar ao centro. Cantos grupos distintos se poden formar?', hint:'Un grupo é un conxunto; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:10, k:4 },
+      { context:'Nunha pizzería hai 5 ingredientes. Queres pedir unha pizza con exactamente 2 ingredientes distintos. Cantas pizzas podes pedir?', hint:'Unha pizza non ten orde de ingredientes: {champiñón, queixo} = {queixo, champiñón}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:5, k:2 },
+      { context:'Queres comprar 3 croissants nunha panadaría con 4 tipos e podes repetir. Cantas compras distintas podes facer?', hint:'A orde non importa e pódese repetir: 2 de chocolate + 1 de xamón é válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
+      { context:'Cantas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se poden formar se a orde importa?', hint:'Escolléronse 4 de 5 letras e a orde importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
+      { context:'Cantas palabras distintas se poden formar con todas as letras da palabra LEVEL?', hint:'Úsanse todas as letras, a orde importa, pero hai letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
     ]
   },
 
@@ -1201,17 +1281,32 @@ const LANG = {
     practiceFeedbackOk: (hint) => `<strong>Zuzena!</strong> ${hint}`,
     practiceFeedbackErr: (hint) => `<strong>Ez da mota hori.</strong> ${hint}`,
     practiceWhyTitle: 'Hiru erantzun hauek gainerako motak baztertzen dituzte:',
+    practiceQ1: 'Ordena garrantzitsua da?',
+    practiceQ2: 'Errepikapena dago?',
+    practiceQ3: 'Elementu guztiak erabiltzen dituzu?',
+    practiceQYes: 'Bai', practiceQNo: 'Ez',
+    practiceCheckClassify: 'Mota egiaztatu →',
+    practiceContinueNK: 'Jarraitu →',
+    practiceNKTitle: 'n eta k identifikatu',
+    practiceNNote: 'n — erabilgarri dauden elementu guztiak',
+    practiceKNote: 'k — posizio edo aukeratutako elementuak',
+    practiceKEqN: 'k = n (guztiak erabiltzen dira)',
+    practiceCalcBtn: 'Kalkulatu →',
+    practiceTypeOk: name => `Zuzena! <strong>${name}</strong> da.`,
+    practiceTypeErr: name => `Mota zuzena <strong>${name}</strong> da.`,
+    practiceNKOk: 'n eta k zuzenak dira!',
+    practiceNKErr: (n,k) => `Balio zuzenak: n = ${n}, k = ${k}.`,
     summary: { title:'Laburpen taula', subtitle:'Mota zehazten duten hiru galderak. Erantzun eta errenkadak formula emango dizu.', nkNote:'<strong>n</strong> = erabilgarri dauden elementu ezberdin guztiak &nbsp;·&nbsp; <strong>k</strong> = aukeratutako elementu kopurua edo bete beharreko posizioak', colType:'Mota', colOrder:'Ordena garrantzitsua?', colRep:'Errepikapena?', colScope:'Zenbat erabiltzen dituzu?', colFormula:'Formula', yes:'Bai', no:'Ez', all:'Guztiak', some:'Batzuk' },
     typeLabels: { permutation:'Permutazioa', permutationRep:'Perm. errepikapenarekin', variation:'Bariazioa', variationRep:'Bar. errepikapenarekin', combination:'Konbinazioa', combinationRep:'Konb. errepikapenarekin' },
     problems: [
-      { context:'Zenbat modutan ordenatu daitezke 5 liburu apalategian?', hint:'Liburu guztiak erabiltzen dira eta ordena garrantzitsua da.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$' },
-      { context:'8 atletako lasterketa batean, zenbat modutan gera daitezke 1., 2. eta 3. postuak?', hint:'8tik 3 bakarrik aukeratzen dira eta ordena garrantzitsua da (1. ≠ 2. ≠ 3.).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'WiFi giltza batek 4 karaktere ditu, bakoitza A-tik F-rako edozein letra (6 letra), errepikapenarekin. Zenbat giltza ezberdin daude?', hint:'Ordena garrantzitsua da (ABCD ≠ DCBA) eta karaktereak errepika daitezke.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$' },
-      { context:'10 ikasleko gela batetik 4ko talde bat aukeratu nahi da zentroa ordezkatzeko. Zenbat talde ezberdin sor daitezke?', hint:'Taldea multzo bat da; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'Pizzategi batean 5 osagai daude. 2 osagai ezberdin dituen pizza bat eskatu nahi duzu. Zenbat pizza ezberdin eska ditzakezu?', hint:'Pizzak ez du osagaien ordenarik: {perretxiko, gazta} = {gazta, perretxiko}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$' },
-      { context:'3 croissant erosi nahi dituzu 4 mota dituen gozotegi batean eta errepika dezakezu. Zenbat erosketa ezberdin egin ditzakezu?', hint:'Ordena ez da garrantzitsua eta errepikatu daiteke: 2 txokolate + 1 urdaiazpiko baliozkoa da.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$' },
-      { context:'Zenbat 4 letra ezberdineko matrikula (A, B, C, D, E — 5 letra) sor daitezke ordena garrantzitsua bada?', hint:'5etik 4 letra aukeratzen dira eta ordena garrantzitsua da: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$' },
-      { context:'Zenbat hitz ezberdin sor daitezke LEVEL hitzaren letra guztiekin?', hint:'Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina errepikapenak daude: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$' }
+      { context:'Zenbat modutan ordenatu daitezke 5 liburu apalategian?', hint:'Liburu guztiak erabiltzen dira eta ordena garrantzitsua da.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
+      { context:'8 atletako lasterketa batean, zenbat modutan gera daitezke 1., 2. eta 3. postuak?', hint:'8tik 3 bakarrik aukeratzen dira eta ordena garrantzitsua da (1. ≠ 2. ≠ 3.).', answer:'variation', calc:'$V_{8,3} = 8\\cdot7\\cdot6 = 336$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:8, k:3 },
+      { context:'WiFi giltza batek 4 karaktere ditu, bakoitza A-tik F-rako edozein letra (6 letra), errepikapenarekin. Zenbat giltza ezberdin daude?', hint:'Ordena garrantzitsua da (ABCD ≠ DCBA) eta karaktereak errepika daitezke.', answer:'variationRep', calc:'$VR_{6,4} = 6^4 = 1\\,296$', formula:'$VR_{n,k} = n^k$', n:6, k:4 },
+      { context:'10 ikasleko gela batetik 4ko talde bat aukeratu nahi da zentroa ordezkatzeko. Zenbat talde ezberdin sor daitezke?', hint:'Taldea multzo bat da; {Ana, Biel} = {Biel, Ana}.', answer:'combination', calc:'$C_{10,4} = 210$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:10, k:4 },
+      { context:'Pizzategi batean 5 osagai daude. 2 osagai ezberdin dituen pizza bat eskatu nahi duzu. Zenbat pizza ezberdin eska ditzakezu?', hint:'Pizzak ez du osagaien ordenarik: {perretxiko, gazta} = {gazta, perretxiko}.', answer:'combination', calc:'$C_{5,2} = 10$', formula:'$C_{n,k} = \\dbinom{n}{k}$', n:5, k:2 },
+      { context:'3 croissant erosi nahi dituzu 4 mota dituen gozotegi batean eta errepika dezakezu. Zenbat erosketa ezberdin egin ditzakezu?', hint:'Ordena ez da garrantzitsua eta errepikatu daiteke: 2 txokolate + 1 urdaiazpiko baliozkoa da.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
+      { context:'Zenbat 4 letra ezberdineko matrikula (A, B, C, D, E — 5 letra) sor daitezke ordena garrantzitsua bada?', hint:'5etik 4 letra aukeratzen dira eta ordena garrantzitsua da: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
+      { context:'Zenbat hitz ezberdin sor daitezke LEVEL hitzaren letra guztiekin?', hint:'Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina errepikapenak daude: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
     ]
   }
   // ── Para añadir un idioma: duplica el bloque 'en' y traduce los valores ──
@@ -2067,6 +2162,9 @@ function renderSummaryTable(){
   </div>`;
 }
 let pracIdx=0, pracScore=0, pracDone=false;
+let pracPhase=0;           // 0=classify  1=nk-input  2=result
+let pracOrd=null, pracRep=null, pracAll=null;
+let pracClassifyCorrect=false;
 
 function buildPracticeShell(){
   document.getElementById('practica').innerHTML=`
@@ -2081,8 +2179,46 @@ function buildPracticeShell(){
 }
 
 function initPractice(){
-  pracIdx=0;pracScore=0;pracDone=false;
+  pracIdx=0; pracScore=0; pracDone=false;
+  pracPhase=0; pracOrd=null; pracRep=null; pracAll=null;
   buildPracticeShell();
+  renderPractice();
+}
+
+function deducePracType(){
+  for(const [type,d] of Object.entries(TYPE_DECISIONS)){
+    if(d.order===pracOrd && d.rep===pracRep && (d.scope==='all')===pracAll) return type;
+  }
+  return null;
+}
+
+function pracSetQ(key,val){
+  if(key==='ord') pracOrd=val;
+  else if(key==='rep') pracRep=val;
+  else if(key==='all') pracAll=val;
+  renderPractice();
+}
+
+function pracCheckClassify(){
+  const prob=t('problems')[pracIdx];
+  const deduced=deducePracType();
+  pracClassifyCorrect=(deduced===prob.answer);
+  if(pracClassifyCorrect) pracScore++;
+  pracPhase=1;
+  renderPractice();
+}
+
+function pracCheckNK(){
+  const prob=t('problems')[pracIdx];
+  const nVal=parseInt(document.getElementById('prac-n')?.value)||0;
+  const kVal=parseInt(document.getElementById('prac-k')?.value)||0;
+  const d=TYPE_DECISIONS[prob.answer];
+  const isAllScope=(d.scope==='all');
+  const nOk=nVal===prob.n;
+  const kOk=isAllScope||kVal===prob.k;
+  pracPhase=2;
+  // store for result phase
+  window._pracNOk=nOk; window._pracKOk=kOk; window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
   renderPractice();
 }
 
@@ -2116,63 +2252,122 @@ function renderPractice(){
   }
 
   const prob=problems[pracIdx];
+  const d=TYPE_DECISIONS[prob.answer];
   const typeLabels=t('typeLabels');
-  const opts=shuffle([prob.answer,...sample(ALL_TYPE_KEYS.filter(o=>o!==prob.answer),3)]);
+  const sw=k=>t('summary.'+k);
+  const isAllScope=(d.scope==='all');
 
+  // ── helper: build yes/no toggle buttons for a question key ──
+  function qBtns(key,curVal){
+    const ySel=curVal===true?'sel-y':'';
+    const nSel=curVal===false?'sel-n':'';
+    return `<div class="prac-q-btns">
+      <button class="prac-q-btn ${ySel}" onclick="pracSetQ('${key}',true)">${t('practiceQYes')}</button>
+      <button class="prac-q-btn ${nSel}" onclick="pracSetQ('${key}',false)">${t('practiceQNo')}</button>
+    </div>`;
+  }
+
+  const allAnswered=pracOrd!==null && pracRep!==null && pracAll!==null;
+
+  // ══════════ PHASE 0: classification questions ══════════
+  if(pracPhase===0){
+    document.getElementById('prac-content').innerHTML=`
+      <div class="practice-card">
+        <div class="step-indicator">${t('practiceProblemLabel')(pracIdx+1,total)}</div>
+        <div class="practice-context">${prob.context}</div>
+        <p class="prac-phase-label">1 — ${t('practiceCheckClassify').replace('→','').trim()}</p>
+        <div class="prac-q-block">
+          <div class="prac-q-row">
+            <span class="prac-q-text">${t('practiceQ1')}</span>
+            ${qBtns('ord',pracOrd)}
+          </div>
+          <div class="prac-q-row">
+            <span class="prac-q-text">${t('practiceQ2')}</span>
+            ${qBtns('rep',pracRep)}
+          </div>
+          <div class="prac-q-row">
+            <span class="prac-q-text">${t('practiceQ3')}</span>
+            ${qBtns('all',pracAll)}
+          </div>
+        </div>
+        <div class="nav-row" style="justify-content:flex-end;margin-top:4px">
+          <button class="btn btn-primary" onclick="pracCheckClassify()" ${!allAnswered?'disabled style="opacity:.4"':''}>
+            ${t('practiceCheckClassify')}
+          </button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // ══════════ PHASE 1: n / k input ══════════
+  if(pracPhase===1){
+    const classOk=pracClassifyCorrect;
+    const typeFb=classOk
+      ? `<div class="feedback-box ok">${t('practiceTypeOk')(typeLabels[prob.answer])}</div>`
+      : `<div class="feedback-box err">${t('practiceTypeErr')(typeLabels[prob.answer])}</div>`;
+    const whyInline=`<div style="font-size:.83rem;margin-top:8px;color:var(--text2)">
+      ${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong> &nbsp;·&nbsp;
+      ${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong> &nbsp;·&nbsp;
+      ${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong>
+    </div>`;
+    const kCard=isAllScope
+      ? `<div class="prac-nk-card"><span class="prac-nk-label">${t('practiceKNote')}</span><div class="prac-nk-static">${t('practiceKEqN')}</div></div>`
+      : `<div class="prac-nk-card"><label class="prac-nk-label" for="prac-k">${t('practiceKNote')}</label><input class="prac-nk-input" id="prac-k" type="number" min="1" max="50" placeholder="?"></div>`;
+    document.getElementById('prac-content').innerHTML=`
+      <div class="practice-card">
+        <div class="step-indicator">${t('practiceProblemLabel')(pracIdx+1,total)}</div>
+        <div class="practice-context">${prob.context}</div>
+        ${typeFb}${whyInline}
+        <p class="prac-phase-label">2 — ${t('practiceNKTitle')}</p>
+        <div class="prac-nk-grid">
+          <div class="prac-nk-card"><label class="prac-nk-label" for="prac-n">${t('practiceNNote')}</label><input class="prac-nk-input" id="prac-n" type="number" min="1" max="50" placeholder="?"></div>
+          ${kCard}
+        </div>
+        <div class="nav-row" style="justify-content:flex-end;margin-top:4px">
+          <button class="btn btn-primary" onclick="pracCheckNK()">${t('practiceCalcBtn')}</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // ══════════ PHASE 2: result ══════════
+  const nOk=window._pracNOk; const kOk=window._pracKOk;
+  const nKFb=(nOk&&kOk)
+    ? `<div class="feedback-box ok">${t('practiceNKOk')}</div>`
+    : `<div class="feedback-box err">${t('practiceNKErr')(prob.n, prob.k)}</div>`;
+  const typeData=t('types')[prob.answer];
+  const whyBlock=`<div style="margin-top:10px;font-size:.86rem">
+    <strong>${t('practiceWhyTitle')}</strong>
+    <ul style="margin:6px 0 0;padding-left:18px">
+      <li>${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong></li>
+      <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
+      <li>${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong></li>
+    </ul>
+  </div>`;
   document.getElementById('prac-content').innerHTML=`
     <div class="practice-card">
       <div class="step-indicator">${t('practiceProblemLabel')(pracIdx+1,total)}</div>
-      <h2 style="margin-bottom:14px">${t('practiceQuestion')}</h2>
       <div class="practice-context">${prob.context}</div>
-      <div class="classify-grid" id="prac-opts">
-        ${opts.map(o=>`<button class="classify-btn" onclick="pracAnswer('${o}')">${typeLabels[o]}</button>`).join('')}
+      ${nKFb}
+      <div style="margin-top:14px">
+        <strong>${typeLabels[prob.answer]}</strong>
+        <div class="formula-box" style="margin-top:8px;text-align:center">${typeData.formula}</div>
+        <div style="margin-top:8px;text-align:center">${prob.calc}</div>
+        ${whyBlock}
       </div>
-      <div id="prac-fb"></div>
-      <div class="nav-row" id="prac-nav" style="display:none">
+      <div class="nav-row" style="margin-top:18px">
         <span></span>
         <button class="btn btn-primary" onclick="pracNext()">
           ${pracIdx<total-1?t('practiceNext'):t('practiceFinish')}
         </button>
       </div>
     </div>`;
-}
-
-function pracAnswer(chosen){
-  const prob=t('problems')[pracIdx];
-  const correct=chosen===prob.answer;
-  const typeLabels=t('typeLabels');
-  document.querySelectorAll('#prac-opts .classify-btn').forEach(b=>{
-    b.disabled=true;
-    if(b.textContent===typeLabels[chosen]) b.classList.add(correct?'correct':'wrong');
-    if(!correct&&b.textContent===typeLabels[prob.answer]) b.classList.add('correct');
-  });
-  if(correct)pracScore++;
-  const typeData=t('types')[prob.answer];
-  const fbText=correct?t('practiceFeedbackOk')(prob.hint):t('practiceFeedbackErr')(prob.hint);
-  const d=TYPE_DECISIONS[prob.answer];
-  const sw=k=>t('summary.'+k);
-  const whyBlock=`
-    <div style="margin-top:10px;font-size:.86rem">
-      <strong>${t('practiceWhyTitle')}</strong>
-      <ul style="margin:6px 0 0;padding-left:18px">
-        <li>${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong></li>
-        <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
-        <li>${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong></li>
-      </ul>
-    </div>`;
-  document.getElementById('prac-fb').innerHTML=`
-    <div class="feedback-box ${correct?'ok':'err'}">
-      ${fbText}
-      <div class="formula-box" style="margin-top:10px;text-align:center">${typeData.formula}</div>
-      <div style="margin-top:6px;text-align:center">${prob.calc}</div>
-      ${whyBlock}
-    </div>`;
-  document.getElementById('prac-nav').style.display='flex';
   renderKatex();
 }
 
 function pracNext(){
   pracIdx++;
+  pracPhase=0; pracOrd=null; pracRep=null; pracAll=null; pracClassifyCorrect=false;
   if(pracIdx>=t('problems').length) pracDone=true;
   renderPractice();
 }
