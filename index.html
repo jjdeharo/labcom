@@ -2246,6 +2246,7 @@ let pracIdx=0, pracScore=0, pracDone=false;
 let pracPhase=0;           // 0=classify  1=nk-input  2=result
 let pracOrd=null, pracRep=null, pracAll=null;
 let pracClassifyCorrect=false;
+let pracChosenType=null;
 let pracCurrentProb=null, pracCurrentType=null, pracCurrentFilter=null;
 let pracSessionCorrect=0, pracSessionTotal=0;
 
@@ -2419,7 +2420,8 @@ function startPracticeType(filter){
   if(!result){renderPracticeHub();return;}
   pracCurrentProb=result.prob;
   pracCurrentType=result.type;
-  pracPhase=0; pracOrd=null; pracRep=null; pracAll=null; pracClassifyCorrect=false;
+  pracPhase=0; pracChosenType=null; pracClassifyCorrect=false;
+  pracOrd=null; pracRep=null; pracAll=null;
   renderPractice();
 }
 
@@ -2458,10 +2460,10 @@ function pracSetQ(key,val){
   renderPractice();
 }
 
-function pracCheckClassify(){
+function pracCheckClassify(chosenType){
   const prob=pracCurrentProb;
-  const deduced=deducePracType();
-  pracClassifyCorrect=(deduced===prob.type);
+  pracChosenType=chosenType;
+  pracClassifyCorrect=(chosenType===prob.type);
   pracSessionTotal++;
   if(pracClassifyCorrect) pracSessionCorrect++;
   updateBayesType(prob.type,pracClassifyCorrect,prob.difficulty);
@@ -2494,35 +2496,35 @@ function renderPractice(){
     ?`<span style="font-size:.78rem;color:var(--text2);font-weight:400"> · ${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span>`:'';
   const backBtn=`<button class="btn-ghost" style="margin-left:auto" onclick="renderPracticeHub()">${t('practiceHubBack')}</button>`;
 
-  function qBtns(key,curVal){
-    const ySel=curVal===true?'sel-y':'';
-    const nSel=curVal===false?'sel-n':'';
-    return `<div class="prac-q-btns">
-      <button class="prac-q-btn ${ySel}" onclick="pracSetQ('${key}',true)">${t('practiceQYes')}</button>
-      <button class="prac-q-btn ${nSel}" onclick="pracSetQ('${key}',false)">${t('practiceQNo')}</button>
-    </div>`;
-  }
-  const allAnswered=pracOrd!==null&&pracRep!==null&&pracAll!==null;
-
-  // ══════════ PHASE 0: preguntas de clasificación ══════════
+  // ══════════ PHASE 0: 3 preguntas → el alumno elige el tipo ══════════
   if(pracPhase===0){
+    function qBtns(key,curVal){
+      const ySel=curVal===true?'sel-y':'';
+      const nSel=curVal===false?'sel-n':'';
+      return `<div class="prac-q-btns">
+        <button class="prac-q-btn ${ySel}" onclick="pracSetQ('${key}',true)">${t('practiceQYes')}</button>
+        <button class="prac-q-btn ${nSel}" onclick="pracSetQ('${key}',false)">${t('practiceQNo')}</button>
+      </div>`;
+    }
+    const allAnswered=pracOrd!==null&&pracRep!==null&&pracAll!==null;
+    const typeBtns=ALL_TYPE_KEYS.map(type=>`
+      <button class="classify-btn" ${!allAnswered?'disabled':''} onclick="pracCheckClassify('${type}')">
+        ${typeLabels[type]}
+      </button>`).join('');
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
           <span>${t('practiceTitle')}${sessionChip}</span>${backBtn}
         </div>
         <div class="practice-context">${probText.context}</div>
-        <p class="prac-phase-label">1 — ${t('practiceCheckClassify').replace('→','').trim()}</p>
+        <p class="prac-phase-label">1 — ${t('practiceWhyTitle')}</p>
         <div class="prac-q-block">
           <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ1')}</span>${qBtns('ord',pracOrd)}</div>
           <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ2')}</span>${qBtns('rep',pracRep)}</div>
           <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ3')}</span>${qBtns('all',pracAll)}</div>
         </div>
-        <div class="nav-row" style="justify-content:flex-end;margin-top:4px">
-          <button class="btn btn-primary" onclick="pracCheckClassify()" ${!allAnswered?'disabled style="opacity:.4"':''}>
-            ${t('practiceCheckClassify')}
-          </button>
-        </div>
+        <p class="prac-phase-label" style="${!allAnswered?'opacity:.35':''}">2 — ${t('practiceQuestion')}</p>
+        <div class="classify-grid" style="${!allAnswered?'opacity:.35;pointer-events:none':''}">${typeBtns}</div>
       </div>`;
     return;
   }
