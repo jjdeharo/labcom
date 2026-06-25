@@ -44,4 +44,7 @@ Abre `index.html` directamente en el navegador. No necesita servidor.
 
 ## Licencia
 
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — Juan José de Haro
+- Contenido: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- Código: [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html)
+
+© [Juan José de Haro](https://bilateria.org)

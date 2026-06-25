@@ -200,6 +200,10 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .summary-table th{background:var(--surface2);color:var(--text2);font-weight:600;font-size:.82rem}
 .summary-table td:first-child,.summary-table th:first-child{text-align:left}
 .summary-table tbody tr:nth-child(even){background:var(--surface2)}
+.site-footer{color:var(--text2);font-size:.75rem;padding:.9rem 0 1.4rem;text-align:center;border-top:1px solid var(--border);margin-top:28px}
+.site-footer a{color:var(--text2);text-decoration:none}
+.site-footer a:hover{color:var(--accent)}
+.site-footer .sep{margin:0 .5rem;opacity:.35}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -219,6 +223,14 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
   <div id="leccion" class="section"></div>
   <div id="practica" class="section"></div>
 </main>
+
+<footer class="site-footer">
+  © <a href="https://bilateria.org" target="_blank" rel="noopener">Juan José de Haro</a>
+  <span class="sep">·</span>
+  Contenido: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
+  <span class="sep">·</span>
+  Código: <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">AGPL-3.0</a>
+</footer>
 
 <script>
 // ══════════════════════════════════════════════════════════════
