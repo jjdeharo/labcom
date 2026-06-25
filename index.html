@@ -2508,7 +2508,7 @@ function renderPractice(){
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
-          <span>${typeLabels[prob.type]}${sessionChip}</span>${backBtn}
+          <span>${t('practiceTitle')}${sessionChip}</span>${backBtn}
         </div>
         <div class="practice-context">${probText.context}</div>
         <p class="prac-phase-label">1 — ${t('practiceCheckClassify').replace('→','').trim()}</p>
