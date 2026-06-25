@@ -2427,7 +2427,8 @@ function resetBayesData(){
   if(!confirm(t('practiceResetConfirm'))) return;
   const p=loadProgress();
   delete p.bayes; delete p.doneProblems;
-  saveProgress(p);
+  // Escribe directamente para evitar el merge de saveProgress
+  localStorage.setItem('comb_progress',JSON.stringify(p));
   doneProblemIds.clear();
   pracSessionCorrect=0; pracSessionTotal=0;
   renderPracticeHub();
