@@ -2336,9 +2336,10 @@ function getTrafficLight(type){
   const state=loadBayesState();
   const ts=state[type];
   if(!ts||ts.count===0) return 'none';
-  const pMax=Math.max(...ts.prior);
-  if(pMax>=0.80) return 'green';
-  if(pMax>=0.55) return 'yellow';
+  // Usa la theta esperada para saber si el alumno domina (no solo qué hipótesis tiene más masa)
+  const expectedTheta=ts.prior.reduce((s,p,i)=>s+p*BAYES_THETA[i],0);
+  if(expectedTheta>=1.4) return 'green';
+  if(expectedTheta>=-0.3) return 'yellow';
   return 'red';
 }
 function trafficEmoji(type){
@@ -2464,9 +2465,6 @@ function pracCheckClassify(chosenType){
   const prob=pracCurrentProb;
   pracChosenType=chosenType;
   pracClassifyCorrect=(chosenType===prob.type);
-  pracSessionTotal++;
-  if(pracClassifyCorrect) pracSessionCorrect++;
-  updateBayesType(prob.type,pracClassifyCorrect,prob.difficulty);
   pracPhase=1;
   renderPractice();
 }
@@ -2479,6 +2477,11 @@ function pracCheckNK(){
   const isAllScope=(d.scope==='all');
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
+  // Acierto completo = tipo correcto + n y k correctos
+  const fullyCorrect=pracClassifyCorrect&&nOk&&kOk;
+  pracSessionTotal++;
+  if(fullyCorrect) pracSessionCorrect++;
+  updateBayesType(prob.type,fullyCorrect,prob.difficulty);
   pracPhase=2;
   window._pracNOk=nOk; window._pracKOk=kOk; window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
   renderPractice();
