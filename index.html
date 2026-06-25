@@ -506,10 +506,11 @@ const LANG = {
     practiceTypeErr: name => `El tipo correcto es <strong>${name}</strong>.`,
     practiceNKOk: '¡n y k correctos!',
     practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
-    practiceHubTitle: 'Práctica adaptativa',
-    practiceHubSubtitle: 'El sistema elige el problema más informativo para tu nivel actual.',
+    practiceHubTitle: 'Práctica',
+    practiceHubSubtitle: 'Practica un tipo concreto o deja que el sistema elija el que más necesitas mejorar.',
     practiceHubChoose: 'Elige un tipo específico o deja que el sistema decida:',
-    practiceAdaptiveBtn: '🎯 Adaptativo',
+    practiceAdaptiveBtn: 'El sistema elige el tipo',
+    practiceAdaptiveHint: 'Practica el tipo en el que más necesitas mejorar',
     practiceMasteryNone: 'Sin datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -773,10 +774,11 @@ const LANG = {
     practiceTypeErr: name => `The correct type is <strong>${name}</strong>.`,
     practiceNKOk: 'n and k are correct!',
     practiceNKErr: (n,k) => `Correct values: n = ${n}, k = ${k}.`,
-    practiceHubTitle: 'Adaptive practice',
-    practiceHubSubtitle: 'The system picks the most informative problem for your current level.',
+    practiceHubTitle: 'Practice',
+    practiceHubSubtitle: 'Choose a specific type or let the system pick the one you need to improve most.',
     practiceHubChoose: 'Choose a specific type or let the system decide:',
-    practiceAdaptiveBtn: '🎯 Adaptive',
+    practiceAdaptiveBtn: 'System picks the type',
+    practiceAdaptiveHint: 'Practise the type you need to improve most',
     practiceMasteryNone: 'No data',
     practiceMasteryLow: 'Starting',
     practiceMasteryMid: 'In progress',
@@ -979,10 +981,11 @@ const LANG = {
     practiceTypeErr: name => `El tipus correcte és <strong>${name}</strong>.`,
     practiceNKOk: 'n i k correctes!',
     practiceNKErr: (n,k) => `Valors correctes: n = ${n}, k = ${k}.`,
-    practiceHubTitle: 'Pràctica adaptativa',
-    practiceHubSubtitle: 'El sistema tria el problema més informatiu per al teu nivell actual.',
+    practiceHubTitle: 'Pràctica',
+    practiceHubSubtitle: 'Practica un tipus concret o deixa que el sistema triï el que més necessites millorar.',
     practiceHubChoose: 'Tria un tipus específic o deixa que el sistema decideixi:',
-    practiceAdaptiveBtn: '🎯 Adaptatiu',
+    practiceAdaptiveBtn: 'El sistema tria el tipus',
+    practiceAdaptiveHint: 'Practica el tipus que més necessites millorar',
     practiceMasteryNone: 'Sense dades',
     practiceMasteryLow: 'Iniciant',
     practiceMasteryMid: 'En procés',
@@ -1169,10 +1172,11 @@ const LANG = {
     practiceTypeErr: name => `O tipo correcto é <strong>${name}</strong>.`,
     practiceNKOk: 'n e k correctos!',
     practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
-    practiceHubTitle: 'Práctica adaptativa',
-    practiceHubSubtitle: 'O sistema escolle o problema máis informativo para o teu nivel actual.',
+    practiceHubTitle: 'Práctica',
+    practiceHubSubtitle: 'Practica un tipo concreto ou deixa que o sistema escolle o que máis necesitas mellorar.',
     practiceHubChoose: 'Escolle un tipo específico ou deixa que o sistema decida:',
-    practiceAdaptiveBtn: '🎯 Adaptativo',
+    practiceAdaptiveBtn: 'O sistema escolle o tipo',
+    practiceAdaptiveHint: 'Practica o tipo en que máis necesitas mellorar',
     practiceMasteryNone: 'Sen datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -1359,10 +1363,11 @@ const LANG = {
     practiceTypeErr: name => `Mota zuzena <strong>${name}</strong> da.`,
     practiceNKOk: 'n eta k zuzenak dira!',
     practiceNKErr: (n,k) => `Balio zuzenak: n = ${n}, k = ${k}.`,
-    practiceHubTitle: 'Praktika egokitzailea',
-    practiceHubSubtitle: 'Sistemak zure mailari egokitutako arazo informatiboena hautatzen du.',
+    practiceHubTitle: 'Praktika',
+    practiceHubSubtitle: 'Mota zehatz bat praktikatu edo sistemak gehien hobetu behar duzuna hauta dezala.',
     practiceHubChoose: 'Aukeratu mota zehatz bat edo utz iezaiozu sistemari erabakitzen:',
-    practiceAdaptiveBtn: '🎯 Egokitzailea',
+    practiceAdaptiveBtn: 'Sistemak mota hautatzen du',
+    practiceAdaptiveHint: 'Gehien hobetu behar duzun mota praktikatu',
     practiceMasteryNone: 'Daturik ez',
     practiceMasteryLow: 'Hasiera',
     practiceMasteryMid: 'Aurreratzen',
@@ -2391,7 +2396,11 @@ function renderPracticeHub(){
       <div class="prac-hub-grid">
         ${typeBtns}
         <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')">
-          ${t('practiceAdaptiveBtn')}
+          <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
+          <span class="prac-hub-type-name" style="text-align:center;flex:1">
+            ${t('practiceAdaptiveBtn')}
+            <span class="prac-hub-mastery">${t('practiceAdaptiveHint')}</span>
+          </span>
         </button>
       </div>
       <div style="margin-top:16px;text-align:center">
