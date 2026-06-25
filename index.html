@@ -2356,9 +2356,10 @@ function selectAdaptiveProblem(filter){
   const state=loadBayesState();
   let targetType=filter;
   if(filter==='all'){
-    targetType=ALL_TYPE_KEYS.reduce((best,type)=>
-      bayesEntropy(state[type].prior)>bayesEntropy(state[best].prior)?type:best
-    ,ALL_TYPE_KEYS[0]);
+    const entropies=ALL_TYPE_KEYS.map(type=>bayesEntropy(state[type].prior));
+    const maxEnt=Math.max(...entropies);
+    const topTypes=ALL_TYPE_KEYS.filter((_,i)=>entropies[i]>=maxEnt-1e-9);
+    targetType=topTypes[Math.floor(Math.random()*topTypes.length)];
   }
   const prior=state[targetType].prior;
   let available=PROBLEM_BANK.filter(p=>p.type===targetType&&!doneProblemIds.has(p.id));
@@ -2370,7 +2371,9 @@ function selectAdaptiveProblem(filter){
   if(!available.length) return null;
   const gains=available.map(p=>bayesIG(prior,p.difficulty));
   const maxGain=Math.max(...gains);
-  const candidates=available.filter((_,i)=>gains[i]>=maxGain-1e-9);
+  // umbral del 10% del máximo para añadir variedad cuando el prior es poco informativo
+  const threshold=Math.max(maxGain*0.10,1e-9);
+  const candidates=available.filter((_,i)=>gains[i]>=maxGain-threshold);
   return {prob:candidates[Math.floor(Math.random()*candidates.length)],type:targetType};
 }
 
