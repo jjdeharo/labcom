@@ -197,6 +197,12 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .prac-nk-input:focus{outline:2px solid var(--accent);border-radius:6px}
 .prac-nk-input::-webkit-inner-spin-button,.prac-nk-input::-webkit-outer-spin-button{-webkit-appearance:none}
 .prac-nk-static{font-size:1.1rem;font-weight:700;color:var(--text2);margin-top:4px}
+/* Selección de fórmula */
+.prac-formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
+@media(max-width:500px){.prac-formula-grid{grid-template-columns:1fr}}
+.prac-formula-btn{background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.82rem;text-align:center;transition:all .15s;color:var(--text);font-family:inherit;width:100%}
+.prac-formula-btn:hover:not(.pf-sel){border-color:var(--accent);background:var(--accent-light)}
+.prac-formula-btn.pf-sel{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
 /* Hub práctica adaptativa */
 .prac-hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 10px}
 @media(max-width:500px){.prac-hub-grid{grid-template-columns:1fr}}
@@ -506,6 +512,9 @@ const LANG = {
     practiceTypeErr: name => `El tipo correcto es <strong>${name}</strong>.`,
     practiceNKOk: '¡n y k correctos!',
     practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
+    practiceFormulaTitle: 'Elige la fórmula',
+    practiceFormulaOk: '¡Fórmula correcta!',
+    practiceFormulaErr: name => `Fórmula correcta: ${name}`,
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto o deja que el sistema elija el que más necesitas mejorar.',
     practiceHubChoose: 'Elige un tipo específico o deja que el sistema decida:',
@@ -774,6 +783,9 @@ const LANG = {
     practiceTypeErr: name => `The correct type is <strong>${name}</strong>.`,
     practiceNKOk: 'n and k are correct!',
     practiceNKErr: (n,k) => `Correct values: n = ${n}, k = ${k}.`,
+    practiceFormulaTitle: 'Choose the formula',
+    practiceFormulaOk: 'Correct formula!',
+    practiceFormulaErr: name => `Correct formula: ${name}`,
     practiceHubTitle: 'Practice',
     practiceHubSubtitle: 'Choose a specific type or let the system pick the one you need to improve most.',
     practiceHubChoose: 'Choose a specific type or let the system decide:',
@@ -981,6 +993,9 @@ const LANG = {
     practiceTypeErr: name => `El tipus correcte és <strong>${name}</strong>.`,
     practiceNKOk: 'n i k correctes!',
     practiceNKErr: (n,k) => `Valors correctes: n = ${n}, k = ${k}.`,
+    practiceFormulaTitle: 'Tria la fórmula',
+    practiceFormulaOk: 'Fórmula correcta!',
+    practiceFormulaErr: name => `Fórmula correcta: ${name}`,
     practiceHubTitle: 'Pràctica',
     practiceHubSubtitle: 'Practica un tipus concret o deixa que el sistema triï el que més necessites millorar.',
     practiceHubChoose: 'Tria un tipus específic o deixa que el sistema decideixi:',
@@ -1172,6 +1187,9 @@ const LANG = {
     practiceTypeErr: name => `O tipo correcto é <strong>${name}</strong>.`,
     practiceNKOk: 'n e k correctos!',
     practiceNKErr: (n,k) => `Valores correctos: n = ${n}, k = ${k}.`,
+    practiceFormulaTitle: 'Escolle a fórmula',
+    practiceFormulaOk: 'Fórmula correcta!',
+    practiceFormulaErr: name => `Fórmula correcta: ${name}`,
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto ou deixa que o sistema escolle o que máis necesitas mellorar.',
     practiceHubChoose: 'Escolle un tipo específico ou deixa que o sistema decida:',
@@ -1363,6 +1381,9 @@ const LANG = {
     practiceTypeErr: name => `Mota zuzena <strong>${name}</strong> da.`,
     practiceNKOk: 'n eta k zuzenak dira!',
     practiceNKErr: (n,k) => `Balio zuzenak: n = ${n}, k = ${k}.`,
+    practiceFormulaTitle: 'Aukeratu formula',
+    practiceFormulaOk: 'Formula zuzena!',
+    practiceFormulaErr: name => `Formula zuzena: ${name}`,
     practiceHubTitle: 'Praktika',
     practiceHubSubtitle: 'Mota zehatz bat praktikatu edo sistemak gehien hobetu behar duzuna hauta dezala.',
     practiceHubChoose: 'Aukeratu mota zehatz bat edo utz iezaiozu sistemari erabakitzen:',
@@ -2247,6 +2268,7 @@ let pracPhase=0;           // 0=classify  1=nk-input  2=result
 let pracOrd=null, pracRep=null, pracAll=null;
 let pracClassifyCorrect=false;
 let pracChosenType=null;
+let pracFormulaChosen=null;
 let pracCurrentProb=null, pracCurrentType=null, pracCurrentFilter=null;
 let pracSessionCorrect=0, pracSessionTotal=0;
 
@@ -2323,10 +2345,16 @@ function loadBayesState(){
 function saveBayesState(state){
   const p=loadProgress(); p.bayes=state; saveProgress(p);
 }
-function updateBayesType(type,isCorrect,difficulty){
+function updateBayesType(type,score,difficulty){
+  // score ∈ [0,1]: 1=todo correcto, 0=todo incorrecto, parciales intermedios
+  // Likelihood suave: L(θ) = score·P(A|θ) + (1-score)·P(F|θ)
+  // Con score=0.5 el likelihood es constante → sin actualización
   const state=loadBayesState();
   const prior=state[type].prior;
-  const veros=BAYES_THETA.map(th=>{const pA=bayesIRT(th,difficulty);return isCorrect?pA:1-pA;});
+  const veros=BAYES_THETA.map(th=>{
+    const pA=bayesIRT(th,difficulty);
+    return score*pA+(1-score)*(1-pA);
+  });
   const marginal=prior.reduce((s,p,i)=>s+p*veros[i],0);
   state[type].prior=marginal>1e-10?prior.map((p,i)=>p*veros[i]/marginal):[1/3,1/3,1/3];
   state[type].count++;
@@ -2421,7 +2449,7 @@ function startPracticeType(filter){
   if(!result){renderPracticeHub();return;}
   pracCurrentProb=result.prob;
   pracCurrentType=result.type;
-  pracPhase=0; pracChosenType=null; pracClassifyCorrect=false;
+  pracPhase=0; pracChosenType=null; pracClassifyCorrect=false; pracFormulaChosen=null;
   pracOrd=null; pracRep=null; pracAll=null;
   renderPractice();
 }
@@ -2469,6 +2497,10 @@ function pracCheckClassify(chosenType){
   renderPractice();
 }
 
+function pracSetFormula(type){
+  pracFormulaChosen=type;
+  renderPractice();
+}
 function pracCheckNK(){
   const prob=pracCurrentProb;
   const nVal=parseInt(document.getElementById('prac-n')?.value)||0;
@@ -2477,13 +2509,16 @@ function pracCheckNK(){
   const isAllScope=(d.scope==='all');
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
-  // Acierto completo = tipo correcto + n y k correctos
-  const fullyCorrect=pracClassifyCorrect&&nOk&&kOk;
+  const formulaOk=pracFormulaChosen===prob.type;
+  // Score ponderado: tipo 40%, n+k 30%, fórmula 30%
+  const score=(pracClassifyCorrect?0.4:0)+(nOk&&kOk?0.3:0)+(formulaOk?0.3:0);
   pracSessionTotal++;
-  if(fullyCorrect) pracSessionCorrect++;
-  updateBayesType(prob.type,fullyCorrect,prob.difficulty);
+  if(score>=0.7) pracSessionCorrect++;
+  updateBayesType(prob.type,score,prob.difficulty);
   pracPhase=2;
-  window._pracNOk=nOk; window._pracKOk=kOk; window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
+  window._pracNOk=nOk; window._pracKOk=kOk;
+  window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
+  window._pracFormulaOk=formulaOk; window._pracScore=score;
   renderPractice();
 }
 
@@ -2546,6 +2581,12 @@ function renderPractice(){
     const kCard=isAllScope
       ?`<div class="prac-nk-card"><span class="prac-nk-label">${t('practiceKNote')}</span><div class="prac-nk-static">${t('practiceKEqN')}</div></div>`
       :`<div class="prac-nk-card"><label class="prac-nk-label" for="prac-k">${t('practiceKNote')}</label><input class="prac-nk-input" id="prac-k" type="number" min="1" max="50" placeholder="?"></div>`;
+    const formulaBtns=ALL_TYPE_KEYS.map(type=>{
+      const f=t('types')[type].formula;
+      const sel=pracFormulaChosen===type?' pf-sel':'';
+      return `<button class="prac-formula-btn${sel}" onclick="pracSetFormula('${type}')">${f}</button>`;
+    }).join('');
+    const calcEnabled=pracFormulaChosen!==null;
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
@@ -2558,19 +2599,36 @@ function renderPractice(){
           <div class="prac-nk-card"><label class="prac-nk-label" for="prac-n">${t('practiceNNote')}</label><input class="prac-nk-input" id="prac-n" type="number" min="1" max="50" placeholder="?"></div>
           ${kCard}
         </div>
+        <p class="prac-phase-label" style="margin-top:14px">3 — ${t('practiceFormulaTitle')}</p>
+        <div class="prac-formula-grid">${formulaBtns}</div>
         <div class="nav-row" style="justify-content:flex-end;margin-top:4px">
-          <button class="btn btn-primary" onclick="pracCheckNK()">${t('practiceCalcBtn')}</button>
+          <button class="btn btn-primary" ${calcEnabled?'':'disabled'} onclick="pracCheckNK()">${t('practiceCalcBtn')}</button>
         </div>
       </div>`;
+    renderKatex();
     return;
   }
 
   // ══════════ PHASE 2: resultado ══════════
   const nOk=window._pracNOk; const kOk=window._pracKOk;
+  const formulaOk=window._pracFormulaOk;
+  const score=window._pracScore||0;
   const nKFb=(nOk&&kOk)
     ?`<div class="feedback-box ok">${t('practiceNKOk')}</div>`
     :`<div class="feedback-box err">${t('practiceNKErr')(prob.n,prob.k)}</div>`;
   const typeData=t('types')[prob.type];
+  const formulaFb=formulaOk
+    ?`<div class="feedback-box ok">${t('practiceFormulaOk')}</div>`
+    :`<div class="feedback-box err">${t('practiceFormulaErr')(typeLabels[prob.type])}</div>`;
+  // Barra de puntuación visual
+  const pct=Math.round(score*100);
+  const barColor=score>=0.7?'var(--ok)':score>=0.4?'var(--warn)':'var(--err)';
+  const scoreBar=`<div style="margin:12px 0 4px;font-size:.82rem;color:var(--text2);display:flex;align-items:center;gap:10px">
+    <div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">
+      <div style="width:${pct}%;height:100%;background:${barColor};border-radius:4px;transition:width .4s"></div>
+    </div>
+    <span style="min-width:32px;text-align:right">${pct}%</span>
+  </div>`;
   const whyBlock=`<div style="margin-top:10px;font-size:.86rem">
     <strong>${t('practiceWhyTitle')}</strong>
     <ul style="margin:6px 0 0;padding-left:18px">
@@ -2585,7 +2643,9 @@ function renderPractice(){
         <span>${typeLabels[prob.type]}${sessionChip}</span>${backBtn}
       </div>
       <div class="practice-context">${probText.context}</div>
+      ${scoreBar}
       ${nKFb}
+      ${formulaFb}
       <div style="margin-top:14px">
         <strong>${typeLabels[prob.type]}</strong>
         <div class="formula-box" style="margin-top:8px;text-align:center">${typeData.formula}</div>
