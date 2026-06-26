@@ -338,6 +338,7 @@ const LANG = {
     ],
     homeIntro: 'Si es tu primera vez, <strong>empieza por las Lecciones</strong> para entender cada tipo de problema paso a paso. Después usa <strong>¿Qué tipo?</strong> cuando tengas un enunciado real y no sepas qué fórmula aplicar. La <strong>Práctica</strong> incluye un <strong>sistema inteligente</strong> que diagnostica tu nivel y se centra en lo que más necesitas practicar. El Laboratorio te permite explorar libremente.',
     homeStep: 'Paso',
+    homePrivacy: '🔒 Todo el procesamiento ocurre en tu navegador. No se envían datos a ningún servidor.',
     threeQuestionsTitle: 'Tres preguntas clave',
     threeQuestionsIntro: 'Antes de usar ninguna fórmula, hazte siempre estas preguntas:',
     threeQ: [
@@ -636,6 +637,7 @@ const LANG = {
     ],
     homeIntro: 'If this is your first time, <strong>start with the Lessons</strong> to understand each problem type step by step. Then use <strong>Which type?</strong> when you have a real problem and are not sure which formula to apply. <strong>Practice</strong> includes an <strong>intelligent system</strong> that diagnoses your level and focuses on what you need to practise most. The Lab lets you explore freely.',
     homeStep: 'Step',
+    homePrivacy: '🔒 All processing happens in your browser. No data is sent to any server.',
     threeQuestionsTitle: 'Three key questions',
     threeQuestionsIntro: 'Before using any formula, always ask yourself these questions:',
     threeQ: [
@@ -921,6 +923,7 @@ const LANG = {
     ],
     homeIntro: 'Si és el teu primer cop, <strong>comença per les Lliçons</strong> per entendre cada tipus de problema pas a pas. Després usa <strong>Quin tipus?</strong> quan tinguis un enunciat real i no sàpigues quina fórmula aplicar. La <strong>Pràctica</strong> inclou un <strong>sistema intel·ligent</strong> que diagnostica el teu nivell i es centra en el que més necessites practicar. El Laboratori et permet explorar lliurement.',
     homeStep: 'Pas',
+    homePrivacy: '🔒 Tot el processament es fa al teu navegador. No s\'envien dades a cap servidor.',
     threeQuestionsTitle: 'Tres preguntes clau',
     threeQuestionsIntro: 'Abans d\'usar cap fórmula, fes-te sempre aquestes preguntes:',
     threeQ: [
@@ -1130,6 +1133,7 @@ const LANG = {
     ],
     homeIntro: 'Se é a túa primeira vez, <strong>comeza polas Leccións</strong> para entender cada tipo de problema paso a paso. Despois usa <strong>Que tipo?</strong> cando teñas un enunciado real e non saibas que fórmula aplicar. A <strong>Práctica</strong> inclúe un <strong>sistema intelixente</strong> que diagnostica o teu nivel e céntranse no que máis necesitas practicar. O Laboratorio permíteche explorar libremente.',
     homeStep: 'Paso',
+    homePrivacy: '🔒 Todo o procesamento ocorre no teu navegador. Non se envían datos a ningún servidor.',
     threeQuestionsTitle: 'Tres preguntas clave',
     threeQuestionsIntro: 'Antes de usar ningunha fórmula, fáite sempre estas preguntas:',
     threeQ: [
@@ -1339,6 +1343,7 @@ const LANG = {
     ],
     homeIntro: 'Lehen aldiz bazara, <strong>hasi Ikasgaiekin</strong> arazo mota bakoitza pausoz pauso ulertzeko. Ondoren erabili <strong>Zer mota?</strong> arazo erreal bat duzunean eta ez dakizunean zein formula aplikatu. <strong>Praktikak</strong> <strong>sistema adimendun</strong> bat du zure maila diagnostikatzeko eta gehien praktikatu behar duzunari fokua jartzeko. Laborategia libreki esploratzeko da.',
     homeStep: 'Urrats',
+    homePrivacy: '🔒 Prozesamendu guztia zure nabigatzailean egiten da. Ez da daturik inongo zerbitzarira bidaltzen.',
     threeQuestionsTitle: 'Hiru galdera nagusi',
     threeQuestionsIntro: 'Edozein formula erabili aurretik, beti egin iezaiozu zure buruari galdera hauek:',
     threeQ: [
@@ -1738,6 +1743,7 @@ function renderInicio() {
           <p>${cards[ci].desc}</p>
         </button>`).join('')}
     </div>
+    <p style="font-size:.82rem;color:var(--text2);text-align:center;margin:4px 0 16px">${t('homePrivacy')}</p>
     <div class="divider"></div>
     <div class="card card-accent">
       <h3>${t('threeQuestionsTitle')}</h3>
