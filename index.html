@@ -209,8 +209,8 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .prac-hub-btn{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:11px 14px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--text);text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;font-family:inherit;width:100%}
 .prac-hub-btn:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
 .prac-hub-btn.is-selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(61,107,158,.15)}
-.prac-hub-adaptive{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff !important;justify-content:center;font-size:.95rem}
-.prac-hub-adaptive:hover{opacity:.85 !important;border-color:var(--accent) !important;background:var(--accent) !important;color:#fff !important}
+.prac-hub-adaptive{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff !important;justify-content:center;font-size:.95rem;transition:all .15s,transform .15s,box-shadow .15s}
+.prac-hub-adaptive:hover{opacity:.9 !important;border-color:var(--accent) !important;background:var(--accent) !important;color:#fff !important;box-shadow:0 4px 14px rgba(0,0,0,.28) !important;transform:translateY(-1px)}
 .prac-tl{font-size:1.05rem;flex-shrink:0;line-height:1}
 .prac-hub-type-name{flex:1}
 .prac-hub-mastery{font-size:.72rem;font-weight:400;color:var(--text2);margin-top:1px;display:block}
@@ -307,6 +307,10 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
   Contenido: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
   <span class="sep">·</span>
   Código: <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">AGPL-3.0</a>
+  <span class="sep">·</span>
+  <a href="https://github.com/jjdeharo/labcom" target="_blank" rel="noopener"><svg style="vertical-align:middle;margin-right:3px" width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+  <span class="sep">·</span>
+  <a href="https://github.com/jjdeharo/labcom/issues" target="_blank" rel="noopener">Sugerencias y problemas</a>
 </footer>
 
 <script>
@@ -2997,13 +3001,26 @@ function renderPracticeHub(){
       <h2>${t('practiceHubTitle')}</h2>
       <p style="color:var(--text2);margin-bottom:10px">${t('practiceHubSubtitle')}</p>
       ${sessionBar}
-      <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')" style="width:100%;margin-bottom:12px">
+      <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')" style="width:100%;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.18)">
         <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
         <span class="prac-hub-type-name" style="text-align:center;flex:1">
           ${t('practiceAdaptiveBtn')}
           <span class="prac-hub-mastery">${t('practiceAdaptiveHint')}</span>
         </span>
+        <span style="font-size:1.1rem;flex-shrink:0;opacity:.75">→</span>
       </button>
+      <p style="font-size:.86rem;font-weight:600;margin-bottom:4px">${t('practiceHubChoose')}</p>
+      ${selectionHint}
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:.78rem;color:var(--text2)">
+        <span>⚪ ${t('practiceMasteryNone')}</span>
+        <span>🔴 ${t('practiceMasteryLow')}</span>
+        <span>🟡 ${t('practiceMasteryMid')}</span>
+        <span>🟢 ${t('practiceMasteryHigh')}</span>
+      </div>
+      <div class="prac-hub-grid">
+        ${typeBtns}
+      </div>
+      ${selectionActions}
       <div class="prac-progress-panel">
         <div class="prac-progress-title">${t('practiceBayesTitle')}</div>
         <div class="prac-progress-sub">${t('practiceBayesSubtitle')}</div>
@@ -3016,12 +3033,6 @@ function renderPracticeHub(){
           </div>
         </div>
       </div>
-      <p style="font-size:.86rem;font-weight:600;margin-bottom:4px">${t('practiceHubChoose')}</p>
-      ${selectionHint}
-      <div class="prac-hub-grid">
-        ${typeBtns}
-      </div>
-      ${selectionActions}
       <div style="margin-top:16px;text-align:center">
         <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--err)';this.style.color='var(--err)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
       </div>
@@ -3209,6 +3220,9 @@ function renderPractice(){
   const formulaOk=window._pracFormulaOk;
   const score=window._pracScore||0;
   const fullyCorrect=!!window._pracFullyCorrect;
+  const typeFb=pracClassifyCorrect
+    ?`<div class="feedback-box ok">${t('practiceTypeOk')(typeLabels[prob.type])}</div>`
+    :`<div class="feedback-box err">${t('practiceTypeErr')(typeLabels[prob.type])}</div>`;
   const nKFb=(nOk&&kOk)
     ?`<div class="feedback-box ok">${t('practiceNKOk')}</div>`
     :`<div class="feedback-box err">${t('practiceNKErr')(prob.n,prob.k)}</div>`;
@@ -3216,24 +3230,18 @@ function renderPractice(){
   const formulaFb=formulaOk
     ?`<div class="feedback-box ok">${t('practiceFormulaOk')}</div>`
     :`<div class="feedback-box err">${t('practiceFormulaErr')(typeLabels[prob.type])}</div>`;
-  // Banner resultado explícito: correcto solo si acierta todo.
+  // Banner resultado con fondo de progreso integrado
   const isPartial=!fullyCorrect&&score>0;
-  const resultBanner=`<div style="margin:10px 0 8px;padding:8px 14px;border-radius:8px;font-weight:700;font-size:.95rem;
-    background:${fullyCorrect?'var(--green-light)':isPartial?'var(--accent-light)':'var(--red-light)'};
-    color:${fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)'};
-    border:1.5px solid ${fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)'}">
-    ${fullyCorrect?t('practiceResultOk'):isPartial?t('practiceResultPartial'):t('practiceResultErr')}
-    <span style="font-weight:400;font-size:.82rem;margin-left:8px">${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span>
-  </div>`;
-  // Barra de progreso visual del intento
   const pct=Math.round(score*100);
-  const barColor=fullyCorrect?'var(--green)':score>=0.4?'var(--accent)':'var(--red)';
-  const scoreBar=`<div style="margin:4px 0 4px;font-size:.82rem;color:var(--text2);display:flex;align-items:center;gap:10px">
-    <span style="min-width:132px">${t('practiceProgressLabel')}</span>
-    <div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">
-      <div style="width:${pct}%;height:100%;background:${barColor};border-radius:4px;transition:width .4s"></div>
-    </div>
-    <span style="min-width:32px;text-align:right">${pct}%</span>
+  const fillColor=fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)';
+  const textColor=fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)';
+  const fillZone=`color-mix(in srgb,${fillColor} 28%,var(--surface2))`;
+  const resultBanner=`<div style="margin:10px 0 8px;padding:8px 14px;border-radius:8px;font-weight:700;font-size:.95rem;
+    background:linear-gradient(to right,${fillZone} ${pct}%,var(--surface2) ${pct}%);
+    color:${textColor};border:1.5px solid ${fillColor};display:flex;align-items:center;gap:6px">
+    <span style="flex:1">${fullyCorrect?t('practiceResultOk'):isPartial?t('practiceResultPartial'):t('practiceResultErr')}
+    <span style="font-weight:400;font-size:.82rem;margin-left:8px">${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span></span>
+    <span style="font-size:.88rem;opacity:.8">${pct}%</span>
   </div>`;
   const whyBlock=`<div style="margin-top:10px;font-size:.86rem">
     <strong>${t('practiceWhyTitle')}</strong>
@@ -3250,7 +3258,7 @@ function renderPractice(){
       </div>
       <div class="practice-context">${probText.context}</div>
       ${resultBanner}
-      ${scoreBar}
+      ${typeFb}
       ${nKFb}
       ${formulaFb}
       <div style="margin-top:14px">
