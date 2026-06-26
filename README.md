@@ -43,7 +43,13 @@ HTML + CSS + JavaScript en un único archivo `index.html`. Sin dependencias exte
 
 ## Uso local
 
-Abre `index.html` directamente en el navegador. No necesita servidor.
+Requiere un servidor local porque la práctica carga `problems.json` mediante `fetch()`. La forma más sencilla:
+
+```bash
+python -m http.server
+```
+
+Y abre `http://localhost:8000` en el navegador. Alternativamente usa la [versión en línea](https://jjdeharo.github.io/labcom/).
 
 ## Sugerencias y problemas
 
