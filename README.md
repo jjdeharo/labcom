@@ -8,7 +8,7 @@ Aplicación web interactiva para aprender combinatoria sin memorizar fórmulas. 
 
 - **Lecciones guiadas** — 6 tipos de problemas explicados paso a paso: desde una situación real hasta la fórmula, con construcción interactiva y exploración de todos los casos posibles.
 - **¿Qué tipo?** — árbol de decisión de 3 preguntas que identifica el tipo y la fórmula adecuada.
-- **Práctica** — banco de más de 54 enunciados reales. Cada ejercicio se resuelve en cuatro pasos: clasificar el tipo, identificar n y k, elegir la fórmula y verificar el resultado. Incluye dos modos:
+- **Práctica** — banco de más de 230 enunciados reales. Cada ejercicio se resuelve en cuatro pasos: clasificar el tipo, identificar n y k, elegir la fórmula y verificar el resultado. Incluye dos modos:
   - **Sistema inteligente de problemas** — primero diagnostica el nivel en cada tipo y después refuerza los más débiles, usando un modelo adaptativo bayesiano con ganancia de información (IRT + entropía de Shannon).
   - **Selección manual** — elige uno o varios tipos concretos para practicarlos.
   - **Panel de progreso** — muestra la probabilidad estimada de acierto por tipo con barras de color codificadas (🔴 Iniciando · 🟡 En proceso · 🟢 Dominado).
