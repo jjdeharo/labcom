@@ -100,6 +100,7 @@ strong{color:var(--text)}
 .tree-question{font-size:1.15rem;font-weight:600;margin-bottom:6px}
 .tree-hint{font-size:.88rem;color:var(--text2);margin-bottom:18px}
 .tree-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.tree-intro{font-size:.95rem;color:var(--text2);margin-bottom:18px;line-height:1.55}
 .tree-progress{display:flex;gap:8px;margin-bottom:22px}
 .tree-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .2s}
 .tree-dot.done{background:var(--accent)}.tree-dot.current{background:var(--accent);opacity:.4}
@@ -355,6 +356,7 @@ const LANG = {
     // Árbol
     treeTitle: '¿Qué tipo de problema tengo?',
     treeSubtitle: 'Responde las preguntas y el programa te dirá qué fórmula usar.',
+    treeIntro: 'Tienes delante un enunciado con un problema de combinatoria y no sabes si corresponde a permutaciones, variaciones o combinaciones. Responde las tres preguntas sobre <em>tu</em> problema y el programa identificará el tipo y te mostrará la fórmula que debes aplicar.',
     treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
     treeBtnYes: 'Sí',
     treeBtnNo: 'No',
@@ -654,6 +656,7 @@ const LANG = {
     statTreeTimes: (n) => `${n}×`,
     treeTitle: 'Which type of problem do I have?',
     treeSubtitle: 'Answer the questions and the program will tell you which formula to use.',
+    treeIntro: 'You have a combinatorics problem in front of you and you\'re not sure whether it involves permutations, variations, or combinations. Answer the three questions about <em>your</em> problem and the program will identify the type and show you the formula to apply.',
     treeQuestion: (current, max) => `Question ${current} of ${max}`,
     treeBtnYes: 'Yes',
     treeBtnNo: 'No',
@@ -940,6 +943,7 @@ const LANG = {
     statBest: 'Millor puntuació', statTree: 'Arbre usat', statTreeTimes: (n) => `${n}×`,
     treeTitle: 'Quin tipus de problema tinc?',
     treeSubtitle: 'Respon les preguntes i el programa et dirà quina fórmula fer servir.',
+    treeIntro: 'Tens davant un enunciat amb un problema de combinatòria i no saps si és de permutacions, variacions o combinacions. Respon les tres preguntes sobre <em>el teu</em> problema i el programa n\'identificarà el tipus i et mostrarà la fórmula que cal aplicar.',
     treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
     treeBtnYes: 'Sí', treeBtnNo: 'No', treeBtnBack: '← Enrere',
     treeBtnRestart: 'Tornar a començar', treeBtnLab: 'Provar al laboratori →',
@@ -1152,6 +1156,7 @@ const LANG = {
     statBest: 'Mellor puntuación', statTree: 'Árbore usada', statTreeTimes: (n) => `${n}×`,
     treeTitle: 'Que tipo de problema teño?',
     treeSubtitle: 'Responde as preguntas e o programa dirache que fórmula usar.',
+    treeIntro: 'Tes diante un enunciado cun problema de combinatoria e non sabes se corresponde a permutacións, variacións ou combinacións. Responde as tres preguntas sobre <em>o teu</em> problema e o programa identificará o tipo e mostraráche a fórmula que debes aplicar.',
     treeQuestion: (current, max) => `Pregunta ${current} de ${max}`,
     treeBtnYes: 'Si', treeBtnNo: 'Non', treeBtnBack: '← Atrás',
     treeBtnRestart: 'Comezar de novo', treeBtnLab: 'Probar no laboratorio →',
@@ -1364,6 +1369,7 @@ const LANG = {
     statBest: 'Puntuazio onena', statTree: 'Zuhaitza erabilia', statTreeTimes: (n) => `${n}×`,
     treeTitle: 'Zer mota problema dut?',
     treeSubtitle: 'Erantzun galderak eta programak esango dizu zer formula erabili.',
+    treeIntro: 'Konbinatorikako problema bat duzu aurrean eta ez dakizu permutatzioak, bariazioak edo konbinazioak diren. Erantzun hiru galderak <em>zure</em> problemarako eta programak mota identifikatuko du eta aplikatu beharreko formula erakutsiko dizu.',
     treeQuestion: (current, max) => `${current}. galdera ${max}tik`,
     treeBtnYes: 'Bai', treeBtnNo: 'Ez', treeBtnBack: '← Atzera',
     treeBtnRestart: 'Berriz hasi', treeBtnLab: 'Laborategian probatu →',
@@ -1807,6 +1813,7 @@ function buildTreeShell() {
   document.getElementById('arbol').innerHTML = `
     <h1>${t('treeTitle')}</h1>
     <p>${t('treeSubtitle')}</p>
+    <p class="tree-intro">${t('treeIntro')}</p>
     <div id="tree-progress" class="tree-progress"></div>
     <div id="breadcrumb" class="breadcrumb"></div>
     <div id="tree-content"></div>`;
