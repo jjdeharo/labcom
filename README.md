@@ -8,7 +8,10 @@ Aplicación web interactiva para aprender combinatoria sin memorizar fórmulas. 
 
 - **Lecciones guiadas** — 6 tipos de problemas explicados paso a paso: desde una situación real hasta la fórmula, con construcción interactiva y exploración de todos los casos posibles.
 - **¿Qué tipo?** — árbol de decisión de 3 preguntas que identifica el tipo y la fórmula adecuada.
-- **Práctica guiada** — 8 enunciados reales resueltos en tres pasos: clasifica respondiendo las 3 preguntas clave, identifica n y k, y calcula.
+- **Práctica** — banco de más de 54 enunciados reales. Cada ejercicio se resuelve en cuatro pasos: clasificar el tipo, identificar n y k, elegir la fórmula y verificar el resultado. Incluye dos modos:
+  - **Sistema inteligente de problemas** — primero diagnostica el nivel en cada tipo y después refuerza los más débiles, usando un modelo adaptativo bayesiano con ganancia de información (IRT + entropía de Shannon).
+  - **Selección manual** — elige uno o varios tipos concretos para practicarlos.
+  - **Panel de progreso** — muestra la probabilidad estimada de acierto por tipo con barras de color codificadas (🔴 Iniciando · 🟡 En proceso · 🟢 Dominado).
 - **Laboratorio** — ajusta *n* y *k* en tiempo real y visualiza todas las posibilidades.
 - **Tabla resumen** — los 6 tipos con las tres preguntas clave y las fórmulas.
 
@@ -27,7 +30,7 @@ Aplicación web interactiva para aprender combinatoria sin memorizar fórmulas. 
 
 1. **Lecciones** — aprende cada tipo paso a paso
 2. **¿Qué tipo?** — identifica el tipo cuando tengas un enunciado real
-3. **Práctica** — comprueba lo que has aprendido
+3. **Práctica** — comprueba y refuerza lo que has aprendido
 4. **Laboratorio** — explora libremente
 
 ## Idiomas
@@ -41,6 +44,10 @@ HTML + CSS + JavaScript en un único archivo `index.html`. Sin dependencias exte
 ## Uso local
 
 Abre `index.html` directamente en el navegador. No necesita servidor.
+
+## Sugerencias y problemas
+
+Abre un [issue en GitHub](https://github.com/jjdeharo/labcom/issues).
 
 ## Licencia
 
