@@ -361,6 +361,11 @@ const LANG = {
     treeBtnRestart: 'Empezar de nuevo',
     treeBtnLab: 'Probar en el laboratorio →',
     treeNoLabNote: 'Este caso requiere indicar cuántos elementos se repiten de cada tipo, así que no encaja en el laboratorio básico de n y k.',
+    treeCalcTitle: 'Calcula con tus valores',
+    treeCalcN: 'n (total de elementos)',
+    treeCalcK: 'k (elementos elegidos)',
+    treeCalcResult: 'Resultado',
+    treeCalcInvalid: 'Valores no válidos para este tipo',
     treeSteps: [
       { id:'order',   question:'¿Importa el orden?',                        hint:'Si cambias el orden de los elementos, ¿obtienes un resultado diferente?', yes:'all',    no:'rep2' },
       { id:'all',     question:'¿Usas todos los elementos disponibles?',     hint:'Si tienes n elementos, ¿los usas todos o solo eliges k de ellos?',          yes:'repAll', no:'rep1' },
@@ -652,6 +657,11 @@ const LANG = {
     treeBtnRestart: 'Start over',
     treeBtnLab: 'Try in the lab →',
     treeNoLabNote: 'This case requires specifying how many elements repeat in each group, so it does not fit the basic n-and-k lab.',
+    treeCalcTitle: 'Calculate with your values',
+    treeCalcN: 'n (total elements)',
+    treeCalcK: 'k (chosen elements)',
+    treeCalcResult: 'Result',
+    treeCalcInvalid: 'Invalid values for this type',
     treeSteps: [
       { id:'order',   question:'Does the order matter?',                        hint:'If you change the order of elements, do you get a different result?',           yes:'all',    no:'rep2' },
       { id:'all',     question:'Do you use all available elements?',             hint:'If you have n elements, do you use all of them or just pick k?',                yes:'repAll', no:'rep1' },
@@ -927,6 +937,11 @@ const LANG = {
     treeBtnYes: 'Sí', treeBtnNo: 'No', treeBtnBack: '← Enrere',
     treeBtnRestart: 'Tornar a començar', treeBtnLab: 'Provar al laboratori →',
     treeNoLabNote: 'Aquest cas requereix indicar quants elements es repeteixen de cada tipus i no encaixa al laboratori bàsic de n i k.',
+    treeCalcTitle: 'Calcula amb els teus valors',
+    treeCalcN: 'n (total d\'elements)',
+    treeCalcK: 'k (elements triats)',
+    treeCalcResult: 'Resultat',
+    treeCalcInvalid: 'Valors no vàlids per a aquest tipus',
     treeSteps: [
       { id:'order',  question:'L\'ordre és important?',                      hint:'Si canvies l\'ordre dels elements, obtens un resultat diferent?',        yes:'all',    no:'rep2' },
       { id:'all',    question:'Fas servir tots els elements disponibles?',    hint:'Si tens n elements, els fas servir tots o només tries k?',               yes:'repAll', no:'rep1' },
@@ -1131,6 +1146,11 @@ const LANG = {
     treeBtnYes: 'Si', treeBtnNo: 'Non', treeBtnBack: '← Atrás',
     treeBtnRestart: 'Comezar de novo', treeBtnLab: 'Probar no laboratorio →',
     treeNoLabNote: 'Este caso require indicar cantos elementos se repiten de cada tipo, polo que non encaixa no laboratorio básico de n e k.',
+    treeCalcTitle: 'Calcula cos teus valores',
+    treeCalcN: 'n (total de elementos)',
+    treeCalcK: 'k (elementos elixidos)',
+    treeCalcResult: 'Resultado',
+    treeCalcInvalid: 'Valores non válidos para este tipo',
     treeSteps: [
       { id:'order',  question:'Importa a orde?',                        hint:'Se cambias a orde dos elementos, obtés un resultado diferente?',       yes:'all',    no:'rep2' },
       { id:'all',    question:'Usas todos os elementos dispoñibles?',    hint:'Se tes n elementos, usas todos ou só escolles k?',                     yes:'repAll', no:'rep1' },
@@ -1335,6 +1355,11 @@ const LANG = {
     treeBtnYes: 'Bai', treeBtnNo: 'Ez', treeBtnBack: '← Atzera',
     treeBtnRestart: 'Berriz hasi', treeBtnLab: 'Laborategian probatu →',
     treeNoLabNote: 'Kasu honek mota bakoitzetik zenbat elementu errepikatu adierazi behar du eta ez dago n eta k-ren oinarrizko laborategian sartzen.',
+    treeCalcTitle: 'Kalkulatu zure balioekin',
+    treeCalcN: 'n (elementu guztiak)',
+    treeCalcK: 'k (aukeratutako elementuak)',
+    treeCalcResult: 'Emaitza',
+    treeCalcInvalid: 'Balio ez-baliodunak mota honetarako',
     treeSteps: [
       { id:'order',  question:'Garrantzitsua al da ordena?',                        hint:'Elementuen ordena aldatzen baduzu, emaitza ezberdina lortzen al duzu?',    yes:'all',    no:'rep2' },
       { id:'all',    question:'Erabilgarri dauden elementu guztiak erabiltzen al dituzu?', hint:'n elementu badituzu, denak erabiltzen dituzu ala k bakarrik aukeratzen?', yes:'repAll', no:'rep1' },
@@ -1735,6 +1760,33 @@ function renderInicio() {
 // ══════════════════════════════════════════════════════════════
 let treeState = [];
 
+function treeCalcUpdate(type){
+  const nEl=document.getElementById('tree-calc-n');
+  const kEl=document.getElementById('tree-calc-k');
+  const resEl=document.getElementById('tree-calc-res');
+  if(!nEl||!resEl) return;
+  const n=parseInt(nEl.value)||0;
+  const k=kEl?parseInt(kEl.value)||0:n;
+  let value=null, calcStr='';
+  if(type==='permutation'&&n>=1){
+    value=factorial(n); calcStr=`$P_{${n}}=${n}!=${fmtNumber(value)}$`;
+  }else if(type==='variation'&&n>=1&&k>=1&&k<=n){
+    value=variations(n,k); calcStr=`$V_{${n},${k}}=\\dfrac{${n}!}{${n-k}!}=${fmtNumber(value)}$`;
+  }else if(type==='variationRep'&&n>=1&&k>=1){
+    value=variationsRep(n,k); calcStr=`$VR_{${n},${k}}=${n}^{${k}}=${fmtNumber(value)}$`;
+  }else if(type==='combination'&&n>=1&&k>=1&&k<=n){
+    value=combinations(n,k); calcStr=`$C_{${n},${k}}=\\dfrac{${n}!}{${k}!\\cdot${n-k}!}=${fmtNumber(value)}$`;
+  }else if(type==='combinationRep'&&n>=1&&k>=1){
+    value=combinationsRep(n,k); calcStr=`$CR_{${n},${k}}=\\dbinom{${n+k-1}}{${k}}=${fmtNumber(value)}$`;
+  }
+  if(value===null){
+    resEl.innerHTML=`<span style="color:var(--text2);font-size:.84rem">${t('treeCalcInvalid')}</span>`;
+  }else{
+    resEl.innerHTML=`<div class="formula-box" style="margin:0">${calcStr}</div>`;
+    renderKatex();
+  }
+}
+
 function buildTreeShell() {
   document.getElementById('arbol').innerHTML = `
     <h1>${t('treeTitle')}</h1>
@@ -1792,12 +1844,31 @@ function renderTree(){
         <p>${typeData.desc}</p>
         <div class="formula-box">${typeData.formula}</div>
         <div class="example-box"><strong>${t('exampleLabel')}</strong> ${typeData.exText}<div style="margin-top:7px">${typeData.exCalc}</div></div>
+        ${currentId!=='permutationRep'?`
+        <div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
+          <div style="font-size:.86rem;font-weight:700;margin-bottom:10px">${t('treeCalcTitle')}</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px">
+            <label style="font-size:.84rem;display:flex;flex-direction:column;gap:4px">${t('treeCalcN')}
+              <input id="tree-calc-n" type="number" min="1" max="99" value="5"
+                style="width:72px;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem;background:var(--surface2);color:var(--text);font-family:inherit"
+                oninput="treeCalcUpdate('${currentId}')">
+            </label>
+            ${currentId!=='permutation'?`<label style="font-size:.84rem;display:flex;flex-direction:column;gap:4px">${t('treeCalcK')}
+              <input id="tree-calc-k" type="number" min="1" max="99" value="3"
+                style="width:72px;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem;background:var(--surface2);color:var(--text);font-family:inherit"
+                oninput="treeCalcUpdate('${currentId}')">
+            </label>`:''}
+          </div>
+          <div id="tree-calc-res"></div>
+        </div>`:''}
         <div style="margin-top:18px;display:flex;gap:9px;flex-wrap:wrap">
           <button class="btn btn-secondary" onclick="initTree()">${t('treeBtnRestart')}</button>
           ${labAction}
         </div>
       </div>`;
-    renderKatex();return;
+    renderKatex();
+    if(currentId!=='permutationRep') treeCalcUpdate(currentId);
+    return;
   }
   const step=treeGetStep(currentId);
   if(!step)return;
