@@ -208,12 +208,52 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 @media(max-width:500px){.prac-hub-grid{grid-template-columns:1fr}}
 .prac-hub-btn{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:11px 14px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--text);text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;font-family:inherit;width:100%}
 .prac-hub-btn:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.prac-hub-btn.is-selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(61,107,158,.15)}
 .prac-hub-adaptive{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff !important;justify-content:center;font-size:.95rem}
 .prac-hub-adaptive:hover{opacity:.85 !important;border-color:var(--accent) !important;background:var(--accent) !important;color:#fff !important}
 .prac-tl{font-size:1.05rem;flex-shrink:0;line-height:1}
 .prac-hub-type-name{flex:1}
 .prac-hub-mastery{font-size:.72rem;font-weight:400;color:var(--text2);margin-top:1px;display:block}
 .prac-hub-adaptive .prac-hub-mastery{color:rgba(255,255,255,.8)}
+.prac-hub-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin:6px 0 6px}
+.prac-hub-note{font-size:.79rem;color:var(--text2);margin:-2px 0 4px}
+.prac-progress-panel{margin:14px 0 12px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--surface2)}
+.prac-progress-title{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.prac-progress-sub{font-size:.82rem;color:var(--text2);margin-bottom:12px;line-height:1.45}
+.prac-progress-chart{--low-max:50%;--high-min:90%;display:grid;gap:8px}
+.prac-progress-axis{display:grid;grid-template-columns:minmax(120px,1fr) 1.6fr 54px;gap:10px;align-items:end}
+.prac-progress-body{display:grid;grid-template-columns:minmax(120px,1fr) 1.6fr 54px;gap:10px;align-items:stretch}
+.prac-progress-axis-spacer,.prac-progress-axis-end{height:24px}
+.prac-progress-scale{position:relative;height:24px;font-size:.7rem;color:var(--text2)}
+.prac-progress-scale span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.prac-progress-level-low{left:var(--low-label)}
+.prac-progress-level-mid{left:var(--mid-label)}
+.prac-progress-level-high{left:var(--high-label)}
+.prac-progress-names,.prac-progress-bars,.prac-progress-pcts{display:grid;grid-template-rows:repeat(6,1fr);gap:10px;align-items:center}
+.prac-progress-bars{position:relative}
+.prac-progress-bars::before{content:"";position:absolute;inset:-3px 0;pointer-events:none;background:
+  linear-gradient(to right,
+    transparent 0,
+    transparent calc(var(--low-max) - 1px),
+    rgba(92,107,128,.28) calc(var(--low-max) - 1px),
+    rgba(92,107,128,.28) calc(var(--low-max) + 1px),
+    transparent calc(var(--low-max) + 1px),
+    transparent calc(var(--high-min) - 1px),
+    rgba(92,107,128,.28) calc(var(--high-min) - 1px),
+    rgba(92,107,128,.28) calc(var(--high-min) + 1px),
+    transparent calc(var(--high-min) + 1px)
+  )}
+.prac-progress-name{font-size:.86rem;font-weight:600}
+.prac-progress-track{height:8px;background:var(--border);border-radius:999px;overflow:hidden;position:relative;z-index:1}
+.prac-progress-fill{height:100%;background:linear-gradient(90deg,var(--progress-start,var(--accent)),var(--progress-end,#6aa2df));border-radius:999px;transition:width .35s,background .35s}
+.prac-progress-pct{font-size:.82rem;font-weight:700;color:var(--text2);min-width:44px;text-align:right;line-height:1.2}
+.prac-progress-count{display:block;font-size:.7rem;font-weight:400;color:var(--text2);margin-top:3px}
+@media(max-width:560px){
+  .prac-progress-axis,.prac-progress-body{grid-template-columns:minmax(92px,1fr) 1.2fr 44px}
+  .prac-progress-scale{font-size:.64rem}
+  .prac-progress-name{font-size:.78rem}
+  .prac-progress-pct{font-size:.78rem}
+}
 /* Inicio */
 .route-intro{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:8px;padding:13px 16px;margin-bottom:20px;font-size:.93rem;line-height:1.55}
 .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
@@ -290,7 +330,7 @@ const LANG = {
       { icon:'🌿', title:'¿Qué tipo de problema tengo?',     desc:'Responde tres preguntas y el programa identifica el tipo y la fórmula.' },
       { icon:'🔬', title:'Laboratorio',                       desc:'Ajusta <em>n</em> y <em>k</em>, elige las opciones y ve el resultado en tiempo real.' },
       { icon:'📖', title:'Lecciones guiadas',                 desc:'Aprende los seis tipos paso a paso, desde una situación real hasta la fórmula.' },
-      { icon:'🏆', title:'Práctica: Clasifica problemas',     desc:'Lee un enunciado real y decide qué tipo de problema es antes de ver el cálculo.' }
+      { icon:'🏆', title:'Práctica: Resuelve problemas',       desc:'Lee un enunciado, clasifica el tipo, identifica n y k, elige la fórmula y comprueba el resultado.' }
     ],
     homeIntro: 'Si es tu primera vez, <strong>empieza por las Lecciones</strong> para entender cada tipo de problema paso a paso. Después usa <strong>¿Qué tipo?</strong> cuando tengas un enunciado real y no sepas qué fórmula aplicar. La Práctica mide lo que has aprendido y el Laboratorio te permite explorar libremente.',
     homeStep: 'Paso',
@@ -484,7 +524,7 @@ const LANG = {
     },
 
     // Práctica
-    practiceTitle: 'Clasifica el problema',
+    practiceTitle: 'Práctica',
     practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
     practiceQuestion: '¿Qué tipo de problema es?',
     practiceNext: 'Siguiente problema →',
@@ -515,11 +555,21 @@ const LANG = {
     practiceFormulaTitle: 'Elige la fórmula',
     practiceFormulaOk: '¡Fórmula correcta!',
     practiceFormulaErr: name => `Fórmula correcta: ${name}`,
+    practiceResultOk: '✓ Ejercicio correcto',
+    practiceResultPartial: '△ Ejercicio parcialmente correcto',
+    practiceResultErr: '✗ Ejercicio incorrecto',
+    practiceProgressLabel: 'Progreso del intento',
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto o deja que el sistema elija el que más necesitas mejorar.',
-    practiceHubChoose: 'Elige un tipo específico o deja que el sistema decida:',
-    practiceAdaptiveBtn: 'El sistema elige el tipo',
-    practiceAdaptiveHint: 'Practica el tipo en el que más necesitas mejorar',
+    practiceBayesTitle: 'Tu nivel ahora por tipo',
+    practiceBayesSubtitle: 'Qué probabilidad tienes ahora mismo de resolver bien un ejercicio de este tipo.',
+    practiceBayesNoData: 'Aún sin datos',
+    practiceSolvedCount: count => count===1 ? '1 resuelto' : `${count} resueltos`,
+    practiceHubChoose: 'O elige uno o varios tipos:',
+    practiceHubMultiHint: 'Selecciona varios si quieres compararlos y diferenciarlos mejor.',
+    practiceStartSelected: count => `Practicar selección (${count})`,
+    practiceAdaptiveBtn: 'Sistema inteligente de problemas (recomendado)',
+    practiceAdaptiveHint: 'Primero diagnostica y después refuerza lo que menos dominas',
     practiceMasteryNone: 'Sin datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -535,10 +585,11 @@ const LANG = {
       nkNote: '<strong>n</strong> = total de elementos distintos disponibles &nbsp;·&nbsp; <strong>k</strong> = cantidad de elementos elegidos o posiciones a rellenar',
       colType: 'Tipo',
       colOrder: '¿Importa el orden?',
+      colScope: '¿Usas todos los elementos?',
       colRep: '¿Hay repetición?',
-      colScope: '¿Cuántos usas?',
       colFormula: 'Fórmula',
-      yes: 'Sí', no: 'No', all: 'Todos', some: 'Algunos'
+      yes: 'Sí', no: 'No', all: 'Todos', some: 'Algunos',
+      mnemonic: '💡 <strong>Orden sí + todos → Permutación &nbsp;·&nbsp; Orden sí + algunos → Variación &nbsp;·&nbsp; Orden no → Combinación</strong>'
     },
     typeLabels: {
       permutation:    'Permutación',
@@ -572,7 +623,7 @@ const LANG = {
       { icon:'🌿', title:'Which type of problem do I have?', desc:'Answer three questions and the program identifies the type and the formula.' },
       { icon:'🔬', title:'Lab',                               desc:'Adjust <em>n</em> and <em>k</em>, choose the options and see the result in real time.' },
       { icon:'📖', title:'Guided lessons',                    desc:'Learn all six types step by step, from a real situation to the formula.' },
-      { icon:'🏆', title:'Practice: Classify problems',       desc:'Read a real problem and decide which type it is before seeing the calculation.' }
+      { icon:'🏆', title:'Practice: Solve problems',           desc:'Read a problem, classify the type, identify n and k, choose the formula and check the result.' }
     ],
     homeIntro: 'If this is your first time, <strong>start with the Lessons</strong> to understand each problem type step by step. Then use <strong>Which type?</strong> when you have a real problem and are not sure which formula to apply. Practice measures what you have learned and the Lab lets you explore freely.',
     homeStep: 'Step',
@@ -755,7 +806,7 @@ const LANG = {
         explore:{ desc:'The 6 distinct words using the letters of MAMA.' }
       }
     },
-    practiceTitle: 'Classify the problem',
+    practiceTitle: 'Practice',
     practiceProblemLabel: (i, total) => `Problem ${i} of ${total}`,
     practiceQuestion: 'What type of problem is this?',
     practiceNext: 'Next problem →',
@@ -786,11 +837,21 @@ const LANG = {
     practiceFormulaTitle: 'Choose the formula',
     practiceFormulaOk: 'Correct formula!',
     practiceFormulaErr: name => `Correct formula: ${name}`,
+    practiceResultOk: '✓ Exercise correct',
+    practiceResultPartial: '△ Exercise partially correct',
+    practiceResultErr: '✗ Exercise incorrect',
+    practiceProgressLabel: 'Attempt progress',
     practiceHubTitle: 'Practice',
     practiceHubSubtitle: 'Choose a specific type or let the system pick the one you need to improve most.',
-    practiceHubChoose: 'Choose a specific type or let the system decide:',
-    practiceAdaptiveBtn: 'System picks the type',
-    practiceAdaptiveHint: 'Practise the type you need to improve most',
+    practiceBayesTitle: 'Your current level by type',
+    practiceBayesSubtitle: 'How likely you are right now to solve an exercise of this type correctly.',
+    practiceBayesNoData: 'No data yet',
+    practiceSolvedCount: count => count===1 ? '1 solved' : `${count} solved`,
+    practiceHubChoose: 'Or choose one or more types:',
+    practiceHubMultiHint: 'Select several if you want to compare them and tell them apart better.',
+    practiceStartSelected: count => `Practise selection (${count})`,
+    practiceAdaptiveBtn: 'Smart problem system (recommended)',
+    practiceAdaptiveHint: 'First diagnoses, then reinforces what you know least',
     practiceMasteryNone: 'No data',
     practiceMasteryLow: 'Starting',
     practiceMasteryMid: 'In progress',
@@ -806,10 +867,11 @@ const LANG = {
       nkNote: '<strong>n</strong> = total distinct elements available &nbsp;·&nbsp; <strong>k</strong> = number of elements chosen or positions to fill',
       colType: 'Type',
       colOrder: 'Does order matter?',
+      colScope: 'Do you use all elements?',
       colRep: 'Is repetition allowed?',
-      colScope: 'How many do you use?',
       colFormula: 'Formula',
-      yes: 'Yes', no: 'No', all: 'All', some: 'Some'
+      yes: 'Yes', no: 'No', all: 'All', some: 'Some',
+      mnemonic: '💡 <strong>Order yes + all → Permutation &nbsp;·&nbsp; Order yes + some → Variation &nbsp;·&nbsp; Order no → Combination</strong>'
     },
     typeLabels: {
       permutation:    'Permutation',
@@ -841,7 +903,7 @@ const LANG = {
       { icon:'🌿', title:'Quin tipus de problema tinc?',    desc:'Respon tres preguntes i el programa identifica el tipus i la fórmula.' },
       { icon:'🔬', title:'Laboratori',                       desc:'Ajusta <em>n</em> i <em>k</em>, tria les opcions i veu el resultat en temps real.' },
       { icon:'📖', title:'Lliçons guiades',                  desc:'Aprèn els sis tipus pas a pas, des d\'una situació real fins a la fórmula.' },
-      { icon:'🏆', title:'Pràctica: Classifica problemes',   desc:'Llegeix un enunciat real i decideix quin tipus de problema és abans de veure el càlcul.' }
+      { icon:'🏆', title:'Pràctica: Resol problemes',         desc:'Llegeix un enunciat, classifica el tipus, identifica n i k, tria la fórmula i comprova el resultat.' }
     ],
     homeIntro: 'Si és el teu primer cop, <strong>comença per les Lliçons</strong> per entendre cada tipus de problema pas a pas. Després usa <strong>Quin tipus?</strong> quan tinguis un enunciat real i no sàpigues quina fórmula aplicar. La Pràctica mesura el que has après i el Laboratori et permet explorar lliurement.',
     homeStep: 'Pas',
@@ -967,7 +1029,7 @@ const LANG = {
         explore:{ desc:'Les 6 paraules distintes amb les lletres de MAMA.' }
       }
     },
-    practiceTitle: 'Classifica el problema',
+    practiceTitle: 'Pràctica',
     practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
     practiceQuestion: 'Quin tipus de problema és?',
     practiceNext: 'Problema següent →', practiceFinish: 'Veure resultats →',
@@ -996,11 +1058,21 @@ const LANG = {
     practiceFormulaTitle: 'Tria la fórmula',
     practiceFormulaOk: 'Fórmula correcta!',
     practiceFormulaErr: name => `Fórmula correcta: ${name}`,
+    practiceResultOk: '✓ Exercici correcte',
+    practiceResultPartial: '△ Exercici parcialment correcte',
+    practiceResultErr: '✗ Exercici incorrecte',
+    practiceProgressLabel: 'Progrés de l’intent',
     practiceHubTitle: 'Pràctica',
     practiceHubSubtitle: 'Practica un tipus concret o deixa que el sistema triï el que més necessites millorar.',
-    practiceHubChoose: 'Tria un tipus específic o deixa que el sistema decideixi:',
-    practiceAdaptiveBtn: 'El sistema tria el tipus',
-    practiceAdaptiveHint: 'Practica el tipus que més necessites millorar',
+    practiceBayesTitle: 'El teu nivell ara per tipus',
+    practiceBayesSubtitle: 'Quina probabilitat tens ara mateix de resoldre bé un exercici d’aquest tipus.',
+    practiceBayesNoData: 'Encara sense dades',
+    practiceSolvedCount: count => count===1 ? '1 resolt' : `${count} resolts`,
+    practiceHubChoose: 'O tria un o diversos tipus:',
+    practiceHubMultiHint: 'Selecciona\'n diversos si vols comparar-los i diferenciar-los millor.',
+    practiceStartSelected: count => `Practica la selecció (${count})`,
+    practiceAdaptiveBtn: 'Sistema intel·ligent de problemes (recomanat)',
+    practiceAdaptiveHint: 'Primer diagnostica i després reforça el que menys domines',
     practiceMasteryNone: 'Sense dades',
     practiceMasteryLow: 'Iniciant',
     practiceMasteryMid: 'En procés',
@@ -1010,7 +1082,7 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sessió: ${correct}/${total} correctes`,
     practiceResetData: 'Reiniciar dades de progrés',
     practiceResetConfirm: 'Segur? S\'esborraran totes les dades de pràctica.',
-    summary: { title:'Taula resum', subtitle:'Les tres preguntes que determinen el tipus. Respon-les i la fila et dóna la fórmula.', nkNote:'<strong>n</strong> = total d\'elements distints disponibles &nbsp;·&nbsp; <strong>k</strong> = quantitat d\'elements triats o posicions a omplir', colType:'Tipus', colOrder:'L\'ordre importa?', colRep:'Hi ha repetició?', colScope:'Quants en fas servir?', colFormula:'Fórmula', yes:'Sí', no:'No', all:'Tots', some:'Alguns' },
+    summary: { title:'Taula resum', subtitle:'Les tres preguntes que determinen el tipus. Respon-les i la fila et dóna la fórmula.', nkNote:'<strong>n</strong> = total d\'elements distints disponibles &nbsp;·&nbsp; <strong>k</strong> = quantitat d\'elements triats o posicions a omplir', colType:'Tipus', colOrder:'L\'ordre importa?', colScope:'Fas servir tots els elements?', colRep:'Hi ha repetició?', colFormula:'Fórmula', yes:'Sí', no:'No', all:'Tots', some:'Alguns', mnemonic:'💡 <strong>Ordre sí + tots → Permutació &nbsp;·&nbsp; Ordre sí + alguns → Variació &nbsp;·&nbsp; Ordre no → Combinació</strong>' },
     typeLabels: { permutation:'Permutació', permutationRep:'Perm. amb rep.', variation:'Variació', variationRep:'Var. amb rep.', combination:'Combinació', combinationRep:'Comb. amb rep.' },
     problems: [
       { context:'De quantes formes es poden ordenar 5 llibres en una estanteria?', hint:'Es fan servir tots els llibres i l\'ordre importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
@@ -1035,7 +1107,7 @@ const LANG = {
       { icon:'🌿', title:'Que tipo de problema teño?',     desc:'Responde tres preguntas e o programa identifica o tipo e a fórmula.' },
       { icon:'🔬', title:'Laboratorio',                     desc:'Axusta <em>n</em> e <em>k</em>, escolle as opcións e ve o resultado en tempo real.' },
       { icon:'📖', title:'Leccións guiadas',                desc:'Aprende os seis tipos paso a paso, desde unha situación real até a fórmula.' },
-      { icon:'🏆', title:'Práctica: Clasifica problemas',   desc:'Le un enunciado real e decide que tipo de problema é antes de ver o cálculo.' }
+      { icon:'🏆', title:'Práctica: Resolve problemas',       desc:'Le un enunciado, clasifica o tipo, identifica n e k, escolle a fórmula e comproba o resultado.' }
     ],
     homeIntro: 'Se é a túa primeira vez, <strong>comeza polas Leccións</strong> para entender cada tipo de problema paso a paso. Despois usa <strong>Que tipo?</strong> cando teñas un enunciado real e non saibas que fórmula aplicar. A Práctica mide o que aprendiches e o Laboratorio permíteche explorar libremente.',
     homeStep: 'Paso',
@@ -1161,7 +1233,7 @@ const LANG = {
         explore:{ desc:'As 6 palabras distintas coas letras de MAMA.' }
       }
     },
-    practiceTitle: 'Clasifica o problema',
+    practiceTitle: 'Práctica',
     practiceProblemLabel: (i, total) => `Problema ${i} de ${total}`,
     practiceQuestion: 'Que tipo de problema é?',
     practiceNext: 'Seguinte problema →', practiceFinish: 'Ver resultados →',
@@ -1190,11 +1262,21 @@ const LANG = {
     practiceFormulaTitle: 'Escolle a fórmula',
     practiceFormulaOk: 'Fórmula correcta!',
     practiceFormulaErr: name => `Fórmula correcta: ${name}`,
+    practiceResultOk: '✓ Exercicio correcto',
+    practiceResultPartial: '△ Exercicio parcialmente correcto',
+    practiceResultErr: '✗ Exercicio incorrecto',
+    practiceProgressLabel: 'Progreso do intento',
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto ou deixa que o sistema escolle o que máis necesitas mellorar.',
-    practiceHubChoose: 'Escolle un tipo específico ou deixa que o sistema decida:',
-    practiceAdaptiveBtn: 'O sistema escolle o tipo',
-    practiceAdaptiveHint: 'Practica o tipo en que máis necesitas mellorar',
+    practiceBayesTitle: 'O teu nivel agora por tipo',
+    practiceBayesSubtitle: 'Que probabilidade tes agora mesmo de resolver ben un exercicio deste tipo.',
+    practiceBayesNoData: 'Aínda sen datos',
+    practiceSolvedCount: count => count===1 ? '1 resolto' : `${count} resoltos`,
+    practiceHubChoose: 'Ou escolle un ou varios tipos:',
+    practiceHubMultiHint: 'Selecciona varios se queres comparalos e diferencialos mellor.',
+    practiceStartSelected: count => `Practicar selección (${count})`,
+    practiceAdaptiveBtn: 'Sistema intelixente de problemas (recomendado)',
+    practiceAdaptiveHint: 'Primeiro diagnostica e despois reforza o que menos dominas',
     practiceMasteryNone: 'Sen datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -1204,7 +1286,7 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
     practiceResetData: 'Reiniciar datos de progreso',
     practiceResetConfirm: 'Seguro? Borraranse todos os datos de práctica.',
-    summary: { title:'Táboa resumo', subtitle:'As tres preguntas que determinan o tipo. Respóndeas e a fila dáche a fórmula.', nkNote:'<strong>n</strong> = total de elementos distintos dispoñibles &nbsp;·&nbsp; <strong>k</strong> = cantidade de elementos escollidos ou posicións a cubrir', colType:'Tipo', colOrder:'Importa a orde?', colRep:'Hai repetición?', colScope:'Cantos usas?', colFormula:'Fórmula', yes:'Si', no:'Non', all:'Todos', some:'Algúns' },
+    summary: { title:'Táboa resumo', subtitle:'As tres preguntas que determinan o tipo. Respóndeas e a fila dáche a fórmula.', nkNote:'<strong>n</strong> = total de elementos distintos dispoñibles &nbsp;·&nbsp; <strong>k</strong> = cantidade de elementos escollidos ou posicións a cubrir', colType:'Tipo', colOrder:'Importa a orde?', colScope:'Usas todos os elementos?', colRep:'Hai repetición?', colFormula:'Fórmula', yes:'Si', no:'Non', all:'Todos', some:'Algúns', mnemonic:'💡 <strong>Orde si + todos → Permutación &nbsp;·&nbsp; Orde si + algúns → Variación &nbsp;·&nbsp; Orde non → Combinación</strong>' },
     typeLabels: { permutation:'Permutación', permutationRep:'Perm. con rep.', variation:'Variación', variationRep:'Var. con rep.', combination:'Combinación', combinationRep:'Comb. con rep.' },
     problems: [
       { context:'De cantas formas se poden ordenar 5 libros nunha estante?', hint:'Úsanse todos os libros e a orde importa.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
@@ -1229,7 +1311,7 @@ const LANG = {
       { icon:'🌿', title:'Zer mota problema dut?',         desc:'Erantzun hiru galdera eta programak mota eta formula identifikatuko ditu.' },
       { icon:'🔬', title:'Laborategia',                     desc:'Doitu <em>n</em> eta <em>k</em>, aukeratu ezarpenak eta ikusi emaitza denbora errealean.' },
       { icon:'📖', title:'Ikasgai gidatuak',                desc:'Ikasi sei motak pausoz pauso, egoera erreal batetik formulara arte.' },
-      { icon:'🏆', title:'Praktika: Sailkatu problemak',    desc:'Irakurri enuntziatu erreal bat eta erabaki zer mota den kalkulua ikusi aurretik.' }
+      { icon:'🏆', title:'Praktika: Ebatzi problemak',       desc:'Irakurri enuntziatu bat, sailkatu mota, identifikatu n eta k, aukeratu formula eta egiaztatu emaitza.' }
     ],
     homeIntro: 'Lehen aldiz bazara, <strong>hasi Ikasgaiekin</strong> arazo mota bakoitza pausoz pauso ulertzeko. Ondoren erabili <strong>Zer mota?</strong> arazo erreal bat duzunean eta ez dakizunean zein formula aplikatu. Praktikak ikasitakoa neurtzen du eta Laborategia libreki esploratzeko da.',
     homeStep: 'Urrats',
@@ -1355,7 +1437,7 @@ const LANG = {
         explore:{ desc:'MAMA hitzaren letrekin 6 hitz ezberdinak.' }
       }
     },
-    practiceTitle: 'Sailkatu problema',
+    practiceTitle: 'Praktika',
     practiceProblemLabel: (i, total) => `${i}. problema ${total}tik`,
     practiceQuestion: 'Zer mota problema da?',
     practiceNext: 'Hurrengo problema →', practiceFinish: 'Ikusi emaitzak →',
@@ -1384,11 +1466,21 @@ const LANG = {
     practiceFormulaTitle: 'Aukeratu formula',
     practiceFormulaOk: 'Formula zuzena!',
     practiceFormulaErr: name => `Formula zuzena: ${name}`,
+    practiceResultOk: '✓ Ariketa zuzena',
+    practiceResultPartial: '△ Ariketa partzialki zuzena',
+    practiceResultErr: '✗ Ariketa okerra',
+    practiceProgressLabel: 'Saiakeraren aurrerapena',
     practiceHubTitle: 'Praktika',
     practiceHubSubtitle: 'Mota zehatz bat praktikatu edo sistemak gehien hobetu behar duzuna hauta dezala.',
-    practiceHubChoose: 'Aukeratu mota zehatz bat edo utz iezaiozu sistemari erabakitzen:',
-    practiceAdaptiveBtn: 'Sistemak mota hautatzen du',
-    practiceAdaptiveHint: 'Gehien hobetu behar duzun mota praktikatu',
+    practiceBayesTitle: 'Zure oraingo maila motaka',
+    practiceBayesSubtitle: 'Mota honetako ariketa bat ondo ebazteko zer probabilitate duzun une honetan.',
+    practiceBayesNoData: 'Oraindik daturik ez',
+    practiceSolvedCount: count => count===1 ? '1 ebatzita' : `${count} ebatzita`,
+    practiceHubChoose: 'Edo aukeratu mota bat edo gehiago:',
+    practiceHubMultiHint: 'Aukeratu batzuk elkarrekin konparatu eta hobeto bereizteko.',
+    practiceStartSelected: count => `Landu hautaketa (${count})`,
+    practiceAdaptiveBtn: 'Arazo sistema adimentsua (gomendatua)',
+    practiceAdaptiveHint: 'Lehenik diagnostikatu, gero gutxien dakizuna indartu',
     practiceMasteryNone: 'Daturik ez',
     practiceMasteryLow: 'Hasiera',
     practiceMasteryMid: 'Aurreratzen',
@@ -1398,7 +1490,7 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Saioa: ${correct}/${total} zuzen`,
     practiceResetData: 'Berrezarri aurrerapen-datuak',
     practiceResetConfirm: 'Ziur? Praktikako datu guztiak ezabatuko dira.',
-    summary: { title:'Laburpen taula', subtitle:'Mota zehazten duten hiru galderak. Erantzun eta errenkadak formula emango dizu.', nkNote:'<strong>n</strong> = erabilgarri dauden elementu ezberdin guztiak &nbsp;·&nbsp; <strong>k</strong> = aukeratutako elementu kopurua edo bete beharreko posizioak', colType:'Mota', colOrder:'Ordena garrantzitsua?', colRep:'Errepikapena?', colScope:'Zenbat erabiltzen dituzu?', colFormula:'Formula', yes:'Bai', no:'Ez', all:'Guztiak', some:'Batzuk' },
+    summary: { title:'Laburpen taula', subtitle:'Mota zehazten duten hiru galderak. Erantzun eta errenkadak formula emango dizu.', nkNote:'<strong>n</strong> = erabilgarri dauden elementu ezberdin guztiak &nbsp;·&nbsp; <strong>k</strong> = aukeratutako elementu kopurua edo bete beharreko posizioak', colType:'Mota', colOrder:'Ordena garrantzitsua?', colScope:'Elementu guztiak erabiltzen dituzu?', colRep:'Errepikapena dago?', colFormula:'Formula', yes:'Bai', no:'Ez', all:'Guztiak', some:'Batzuk', mnemonic:'💡 <strong>Ordena bai + guztiak → Permutazioa &nbsp;·&nbsp; Ordena bai + batzuk → Aldaketa &nbsp;·&nbsp; Ordena ez → Konbinazioa</strong>' },
     typeLabels: { permutation:'Permutazioa', permutationRep:'Perm. errepikapenarekin', variation:'Bariazioa', variationRep:'Bar. errepikapenarekin', combination:'Konbinazioa', combinationRep:'Konb. errepikapenarekin' },
     problems: [
       { context:'Zenbat modutan ordenatu daitezke 5 liburu apalategian?', hint:'Liburu guztiak erabiltzen dira eta ordena garrantzitsua da.', answer:'permutation', calc:'$P_5 = 5! = 120$', formula:'$P_n = n!$', n:5, k:5 },
@@ -2244,19 +2336,20 @@ function renderSummaryTable(){
     return `<tr>
       <td><strong>${types[k].name}</strong></td>
       <td>${d.order?s('yes'):s('no')}</td>
-      <td>${d.rep?s('yes'):s('no')}</td>
       <td>${d.scope==='all'?s('all'):s('some')}</td>
+      <td>${d.rep?s('yes'):s('no')}</td>
       <td>${types[k].formula}</td>
     </tr>`;
   }).join('');
   return `<div class="card">
     <h3>${s('title')}</h3>
     <p style="color:var(--text2);font-size:.9rem;margin-bottom:10px">${s('subtitle')}</p>
+    <div style="background:var(--accent-light,#e8f4fd);border-radius:8px;padding:9px 14px;font-size:.88rem;margin-bottom:10px;color:var(--text)">${s('mnemonic')}</div>
     <div style="background:var(--surface2);border-radius:8px;padding:9px 14px;font-size:.86rem;margin-bottom:12px;color:var(--text2)">${s('nkNote')}</div>
     <div style="overflow-x:auto">
       <table class="summary-table">
         <thead><tr>
-          <th>${s('colType')}</th><th>${s('colOrder')}</th><th>${s('colRep')}</th><th>${s('colScope')}</th><th>${s('colFormula')}</th>
+          <th>${s('colType')}</th><th>${s('colOrder')}</th><th>${s('colScope')}</th><th>${s('colRep')}</th><th>${s('colFormula')}</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
@@ -2270,6 +2363,7 @@ let pracClassifyCorrect=false;
 let pracChosenType=null;
 let pracFormulaChosen=null;
 let pracCurrentProb=null, pracCurrentType=null, pracCurrentFilter=null;
+let pracSelectedTypes=new Set();
 let pracSessionCorrect=0, pracSessionTotal=0;
 
 // ══════════════════════════════════════════════════════════════
@@ -2309,15 +2403,377 @@ function getProblemText(prob){
 }
 
 // ══════════════════════════════════════════════════════════════
+// GENERADOR PROCEDURAL DE PROBLEMAS
+// ══════════════════════════════════════════════════════════════
+const TYPE_FORMULAS={
+  permutation:'$P_n = n!$',
+  permutationRep:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$',
+  variation:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',
+  variationRep:'$VR_{n,k} = n^k$',
+  combination:'$C_{n,k} = \\dbinom{n}{k}$',
+  combinationRep:'$CR_{n,k} = \\dbinom{n+k-1}{k}$'
+};
+// [singular, plural] por color e idioma
+const PROC_BALL_COLORS={
+  es:[['roja','rojas'],['azul','azules'],['verde','verdes'],['amarilla','amarillas'],['blanca','blancas'],['negra','negras'],['naranja','naranjas'],['morada','moradas']],
+  en:[['red','red'],['blue','blue'],['green','green'],['yellow','yellow'],['white','white'],['black','black'],['orange','orange'],['purple','purple']],
+  ca:[['vermella','vermelles'],['blava','blaves'],['verda','verdes'],['groga','grogues'],['blanca','blanques'],['negra','negres'],['taronja','taronges'],['morada','morades']],
+  ga:[['vermella','vermellas'],['azul','azuis'],['verde','verdes'],['amarela','amarelas'],['branca','brancas'],['negra','negras'],['laranxa','laranxas'],['morada','moradas']],
+  eu:[['gorria','gorriak'],['urdina','urdinak'],['berdea','berdeak'],['horia','horiak'],['zuria','zuriak'],['beltza','beltzak'],['laranja','laranjakoak'],['morea','moreak']]
+};
+function procColorN(qty,colorIdx,lang){
+  const c=(PROC_BALL_COLORS[lang]||PROC_BALL_COLORS.es)[colorIdx%8];
+  return c[qty>1?1:0];
+}
+function procAnd(lang){return{es:'y',en:'and',ca:'i',ga:'e',eu:'eta'}[lang]||'y';}
+function procRepDesc(reps,lang){
+  const p=reps.map((r,i)=>`${r} ${procColorN(r,i,lang)}`);
+  return p.length===1?p[0]:p.slice(0,-1).join(', ')+' '+procAnd(lang)+' '+p[p.length-1];
+}
+function procFill(s,v){return s.replace(/\{(\w+)\}/g,(_,k)=>v[k]!==undefined?v[k]:'{'+k+'}');}
+function procFact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function procFmt(v){return v>=10000?String(v).replace(/\B(?=(\d{3})+(?!\d))/g,'\\,'):String(v);}
+function procComb(n,k){if(k>n||k<0)return 0;let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);}
+
+const PROC_TEMPLATES={
+  permutation:[
+    {ctx:{es:'{n} personas distintas deben ocupar {n} sillas en fila. ¿De cuántas formas pueden sentarse?',
+          en:'{n} different people must sit in {n} chairs in a row. In how many ways can they sit?',
+          ca:'{n} persones distintes han d\'ocupar {n} cadires en fila. De quantes formes poden seure?',
+          ga:'{n} persoas distintas deben ocupar {n} cadeiras en fila. De cantas formas poden sentarse?',
+          eu:'{n} pertsona ezberdinak {n} aulkitan eseri behar dute ilaran. Zenbat modutan eser daitezke?'},
+     hint:{es:'Se ordenan todos los {n} elementos; cualquier cambio da un orden distinto.',
+           en:'All {n} elements are arranged; any change gives a different order.',
+           ca:'S\'ordenen tots els {n} elements; qualsevol canvi dona un ordre distint.',
+           ga:'Ordénanse todos os {n} elementos; calquera cambio dá unha orde distinta.',
+           eu:'{n} elementu guztiak ordenatzen dira; edozein aldaketak ordena ezberdin bat ematen du.'}},
+    {ctx:{es:'{n} libros distintos se colocan en una estantería. ¿Cuántos órdenes distintos son posibles?',
+          en:'{n} different books are placed on a shelf. How many distinct orders are possible?',
+          ca:'{n} llibres distints es col·loquen en una prestatgeria. Quants ordres distints són possibles?',
+          ga:'{n} libros distintos colócanse nunha estantería. Cantos ordes distintos son posibles?',
+          eu:'{n} liburu ezberdin liburutegi batean jartzen dira. Zenbat ordena ezberdin daude?'},
+     hint:{es:'Se ordenan todos los {n} libros; el número de permutaciones es {n}!.',
+           en:'All {n} books are ordered; the number of permutations is {n}!.',
+           ca:'S\'ordenen tots els {n} llibres; el nombre de permutacions és {n}!.',
+           ga:'Ordénanse todos os {n} libros; o número de permutacións é {n}!.',
+           eu:'{n} liburu guztiak ordenatzen dira; permutazio kopurua {n}! da.'}},
+    {ctx:{es:'{n} corredores participan en una carrera. ¿De cuántas formas distintas puede quedar la clasificación final?',
+          en:'{n} runners take part in a race. In how many distinct ways can the final ranking turn out?',
+          ca:'{n} corredors participen en una cursa. De quantes formes distintes pot quedar la classificació final?',
+          ga:'{n} corredores participan nunha carreira. De cantas formas distintas pode quedar a clasificación final?',
+          eu:'{n} lasterlariek lasterketa batean parte hartzen dute. Zenbat modutan gera daiteke azken sailkapena?'},
+     hint:{es:'La clasificación es una ordenación de todos los {n} corredores.',
+           en:'The ranking is an ordering of all {n} runners.',
+           ca:'La classificació és una ordenació de tots els {n} corredors.',
+           ga:'A clasificación é unha ordenación de todos os {n} corredores.',
+           eu:'Sailkapena {n} lasterlariren ordenazio bat da.'}},
+    {ctx:{es:'Se tienen {n} banderas de colores distintos colocadas todas en fila. ¿Cuántos diseños distintos hay?',
+          en:'There are {n} flags of different colours, all placed in a row. How many distinct designs are there?',
+          ca:'Hi ha {n} banderes de colors distints col·locades totes en fila. Quants dissenys distints hi ha?',
+          ga:'Tense {n} bandeiras de cores distintas colocadas todas en fila. Cantos deseños distintos hai?',
+          eu:'{n} kolore ezberdineko banderak ilaran jartzen dira. Zenbat diseinu ezberdin daude?'},
+     hint:{es:'Cada ordenación distinta de las {n} banderas es un diseño diferente.',
+           en:'Each distinct ordering of the {n} flags is a different design.',
+           ca:'Cada ordenació distinta de les {n} banderes és un disseny diferent.',
+           ga:'Cada ordenación distinta das {n} bandeiras é un deseño diferente.',
+           eu:'{n} banderen ordenazio bakoitza diseinu ezberdin bat da.'}}
+  ],
+  variationRep:[
+    {ctx:{es:'Un código de seguridad tiene {k} posiciones y cada una puede ser cualquiera de {n} símbolos (con repetición). ¿Cuántos códigos distintos hay?',
+          en:'A security code has {k} positions and each can be any of {n} symbols (repetition allowed). How many distinct codes are there?',
+          ca:'Un codi de seguretat té {k} posicions i cadascuna pot ser qualsevol de {n} símbols (amb repetició). Quants codis distints hi ha?',
+          ga:'Un código de seguridade ten {k} posicións e cada unha pode ser calquera de {n} símbolos (con repetición). Cantos códigos distintos hai?',
+          eu:'Segurtasun-kode batek {k} posizio ditu eta bakoitza {n} sinbolo ezberdinetatik edozein izan daiteke (errepikapenarekin). Zenbat kode ezberdin daude?'},
+     hint:{es:'Hay {n} opciones para cada una de las {k} posiciones y se puede repetir símbolo.',
+           en:'There are {n} options for each of the {k} positions and symbols can repeat.',
+           ca:'Hi ha {n} opcions per a cadascuna de les {k} posicions i es pot repetir símbol.',
+           ga:'Hai {n} opcións para cada unha das {k} posicións e pódese repetir símbolo.',
+           eu:'{k} posizio bakoitzerako {n} aukera daude eta sinboloa errepika daiteke.'}},
+    {ctx:{es:'Se lanza un dado de {n} caras {k} veces. ¿Cuántas secuencias de resultados distintas son posibles?',
+          en:'A {n}-sided die is rolled {k} times. How many distinct sequences of results are possible?',
+          ca:'Es llança un dau de {n} cares {k} vegades. Quantes seqüències de resultats distintes són possibles?',
+          ga:'Lánzase un dado de {n} caras {k} veces. Cantas secuencias de resultados distintas son posibles?',
+          eu:'{n} aurpegiko dado bat {k} aldiz botatzen da. Zenbat emaitza-segida ezberdin daude?'},
+     hint:{es:'En cada tirada hay {n} resultados posibles y puede repetirse el mismo resultado.',
+           en:'Each roll has {n} possible results and the same result can appear multiple times.',
+           ca:'En cada tirada hi ha {n} resultats possibles i pot repetir-se el mateix resultat.',
+           ga:'En cada tirada hai {n} resultados posibles e pódese repetir o mesmo resultado.',
+           eu:'Botaldi bakoitzean {n} emaitza posible daude eta emaitza bera errepika daiteke.'}},
+    {ctx:{es:'Una urna tiene bolas de {n} colores. Se sacan {k} bolas con reposición (cada bola extraída vuelve a la urna). ¿Cuántas secuencias distintas de colores son posibles?',
+          en:'An urn has balls of {n} colours. {k} balls are drawn with replacement (each ball is put back). How many distinct colour sequences are possible?',
+          ca:'Una urna té boles de {n} colors. S\'extreuen {k} boles amb reposició (cada bola extreta torna a la urna). Quantes seqüències distintes de colors són possibles?',
+          ga:'Unha urna ten bolas de {n} cores. Extráense {k} bolas con reposición (cada bola extraída volve á urna). Cantas secuencias distintas de cores son posibles?',
+          eu:'Urna batek {n} koloreko bolak ditu. {k} bola ateratzen dira ordezkapenarekin (ateratako bola berriro sartzen da). Zenbat kolore-segida ezberdin daude?'},
+     hint:{es:'El orden importa y el color puede repetirse porque las bolas se reponen.',
+           en:'Order matters and colours can repeat because balls are replaced.',
+           ca:'L\'ordre importa i el color pot repetir-se perquè les boles es reposen.',
+           ga:'A orde importa e a cor pódese repetir porque as bolas se repoñen.',
+           eu:'Ordena garrantzitsua da eta kolorea errepika daiteke bolak ordezkatzen direlako.'}},
+    {ctx:{es:'Un sistema informático genera contraseñas de {k} caracteres eligiendo cada uno entre {n} posibles (con repetición). ¿Cuántas contraseñas distintas puede generar?',
+          en:'A computer system generates passwords of {k} characters, each chosen from {n} possible ones (repetition allowed). How many distinct passwords can it generate?',
+          ca:'Un sistema informàtic genera contrasenyes de {k} caràcters triant cadascun entre {n} possibles (amb repetició). Quantes contrasenyes distintes pot generar?',
+          ga:'Un sistema informático xera contrasinais de {k} caracteres escollendo cada un entre {n} posibles (con repetición). Cantos contrasinais distintos pode xerar?',
+          eu:'Informatika-sistema batek {k} karaktereko pasahitzak sortzen ditu, bakoitza {n} posibletatik aukeratuta (errepikapenarekin). Zenbat pasahitz ezberdin sor ditzake?'},
+     hint:{es:'Hay {n} opciones para cada posición y se puede usar el mismo carácter más de una vez.',
+           en:'There are {n} options per position and the same character can be used more than once.',
+           ca:'Hi ha {n} opcions per posició i es pot usar el mateix caràcter més d\'una vegada.',
+           ga:'Hai {n} opcións por posición e pódese usar o mesmo carácter máis dunha vez.',
+           eu:'Posizio bakoitzeko {n} aukera daude eta karaktere bera behin baino gehiagotan erabil daiteke.'}}
+  ],
+  variation:[
+    {ctx:{es:'De un grupo de {n} candidatos se eligen {k} para ocupar {k} cargos distintos (cada cargo lo ocupa una persona diferente). ¿De cuántas formas puede hacerse?',
+          en:'From a group of {n} candidates, {k} are chosen to fill {k} different posts (each held by a different person). In how many ways can this be done?',
+          ca:'D\'un grup de {n} candidats s\'elegeixen {k} per ocupar {k} càrrecs distints (cada càrrec l\'ocupa una persona diferent). De quantes formes pot fer-se?',
+          ga:'Dun grupo de {n} candidatos elíxense {k} para ocupar {k} cargos distintos (cada cargo ocupado por unha persoa diferente). De cantas formas pode facerse?',
+          eu:'{n} hautagai-talde batetik {k} hautatzen dira {k} kargu ezberdin betetzeko (kargu bakoitza pertsona ezberdinek betetzen du). Zenbat modutan egin daiteke?'},
+     hint:{es:'El orden importa (cargo A ≠ cargo B) y no se puede repetir persona.',
+           en:'Order matters (post A ≠ post B) and a person cannot be repeated.',
+           ca:'L\'ordre importa (càrrec A ≠ càrrec B) i no es pot repetir persona.',
+           ga:'A orde importa (cargo A ≠ cargo B) e non se pode repetir persoa.',
+           eu:'Ordena garrantzitsua da (kargu A ≠ kargu B) eta pertsona ezin da errepikatu.'}},
+    {ctx:{es:'En una carrera de {n} atletas se reparten {k} medallas distintas (oro, plata…). ¿De cuántas formas puede quedar el podio?',
+          en:'In a race with {n} athletes, {k} distinct medals are awarded (gold, silver…). In how many ways can the podium turn out?',
+          ca:'En una cursa de {n} atletes es reparteixen {k} medalles distintes (or, plata…). De quantes formes pot quedar el podi?',
+          ga:'Nunha carreira de {n} atletas repártense {k} medallas distintas (ouro, prata…). De cantas formas pode quedar o podio?',
+          eu:'{n} atletako lasterketa batean {k} domina ezberdin banatzen dira (urrea, zilarra...). Zenbat modutan gera daiteke podiumak?'},
+     hint:{es:'El orden importa (oro ≠ plata) y cada atleta solo puede recibir una medalla.',
+           en:'Order matters (gold ≠ silver) and each athlete can only receive one medal.',
+           ca:'L\'ordre importa (or ≠ plata) i cada atleta només pot rebre una medalla.',
+           ga:'A orde importa (ouro ≠ prata) e cada atleta só pode recibir unha medalla.',
+           eu:'Ordena garrantzitsua da (urrea ≠ zilarra) eta atleta bakoitzak domina bat baino ezin du jaso.'}},
+    {ctx:{es:'Hay {n} cuadros distintos y {k} paredes numeradas donde colgarlos (un cuadro por pared). ¿De cuántas formas pueden distribuirse?',
+          en:'There are {n} different paintings and {k} numbered walls to hang them on (one painting per wall). In how many ways can they be distributed?',
+          ca:'Hi ha {n} quadres distints i {k} parets numerades per penjar-los (un quadre per paret). De quantes formes es poden distribuir?',
+          ga:'Hai {n} cadros distintos e {k} paredes numeradas para colgar (un cadro por parede). De cantas formas poden distribuírse?',
+          eu:'{n} koadro ezberdin daude eta {k} horma zenbakitu daude zintzilikatzeko (horma bakoitzeko koadro bat). Zenbat modutan bana daitezke?'},
+     hint:{es:'El orden importa (pared 1 ≠ pared 2) y no se puede colgar el mismo cuadro en dos paredes.',
+           en:'Order matters (wall 1 ≠ wall 2) and the same painting cannot hang on two walls.',
+           ca:'L\'ordre importa (paret 1 ≠ paret 2) i no es pot penjar el mateix quadre a dues parets.',
+           ga:'A orde importa (parede 1 ≠ parede 2) e non se pode colgar o mesmo cadro en dúas paredes.',
+           eu:'Ordena garrantzitsua da (horma 1 ≠ horma 2) eta koadro bera bi hormatan ezin da zintzilika.'}},
+    {ctx:{es:'Un fotógrafo tiene {n} modelos disponibles y hace una sesión con {k} de ellos en posiciones numeradas distintas. ¿Cuántos grupos ordenados de {k} modelos puede formar?',
+          en:'A photographer has {n} available models and shoots {k} of them in distinct numbered positions. How many ordered groups of {k} models can be formed?',
+          ca:'Un fotògraf té {n} models disponibles i fa una sessió amb {k} en posicions numerades distintes. Quants grups ordenats de {k} models pot formar?',
+          ga:'Un fotógrafo ten {n} modelos dispoñibles e fai unha sesión con {k} en posicións numeradas distintas. Cantos grupos ordenados de {k} modelos pode formar?',
+          eu:'Argazkilari batek {n} modelo ditu eta {k} posizioan argazkia egiten du. Zenbat {k} modeloko talde ordenatu osa ditzake?'},
+     hint:{es:'El orden de los modelos en la foto importa y no puede salir el mismo modelo dos veces.',
+           en:'The order of the models in the photo matters and the same model cannot appear twice.',
+           ca:'L\'ordre dels models a la foto importa i no pot sortir el mateix model dues vegades.',
+           ga:'A orde dos modelos na foto importa e non pode saír o mesmo modelo dúas veces.',
+           eu:'Argazkian modeloen ordena garrantzitsua da eta modelo bera birritan ezin da agertu.'}}
+  ],
+  combination:[
+    {ctx:{es:'De un grupo de {n} personas se eligen {k} para formar un comité (sin cargos distintos). ¿Cuántos comités distintos hay?',
+          en:'From a group of {n} people, {k} are chosen to form a committee (no distinct roles). How many distinct committees are there?',
+          ca:'D\'un grup de {n} persones s\'elegeixen {k} per formar un comitè (sense càrrecs distints). Quants comitès distints hi ha?',
+          ga:'Dun grupo de {n} persoas elíxense {k} para formar un comité (sen cargos distintos). Cantos comités distintos hai?',
+          eu:'{n} pertsonako talde batetik {k} hautatatzen dira batzordea osatzeko (kargu berezirik gabe). Zenbat batzorde ezberdin daude?'},
+     hint:{es:'El orden no importa: {A,B,C} es el mismo comité que {C,B,A}.',
+           en:'Order doesn\'t matter: {A,B,C} is the same committee as {C,B,A}.',
+           ca:'L\'ordre no importa: {A,B,C} és el mateix comitè que {C,B,A}.',
+           ga:'A orde non importa: {A,B,C} é o mesmo comité que {C,B,A}.',
+           eu:'Ordena ez da garrantzitsua: {A,B,C} batzordea {C,B,A} berdina da.'}},
+    {ctx:{es:'Un estudiante tiene {n} asignaturas optativas y debe elegir {k} para su plan de estudios. ¿De cuántas formas puede elegirlas?',
+          en:'A student has {n} optional subjects and must choose {k} for their study plan. In how many ways can they be chosen?',
+          ca:'Un estudiant té {n} assignatures optatives i ha de triar-ne {k} per al seu pla d\'estudis. De quantes formes pot triar-les?',
+          ga:'Un estudante ten {n} materias optativas e debe elixir {k} para o seu plan de estudos. De cantas formas pode elixilas?',
+          eu:'Ikasle batek {n} hautazko ikasgai ditu eta {k} aukeratu behar ditu ikasketa-plana egiteko. Zenbat modutan hauta ditzake?'},
+     hint:{es:'El conjunto de asignaturas no tiene orden; solo importa qué {k} se eligen.',
+           en:'The set of subjects has no order; only which {k} are chosen matters.',
+           ca:'El conjunt d\'assignatures no té ordre; només importa quines {k} es trien.',
+           ga:'O conxunto de materias non ten orde; só importa cales {k} se elixen.',
+           eu:'Ikasgai-multzoak ez du ordenarik; {k} zeintzuk aukeratzen diren bakarrik da garrantzitsua.'}},
+    {ctx:{es:'Hay {n} equipos en un torneo y se quieren elegir {k} para una fase especial. ¿Cuántas selecciones distintas de {k} equipos hay?',
+          en:'There are {n} teams in a tournament and {k} are to be chosen for a special stage. How many distinct selections of {k} teams are there?',
+          ca:'Hi ha {n} equips en un torneig i se\'n volen elegir {k} per a una fase especial. Quantes seleccions distintes de {k} equips hi ha?',
+          ga:'Hai {n} equipos nun torneo e quérense elixir {k} para unha fase especial. Cantas seleccións distintas de {k} equipos hai?',
+          eu:'Txapelketa batean {n} talde daude eta {k} aukeratu nahi dira fase berezi baterako. Zenbat {k} taldeen hautaketa ezberdin daude?'},
+     hint:{es:'La selección es un conjunto; {A,B} es lo mismo que {B,A}.',
+           en:'The selection is a set; {A,B} is the same as {B,A}.',
+           ca:'La selecció és un conjunt; {A,B} és el mateix que {B,A}.',
+           ga:'A selección é un conxunto; {A,B} é o mesmo que {B,A}.',
+           eu:'Hautaketa multzo bat da; {A,B} {B,A} berdina da.'}},
+    {ctx:{es:'Una tienda tiene {n} productos distintos y un cliente quiere comprar {k}. ¿Cuántas selecciones distintas de {k} productos puede hacer?',
+          en:'A shop has {n} different products and a customer wants to buy {k}. How many distinct selections of {k} products can be made?',
+          ca:'Una botiga té {n} productes distints i un client vol comprar-ne {k}. Quantes seleccions distintes de {k} productes pot fer?',
+          ga:'Nunha tenda hai {n} produtos distintos e un cliente quere mercar {k}. Cantas seleccións distintas de {k} produtos pode facer?',
+          eu:'Denda batek {n} produktu ezberdin ditu eta bezero batek {k} erosi nahi ditu. Zenbat {k} produkturen hautaketa ezberdin egin ditzake?'},
+     hint:{es:'El conjunto de productos comprados no tiene orden; solo importa cuáles son.',
+           en:'The set of purchased products has no order; only which ones matter.',
+           ca:'El conjunt de productes comprats no té ordre; només importa quins són.',
+           ga:'O conxunto de produtos mercados non ten orde; só importa cales son.',
+           eu:'Erositako produktuen multzoak ez du ordenarik; zein diren bakarrik da garrantzitsua.'}}
+  ],
+  combinationRep:[
+    {ctx:{es:'Una heladería tiene {n} sabores. Pides {k} bolas de helado pudiendo repetir sabor. ¿Cuántas combinaciones distintas de {k} bolas hay?',
+          en:'An ice cream parlour has {n} flavours. You order {k} scoops and may repeat a flavour. How many distinct combinations of {k} scoops are there?',
+          ca:'Una gelateria té {n} gustos. Demanes {k} boles de gelat podent repetir gust. Quantes combinacions distintes de {k} boles hi ha?',
+          ga:'Nunha xeadería hai {n} sabores. Pides {k} bolas de xeado podendo repetir sabor. Cantas combinacións distintas de {k} bolas hai?',
+          eu:'Izozki-dendak {n} zapore ditu. {k} bola eskatzen dituzu zaporea errepika dezakezula. Zenbat {k} bolen konbinazio ezberdin daude?'},
+     hint:{es:'El orden de las bolas no importa y se puede pedir varias del mismo sabor.',
+           en:'The order of scoops doesn\'t matter and several of the same flavour can be chosen.',
+           ca:'L\'ordre de les boles no importa i es pot demanar-ne diverses del mateix gust.',
+           ga:'A orde das bolas non importa e pódense pedir varias do mesmo sabor.',
+           eu:'Bolen ordena ez da garrantzitsua eta zapore bereko bat baino gehiago eska daiteke.'}},
+    {ctx:{es:'Hay {n} variedades de fruta en un mercado. Compras {k} piezas pudiendo repetir variedad. ¿Cuántas compras distintas puedes hacer?',
+          en:'A market has {n} fruit varieties. You buy {k} pieces and may repeat a variety. How many distinct purchases can you make?',
+          ca:'Hi ha {n} varietats de fruita en un mercat. Compres {k} peces podent repetir varietat. Quantes compres distintes pots fer?',
+          ga:'Hai {n} variedades de froita nun mercado. Compras {k} pezas podendo repetir variedade. Cantas compras distintas podes facer?',
+          eu:'Merkatuan {n} fruta barietate daude. {k} fruta erosten dituzu barietatea errepika dezakezula. Zenbat erosketa ezberdin egin ditzakezu?'},
+     hint:{es:'El orden no importa y se puede comprar varias piezas del mismo tipo.',
+           en:'Order doesn\'t matter and several pieces of the same type can be bought.',
+           ca:'L\'ordre no importa i es pot comprar-ne diverses peces del mateix tipus.',
+           ga:'A orde non importa e pódense comprar varias pezas do mesmo tipo.',
+           eu:'Ordena ez da garrantzitsua eta mota bereko bat baino gehiago eros daiteke.'}},
+    {ctx:{es:'Una cafetería tiene {n} tipos de bebida. Pides {k} bebidas para un grupo pudiendo repetir tipo. ¿Cuántos pedidos distintos hay?',
+          en:'A café has {n} types of drink. You order {k} drinks for a group and may repeat a type. How many distinct orders are there?',
+          ca:'Una cafeteria té {n} tipus de beguda. Demanes {k} begudes per a un grup podent repetir tipus. Quantes comandes distintes hi ha?',
+          ga:'Nunha cafetería hai {n} tipos de bebida. Pides {k} bebidas para un grupo podendo repetir tipo. Cantos pedidos distintos hai?',
+          eu:'Kafetegi batek {n} edari mota ditu. {k} edari eskatzen dituzu talde baterako mota errepika dezakezula. Zenbat eskaera ezberdin daude?'},
+     hint:{es:'El orden de las bebidas no importa y se puede pedir el mismo tipo varias veces.',
+           en:'The order of drinks doesn\'t matter and the same type can be ordered more than once.',
+           ca:'L\'ordre de les begudes no importa i es pot demanar el mateix tipus diverses vegades.',
+           ga:'A orde das bebidas non importa e pódese pedir o mesmo tipo varias veces.',
+           eu:'Edarien ordena ez da garrantzitsua eta mota bera behin baino gehiagotan eska daiteke.'}},
+    {ctx:{es:'Una tienda de snacks tiene {n} variedades. Llevas una bolsa con {k} snacks pudiendo repetir. ¿Cuántas bolsas distintas puedes preparar?',
+          en:'A snack shop has {n} varieties. You fill a bag with {k} snacks, repeating if you like. How many distinct bags can you prepare?',
+          ca:'Una botiga de snacks té {n} varietats. Omples una bossa amb {k} snacks podent repetir. Quantes bosses distintes pots preparar?',
+          ga:'Nunha tenda de snacks hai {n} variedades. Enchas unha bolsa con {k} snacks podendo repetir. Cantas bolsas distintas podes preparar?',
+          eu:'Pintxo-dendak {n} barietate ditu. {k} pintxoz poltsatxo bat betetzen duzu errepika dezakezula. Zenbat poltsatxo ezberdin sor ditzakezu?'},
+     hint:{es:'El orden en la bolsa no importa y puedes coger varios de la misma variedad.',
+           en:'Order in the bag doesn\'t matter and several of the same variety can be taken.',
+           ca:'L\'ordre a la bossa no importa i pots agafar-ne diversos de la mateixa varietat.',
+           ga:'A orde na bolsa non importa e podes coller varios da mesma variedade.',
+           eu:'Poltsatxoko ordena ez da garrantzitsua eta barietate bereko bat baino gehiago har dezakezu.'}}
+  ],
+  permutationRep:[
+    {ctx:{es:'Tienes {n} bolas: {reps}. ¿De cuántas formas distintas puedes ordenarlas todas en fila?',
+          en:'You have {n} balls: {reps}. In how many distinct ways can you arrange them all in a row?',
+          ca:'Tens {n} boles: {reps}. De quantes formes distintes pots ordenar-les totes en fila?',
+          ga:'Tes {n} bolas: {reps}. De cantas formas distintas podes ordenalas todas en fila?',
+          eu:'{n} bola dituzu: {reps}. Zenbat modu ezberdinetan ordena ditzakezu guziak ilaran?'},
+     hint:{es:'Los objetos del mismo color son indistinguibles; divide por el factorial de cada grupo.',
+           en:'Objects of the same colour are indistinguishable; divide by the factorial of each group.',
+           ca:'Els objectes del mateix color son indistingibles; divideix pel factorial de cada grup.',
+           ga:'Os obxectos da mesma cor son indistingibles; divide polo factorial de cada grupo.',
+           eu:'Kolore bereko objektuak bereizezinak dira; talde bakoitzaren faktorialaz zatitu.'}},
+    {ctx:{es:'Una caja contiene {n} fichas: {reps}. Se colocan todas en fila. ¿Cuántos órdenes distintos hay?',
+          en:'A box contains {n} tiles: {reps}. They are all placed in a row. How many distinct orders are there?',
+          ca:'Una caixa conté {n} fitxes: {reps}. Es col·loquen totes en fila. Quants ordres distints hi ha?',
+          ga:'Nunha caixa hai {n} fichas: {reps}. Colócanse todas en fila. Cantos ordes distintos hai?',
+          eu:'Kutxa batean {n} fitxa daude: {reps}. Guziak ilaran jartzen dira. Zenbat ordena ezberdin daude?'},
+     hint:{es:'Las fichas del mismo color son idénticas; divide por el factorial de cada grupo repetido.',
+           en:'Tiles of the same colour are identical; divide by the factorial of each repeated group.',
+           ca:'Les fitxes del mateix color son idèntiques; divideix pel factorial de cada grup repetit.',
+           ga:'As fichas da mesma cor son idénticas; divide polo factorial de cada grupo repetido.',
+           eu:'Kolore bereko fitxak berdinak dira; talde errepikatu bakoitzaren faktorialaz zatitu.'}},
+    {ctx:{es:'Hay {n} banderas: {reps}. Se colocan todas en un mástil. ¿Cuántas señales distintas pueden formarse?',
+          en:'There are {n} flags: {reps}. All are placed on a flagpole. How many distinct signals can be formed?',
+          ca:'Hi ha {n} banderes: {reps}. Es col·loquen totes en un pal. Quants senyals distints es poden formar?',
+          ga:'Hai {n} bandeiras: {reps}. Colócanse todas nun mastro. Cantas sinais distintas se poden formar?',
+          eu:'{n} bandera daude: {reps}. Guziak masta batean jartzen dira. Zenbat seinale ezberdin sor daitezke?'},
+     hint:{es:'Las banderas del mismo color son idénticas; divide por el factorial de cada color.',
+           en:'Flags of the same colour are identical; divide by the factorial of each colour.',
+           ca:'Les banderes del mateix color son idèntiques; divideix pel factorial de cada color.',
+           ga:'As bandeiras da mesma cor son idénticas; divide polo factorial de cada cor.',
+           eu:'Kolore bereko banderak berdinak dira; kolore bakoitzaren faktorialaz zatitu.'}},
+    {ctx:{es:'Se ordenan {n} caramelos en fila: {reps} (los del mismo sabor son idénticos). ¿Cuántos órdenes distintos hay?',
+          en:'{n} sweets are arranged in a row: {reps} (sweets of the same flavour are identical). How many distinct orders are there?',
+          ca:'S\'ordenen {n} caramels en fila: {reps} (els del mateix sabor son idèntics). Quants ordres distints hi ha?',
+          ga:'Ordénanse {n} caramelos en fila: {reps} (os do mesmo sabor son idénticos). Cantos ordes distintos hai?',
+          eu:'{n} goxoki ilaran ordenatzen dira: {reps} (zapore bereko goxokiak berdinak dira). Zenbat ordena ezberdin daude?'},
+     hint:{es:'Los caramelos idénticos no generan nuevos órdenes; divide por el factorial de cada grupo.',
+           en:'Identical sweets don\'t generate new orders; divide by the factorial of each group.',
+           ca:'Els caramels idèntics no generen nous ordres; divideix pel factorial de cada grup.',
+           ga:'Os caramelos idénticos non xeran novas ordes; divide polo factorial de cada grupo.',
+           eu:'Goxoki berdinak ez dute ordena berriak sortzen; talde bakoitzaren faktorialaz zatitu.'}}
+  ]
+};
+
+function generateProceduralProblem(type){
+  const LANGS=['es','en','ca','ga','eu'];
+  const tmpls=PROC_TEMPLATES[type];
+  if(!tmpls||!tmpls.length) return null;
+  const tmpl=tmpls[Math.floor(Math.random()*tmpls.length)];
+  let n,k,reps,calc,difficulty;
+  const id='proc-'+type+'-'+Date.now()+'-'+Math.floor(Math.random()*9999);
+
+  if(type==='permutation'){
+    n=4+Math.floor(Math.random()*6); // 4-9
+    k=n;
+    calc=`$P_{${n}} = ${n}! = ${procFmt(procFact(n))}$`;
+    difficulty=n<=5?-1:n<=7?0:1;
+  } else if(type==='variationRep'){
+    n=2+Math.floor(Math.random()*7); // 2-8
+    k=2+Math.floor(Math.random()*5); // 2-6
+    const res=Math.pow(n,k);
+    calc=`$VR_{${n},${k}} = ${n}^{${k}} = ${procFmt(res)}$`;
+    difficulty=res<=100?-1:res<=10000?0:1;
+  } else if(type==='variation'){
+    n=5+Math.floor(Math.random()*10); // 5-14
+    k=2+Math.floor(Math.random()*Math.min(4,n-2)); // 2-5, k<n
+    const terms=Array.from({length:k},(_,i)=>n-i);
+    const res=terms.reduce((a,b)=>a*b,1);
+    calc=`$V_{${n},${k}} = ${terms.join('\\cdot')} = ${procFmt(res)}$`;
+    difficulty=n<=7?-1:n<=12?0:1;
+  } else if(type==='combination'){
+    n=5+Math.floor(Math.random()*14); // 5-18
+    k=2+Math.floor(Math.random()*4); // 2-5
+    if(k>=n) k=n-1;
+    const res=procComb(n,k);
+    calc=`$C_{${n},${k}} = ${procFmt(res)}$`;
+    difficulty=n<=8?-1:n<=13?0:1;
+  } else if(type==='combinationRep'){
+    n=2+Math.floor(Math.random()*8); // 2-9
+    k=2+Math.floor(Math.random()*5); // 2-6
+    const res=procComb(n+k-1,k);
+    calc=`$CR_{${n},${k}} = \\dbinom{${n+k-1}}{${k}} = ${procFmt(res)}$`;
+    difficulty=n<=4&&k<=3?-1:n<=6?0:1;
+  } else if(type==='permutationRep'){
+    n=5+Math.floor(Math.random()*5); // 5-9
+    reps=[];
+    let rem=n;
+    while(rem>0){
+      if(reps.length>=3||rem<=2){reps.push(rem);break;}
+      const g=2+Math.floor(Math.random()*Math.min(3,rem-2));
+      reps.push(g); rem-=g;
+    }
+    reps=reps.filter(r=>r>0);
+    n=reps.reduce((a,b)=>a+b,0);
+    k=n;
+    const denom=reps.map(r=>`${r}!`).join('\\cdot ');
+    const res=Math.round(reps.reduce((acc,r)=>acc/procFact(r),procFact(n)));
+    calc=`$\\dfrac{${n}!}{${denom}} = ${procFmt(res)}$`;
+    difficulty=n<=6?-1:n<=8?0:1;
+  }
+
+  const langObj={};
+  for(const lang of LANGS){
+    const vars={n,k};
+    if(type==='permutationRep') vars.reps=procRepDesc(reps,lang);
+    langObj[lang]={
+      context:procFill(tmpl.ctx[lang]||tmpl.ctx.es,vars),
+      hint:   procFill(tmpl.hint[lang]||tmpl.hint.es,vars)
+    };
+  }
+  return {id,type,difficulty:difficulty||0,n,k,calc,formula:TYPE_FORMULAS[type],...langObj};
+}
+
+// ══════════════════════════════════════════════════════════════
 // MOTOR BAYESIANO ADAPTATIVO
 // ══════════════════════════════════════════════════════════════
 const BAYES_THETA=[-2,0,2];  // hipótesis: no aprendido / aprendiendo / dominado
 const BAYES_A=1.5;           // discriminación IRT
 const BAYES_C=1/6;           // factor de azar (6 tipos posibles)
+const BAYES_MIN_TRIES_FOR_MID=2;
+const BAYES_MIN_TRIES_FOR_HIGH=4;
+const BAYES_DIAGNOSIS_MIN_TRIES=2;
 
 function bayesIRT(theta,b){
   return BAYES_C+(1-BAYES_C)/(1+Math.exp(-BAYES_A*(theta-b)));
 }
+const BAYES_LEVEL_LOW_MAX=Math.round(bayesIRT(-0.3,0)*100);
+const BAYES_LEVEL_HIGH_MIN=Math.round(bayesIRT(1.4,0)*100);
 function bayesEntropy(dist){
   return -dist.reduce((h,p)=>h+(p>1e-10?p*Math.log2(p):0),0);
 }
@@ -2366,6 +2822,8 @@ function getTrafficLight(type){
   if(!ts||ts.count===0) return 'none';
   // Usa la theta esperada para saber si el alumno domina (no solo qué hipótesis tiene más masa)
   const expectedTheta=ts.prior.reduce((s,p,i)=>s+p*BAYES_THETA[i],0);
+  if(ts.count<BAYES_MIN_TRIES_FOR_MID) return 'red';
+  if(ts.count<BAYES_MIN_TRIES_FOR_HIGH) return expectedTheta>=-0.3?'yellow':'red';
   if(expectedTheta>=1.4) return 'green';
   if(expectedTheta>=-0.3) return 'yellow';
   return 'red';
@@ -2381,19 +2839,84 @@ function masteryLabel(type){
   if(tl==='yellow') return t('practiceMasteryMid');
   return t('practiceMasteryLow');
 }
+function bayesSuccessEstimate(type,difficulty=0){
+  const state=loadBayesState();
+  const ts=state[type];
+  if(!ts||ts.count===0) return null;
+  return ts.prior.reduce((s,p,i)=>s+p*bayesIRT(BAYES_THETA[i],difficulty),0);
+}
+function bayesDisplayEstimate(type,difficulty=0){
+  const state=loadBayesState();
+  const ts=state[type];
+  const raw=bayesSuccessEstimate(type,difficulty);
+  if(!ts||raw===null) return null;
+  const rawPct=Math.round(raw*100);
+  if(ts.count<BAYES_MIN_TRIES_FOR_MID) return Math.min(rawPct,BAYES_LEVEL_LOW_MAX-1);
+  if(ts.count<BAYES_MIN_TRIES_FOR_HIGH) return Math.min(rawPct,BAYES_LEVEL_HIGH_MIN-1);
+  return rawPct;
+}
+function clamp01(x){return Math.max(0,Math.min(1,x));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function bayesProgressStyle(pct){
+  if(pct===null) return '';
+  const red=2, orange=31, yellow=48, green=143;
+  const lowWarn=BAYES_LEVEL_LOW_MAX*0.7;
+  const hue=pct<=lowWarn
+    ?red
+    :pct<=BAYES_LEVEL_LOW_MAX
+      ?lerp(red,orange,clamp01((pct-lowWarn)/(BAYES_LEVEL_LOW_MAX-lowWarn)))
+    :pct<BAYES_LEVEL_HIGH_MIN
+      ?lerp(orange,yellow,clamp01((pct-BAYES_LEVEL_LOW_MAX)/(BAYES_LEVEL_HIGH_MIN-BAYES_LEVEL_LOW_MAX)))
+      :lerp(yellow,green,clamp01((pct-BAYES_LEVEL_HIGH_MIN)/(100-BAYES_LEVEL_HIGH_MIN)));
+  return `--progress-start:hsl(${Math.round(hue)} 62% 38%);--progress-end:hsl(${Math.round(hue)} 74% 62%)`;
+}
+function bayesExpectedSuccess(prior,difficulty=0){
+  return prior.reduce((s,p,i)=>s+p*bayesIRT(BAYES_THETA[i],difficulty),0);
+}
+function bayesExpectedTheta(prior){
+  return prior.reduce((s,p,i)=>s+p*BAYES_THETA[i],0);
+}
+function bayesDifficultyFit(prior,difficulty){
+  const gap=Math.abs(difficulty-bayesExpectedTheta(prior));
+  return Math.exp(-0.5*gap*gap);
+}
+function bayesPracticePriority(type,state){
+  const ts=state[type];
+  const weakness=1-bayesExpectedSuccess(ts.prior,0);
+  const uncertainty=bayesEntropy(ts.prior)/Math.log2(BAYES_THETA.length);
+  return 0.7*weakness+0.3*uncertainty;
+}
+function pickAmongTop(items, scores, tolerance){
+  const maxScore=Math.max(...scores);
+  const top=items.filter((_,i)=>scores[i]>=maxScore-tolerance);
+  return top[Math.floor(Math.random()*top.length)];
+}
 function selectAdaptiveProblem(filter){
   if(!PROBLEM_BANK.length) return null;
   const state=loadBayesState();
-  let targetType=filter;
-  if(filter==='all'){
-    const entropies=ALL_TYPE_KEYS.map(type=>bayesEntropy(state[type].prior));
-    const maxEnt=Math.max(...entropies);
-    const topTypes=ALL_TYPE_KEYS.filter((_,i)=>entropies[i]>=maxEnt-1e-9);
-    targetType=topTypes[Math.floor(Math.random()*topTypes.length)];
+  const typePool=Array.isArray(filter)&&filter.length ? filter : filter==='all' ? ALL_TYPE_KEYS : [filter];
+  let targetType=typePool[0];
+  let isDiagnosisPhase=false;
+  if(typePool.length>1){
+    const underSampled=typePool.filter(type=>(state[type]?.count||0)<BAYES_DIAGNOSIS_MIN_TRIES);
+    if(underSampled.length){
+      isDiagnosisPhase=true;
+      const diagnosisScores=underSampled.map(type=>{
+        const missing=BAYES_DIAGNOSIS_MIN_TRIES-(state[type]?.count||0);
+        return missing+bayesEntropy(state[type].prior)/Math.log2(BAYES_THETA.length);
+      });
+      targetType=pickAmongTop(underSampled,diagnosisScores,0.05);
+    }else{
+      const weaknessScores=typePool.map(type=>1-bayesExpectedSuccess(state[type].prior,0));
+      targetType=pickAmongTop(typePool,weaknessScores,0.03);
+    }
   }
   const prior=state[targetType].prior;
   let available=PROBLEM_BANK.filter(p=>p.type===targetType&&!doneProblemIds.has(p.id));
   if(!available.length){
+    const proc=generateProceduralProblem(targetType);
+    if(proc) return {prob:proc,type:targetType};
+    // fallback: reiniciar banco si el generador falla
     PROBLEM_BANK.filter(p=>p.type===targetType).forEach(p=>doneProblemIds.delete(p.id));
     saveDoneProblemIds();
     available=PROBLEM_BANK.filter(p=>p.type===targetType);
@@ -2401,10 +2924,27 @@ function selectAdaptiveProblem(filter){
   if(!available.length) return null;
   const gains=available.map(p=>bayesIG(prior,p.difficulty));
   const maxGain=Math.max(...gains);
-  // umbral del 10% del máximo para añadir variedad cuando el prior es poco informativo
-  const threshold=Math.max(maxGain*0.10,1e-9);
-  const candidates=available.filter((_,i)=>gains[i]>=maxGain-threshold);
+  const scores=isDiagnosisPhase
+    ?gains
+    :available.map((p,i)=>{
+      const normalizedGain=maxGain>1e-9?gains[i]/maxGain:0;
+      return 0.65*normalizedGain+0.35*bayesDifficultyFit(prior,p.difficulty);
+    });
+  const maxScore=Math.max(...scores);
+  const threshold=isDiagnosisPhase?Math.max(maxScore*0.10,1e-9):0.04;
+  const candidates=available.filter((_,i)=>scores[i]>=maxScore-threshold);
   return {prob:candidates[Math.floor(Math.random()*candidates.length)],type:targetType};
+}
+
+function togglePracticeTypeSelection(type){
+  if(pracSelectedTypes.has(type)) pracSelectedTypes.delete(type);
+  else pracSelectedTypes.add(type);
+  renderPracticeHub();
+}
+
+function startSelectedPractice(){
+  if(!pracSelectedTypes.size) return;
+  startPracticeType([...pracSelectedTypes]);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2412,12 +2952,44 @@ function selectAdaptiveProblem(filter){
 // ══════════════════════════════════════════════════════════════
 function renderPracticeHub(){
   pracCurrentProb=null;
+  const bayesState=loadBayesState();
   const typeLabels=t('typeLabels');
+  const bayesItems=ALL_TYPE_KEYS.map(type=>{
+    const pct=bayesDisplayEstimate(type,0);
+    const count=bayesState[type]?.count||0;
+    return {type,pct,count};
+  });
+  const bayesNames=bayesItems.map(({type})=>`<div class="prac-progress-name">${typeLabels[type]}</div>`).join('');
+  const bayesBars=bayesItems.map(({pct})=>`<div class="prac-progress-track">
+    <div class="prac-progress-fill" style="width:${pct===null?0:pct}%;${bayesProgressStyle(pct)}"></div>
+  </div>`).join('');
+  const bayesPcts=bayesItems.map(({pct,count})=>`<div class="prac-progress-pct">${pct===null?t('practiceBayesNoData'):`${pct}%`}<span class="prac-progress-count">${t('practiceSolvedCount')(count)}</span></div>`).join('');
+  const bayesAxis=`<div class="prac-progress-axis">
+    <div class="prac-progress-axis-spacer"></div>
+    <div class="prac-progress-scale">
+      <span class="prac-progress-level-low">${t('practiceMasteryLow')}</span>
+      <span class="prac-progress-level-mid">${t('practiceMasteryMid')}</span>
+      <span class="prac-progress-level-high">${t('practiceMasteryHigh')}</span>
+    </div>
+    <div class="prac-progress-axis-end"></div>
+  </div>`;
+  const bayesChartStyle=[
+    `--low-max:${BAYES_LEVEL_LOW_MAX}%`,
+    `--high-min:${BAYES_LEVEL_HIGH_MIN}%`,
+    `--low-label:${BAYES_LEVEL_LOW_MAX/2}%`,
+    `--mid-label:${(BAYES_LEVEL_LOW_MAX+BAYES_LEVEL_HIGH_MIN)/2}%`,
+    `--high-label:${(BAYES_LEVEL_HIGH_MIN+100)/2}%`
+  ].join(';');
   const typeBtns=ALL_TYPE_KEYS.map(type=>`
-    <button class="prac-hub-btn" onclick="startPracticeType('${type}')">
+    <button class="prac-hub-btn${pracSelectedTypes.has(type)?' is-selected':''}" onclick="togglePracticeTypeSelection('${type}')">
       <span class="prac-tl">${trafficEmoji(type)}</span>
-      <span class="prac-hub-type-name">${typeLabels[type]}<span class="prac-hub-mastery">${masteryLabel(type)}</span></span>
+      <span class="prac-hub-type-name">${typeLabels[type]}<span class="prac-hub-mastery">${masteryLabel(type)} · ${t('practiceSolvedCount')(bayesState[type]?.count||0)}</span></span>
     </button>`).join('');
+  const selectedCount=pracSelectedTypes.size;
+  const selectionHint=`<p class="prac-hub-note">${t('practiceHubMultiHint')}</p>`;
+  const selectionActions=selectedCount
+    ?`<div class="prac-hub-actions"><button class="btn btn-primary" onclick="startSelectedPractice()">${t('practiceStartSelected')(selectedCount)}</button></div>`
+    :'';
   const sessionBar=pracSessionTotal>0
     ?`<p style="font-size:.84rem;color:var(--text2);margin-bottom:12px">${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</p>`:'';
   document.getElementById('prac-content').innerHTML=`
@@ -2425,19 +2997,33 @@ function renderPracticeHub(){
       <h2>${t('practiceHubTitle')}</h2>
       <p style="color:var(--text2);margin-bottom:10px">${t('practiceHubSubtitle')}</p>
       ${sessionBar}
+      <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')" style="width:100%;margin-bottom:12px">
+        <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
+        <span class="prac-hub-type-name" style="text-align:center;flex:1">
+          ${t('practiceAdaptiveBtn')}
+          <span class="prac-hub-mastery">${t('practiceAdaptiveHint')}</span>
+        </span>
+      </button>
+      <div class="prac-progress-panel">
+        <div class="prac-progress-title">${t('practiceBayesTitle')}</div>
+        <div class="prac-progress-sub">${t('practiceBayesSubtitle')}</div>
+        <div class="prac-progress-chart" style="${bayesChartStyle}">
+          ${bayesAxis}
+          <div class="prac-progress-body">
+            <div class="prac-progress-names">${bayesNames}</div>
+            <div class="prac-progress-bars">${bayesBars}</div>
+            <div class="prac-progress-pcts">${bayesPcts}</div>
+          </div>
+        </div>
+      </div>
       <p style="font-size:.86rem;font-weight:600;margin-bottom:4px">${t('practiceHubChoose')}</p>
+      ${selectionHint}
       <div class="prac-hub-grid">
         ${typeBtns}
-        <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')">
-          <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
-          <span class="prac-hub-type-name" style="text-align:center;flex:1">
-            ${t('practiceAdaptiveBtn')}
-            <span class="prac-hub-mastery">${t('practiceAdaptiveHint')}</span>
-          </span>
-        </button>
       </div>
+      ${selectionActions}
       <div style="margin-top:16px;text-align:center">
-        <button class="btn-ghost" onclick="resetBayesData()">${t('practiceResetData')}</button>
+        <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--err)';this.style.color='var(--err)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
       </div>
     </div>`;
 }
@@ -2499,7 +3085,13 @@ function pracCheckClassify(chosenType){
 
 function pracSetFormula(type){
   pracFormulaChosen=type;
-  renderPractice();
+  // Actualizar solo los botones sin re-renderizar (para no borrar los inputs n/k)
+  document.querySelectorAll('.prac-formula-btn').forEach(btn=>{
+    const m=btn.getAttribute('onclick').match(/'([^']+)'/);
+    btn.classList.toggle('pf-sel', m&&m[1]===type);
+  });
+  const calcBtn=document.querySelector('[onclick="pracCheckNK()"]');
+  if(calcBtn) calcBtn.removeAttribute('disabled');
 }
 function pracCheckNK(){
   const prob=pracCurrentProb;
@@ -2510,15 +3102,16 @@ function pracCheckNK(){
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
   const formulaOk=pracFormulaChosen===prob.type;
-  // Score ponderado: tipo 40%, n+k 30%, fórmula 30%
+  // Score ponderado para progreso/adaptatividad: tipo 40%, n+k 30%, fórmula 30%
   const score=(pracClassifyCorrect?0.4:0)+(nOk&&kOk?0.3:0)+(formulaOk?0.3:0);
+  const fullyCorrect=pracClassifyCorrect&&nOk&&kOk&&formulaOk;
   pracSessionTotal++;
-  if(score>=0.7) pracSessionCorrect++;
+  if(fullyCorrect) pracSessionCorrect++;
   updateBayesType(prob.type,score,prob.difficulty);
   pracPhase=2;
   window._pracNOk=nOk; window._pracKOk=kOk;
   window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
-  window._pracFormulaOk=formulaOk; window._pracScore=score;
+  window._pracFormulaOk=formulaOk; window._pracScore=score; window._pracFullyCorrect=fullyCorrect;
   renderPractice();
 }
 
@@ -2558,8 +3151,8 @@ function renderPractice(){
         <p class="prac-phase-label">1 — ${t('practiceWhyTitle')}</p>
         <div class="prac-q-block">
           <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ1')}</span>${qBtns('ord',pracOrd)}</div>
-          <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ2')}</span>${qBtns('rep',pracRep)}</div>
           <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ3')}</span>${qBtns('all',pracAll)}</div>
+          <div class="prac-q-row"><span class="prac-q-text">${t('practiceQ2')}</span>${qBtns('rep',pracRep)}</div>
         </div>
         <p class="prac-phase-label" style="${!allAnswered?'opacity:.35':''}">2 — ${t('practiceQuestion')}</p>
         <div class="classify-grid" style="${!allAnswered?'opacity:.35;pointer-events:none':''}">${typeBtns}</div>
@@ -2575,14 +3168,16 @@ function renderPractice(){
       :`<div class="feedback-box err">${t('practiceTypeErr')(typeLabels[prob.type])}</div>`;
     const whyInline=`<div style="font-size:.83rem;margin-top:8px;color:var(--text2)">
       ${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong> &nbsp;·&nbsp;
-      ${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong> &nbsp;·&nbsp;
-      ${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong>
+      ${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong> &nbsp;·&nbsp;
+      ${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong>
     </div>`;
     const kCard=isAllScope
       ?`<div class="prac-nk-card"><span class="prac-nk-label">${t('practiceKNote')}</span><div class="prac-nk-static">${t('practiceKEqN')}</div></div>`
       :`<div class="prac-nk-card"><label class="prac-nk-label" for="prac-k">${t('practiceKNote')}</label><input class="prac-nk-input" id="prac-k" type="number" min="1" max="50" placeholder="?"></div>`;
-    const formulaBtns=ALL_TYPE_KEYS.map(type=>{
-      const f=t('types')[type].formula;
+    const shuffledTypes=[...ALL_TYPE_KEYS].sort(()=>Math.random()-0.5);
+    const formulaBtns=shuffledTypes.map(type=>{
+      const rawF=t('types')[type].formula;
+      const f=rawF.replace(/^\$[^=]+=\s*/,'$');
       const sel=pracFormulaChosen===type?' pf-sel':'';
       return `<button class="prac-formula-btn${sel}" onclick="pracSetFormula('${type}')">${f}</button>`;
     }).join('');
@@ -2613,6 +3208,7 @@ function renderPractice(){
   const nOk=window._pracNOk; const kOk=window._pracKOk;
   const formulaOk=window._pracFormulaOk;
   const score=window._pracScore||0;
+  const fullyCorrect=!!window._pracFullyCorrect;
   const nKFb=(nOk&&kOk)
     ?`<div class="feedback-box ok">${t('practiceNKOk')}</div>`
     :`<div class="feedback-box err">${t('practiceNKErr')(prob.n,prob.k)}</div>`;
@@ -2620,10 +3216,20 @@ function renderPractice(){
   const formulaFb=formulaOk
     ?`<div class="feedback-box ok">${t('practiceFormulaOk')}</div>`
     :`<div class="feedback-box err">${t('practiceFormulaErr')(typeLabels[prob.type])}</div>`;
-  // Barra de puntuación visual
+  // Banner resultado explícito: correcto solo si acierta todo.
+  const isPartial=!fullyCorrect&&score>0;
+  const resultBanner=`<div style="margin:10px 0 8px;padding:8px 14px;border-radius:8px;font-weight:700;font-size:.95rem;
+    background:${fullyCorrect?'var(--green-light)':isPartial?'var(--accent-light)':'var(--red-light)'};
+    color:${fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)'};
+    border:1.5px solid ${fullyCorrect?'var(--green)':isPartial?'var(--accent)':'var(--red)'}">
+    ${fullyCorrect?t('practiceResultOk'):isPartial?t('practiceResultPartial'):t('practiceResultErr')}
+    <span style="font-weight:400;font-size:.82rem;margin-left:8px">${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span>
+  </div>`;
+  // Barra de progreso visual del intento
   const pct=Math.round(score*100);
-  const barColor=score>=0.7?'var(--ok)':score>=0.4?'var(--warn)':'var(--err)';
-  const scoreBar=`<div style="margin:12px 0 4px;font-size:.82rem;color:var(--text2);display:flex;align-items:center;gap:10px">
+  const barColor=fullyCorrect?'var(--green)':score>=0.4?'var(--accent)':'var(--red)';
+  const scoreBar=`<div style="margin:4px 0 4px;font-size:.82rem;color:var(--text2);display:flex;align-items:center;gap:10px">
+    <span style="min-width:132px">${t('practiceProgressLabel')}</span>
     <div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">
       <div style="width:${pct}%;height:100%;background:${barColor};border-radius:4px;transition:width .4s"></div>
     </div>
@@ -2633,16 +3239,17 @@ function renderPractice(){
     <strong>${t('practiceWhyTitle')}</strong>
     <ul style="margin:6px 0 0;padding-left:18px">
       <li>${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong></li>
-      <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
       <li>${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong></li>
+      <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
     </ul>
   </div>`;
   document.getElementById('prac-content').innerHTML=`
     <div class="practice-card">
       <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
-        <span>${typeLabels[prob.type]}${sessionChip}</span>${backBtn}
+        <span>${typeLabels[prob.type]}</span>${backBtn}
       </div>
       <div class="practice-context">${probText.context}</div>
+      ${resultBanner}
       ${scoreBar}
       ${nKFb}
       ${formulaFb}
