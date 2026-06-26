@@ -27,6 +27,60 @@
     "eu": { "context": "Telebista kate batek 6 ataleko serie bat emititzen du. Zenbat modu ezberdinetan antola ditzake?", "hint": "Atal guztiak emititzen dira eta edozein ordenak programa ezberdina ematen du." }
   },
   {
+    "id": "perm-004", "type": "permutation", "difficulty": -1, "n": 3, "k": 3,
+    "calc": "$P_3 = 3! = 6$", "formula": "$P_n = n!$",
+    "es": { "context": "Tres atletas compiten en la final de los 100 m. ¿De cuántas maneras distintas puede quedar el podio (oro, plata, bronce)?", "hint": "Los tres atletas ocupan las tres posiciones y el orden importa." },
+    "en": { "context": "Three athletes compete in the 100 m final. In how many distinct ways can the podium (gold, silver, bronze) be arranged?", "hint": "All three athletes take a position and order matters." },
+    "ca": { "context": "Tres atletes competeixen a la final dels 100 m. De quantes maneres distintes pot quedar el podi (or, plata, bronze)?", "hint": "Els tres atletes ocupen les tres posicions i l'ordre importa." },
+    "ga": { "context": "Tres atletas compiten na final dos 100 m. De cantas maneiras distintas pode quedar o podio (ouro, prata, bronce)?", "hint": "Os tres atletas ocupan as tres posicións e a orde importa." },
+    "eu": { "context": "Hiru atleta 100 m finalean lehiatzen dira. Zenbat modu ezberdinetan gera daiteke podiumea (urrea, zilarra, brontzea)?", "hint": "Hiru atletak hiru posizioetan kokatzen dira eta ordena garrantzitsua da." }
+  },
+  {
+    "id": "perm-005", "type": "permutation", "difficulty": -1, "n": 4, "k": 4,
+    "calc": "$P_4 = 4! = 24$", "formula": "$P_n = n!$",
+    "es": { "context": "Un DJ tiene 4 canciones y quiere reproducirlas todas seguidas en distinto orden cada noche. ¿Cuántos órdenes distintos puede crear?", "hint": "Se reproducen todas las canciones y cambiar el orden crea una lista diferente." },
+    "en": { "context": "A DJ has 4 songs and wants to play them all in a different order each night. How many distinct playlists can be created?", "hint": "All songs are played and changing the order creates a different set list." },
+    "ca": { "context": "Un DJ té 4 cançons i vol reproduir-les totes seguides en un ordre diferent cada nit. Quants ordres distints pot crear?", "hint": "Es reprodueixen totes les cançons i canviar l'ordre crea una llista diferent." },
+    "ga": { "context": "Un DJ ten 4 cancións e quere reproducilas todas seguidas en distinta orde cada noite. Cantos ordes distintos pode crear?", "hint": "Reprodúcense todas as cancións e cambiar a orde crea unha lista diferente." },
+    "eu": { "context": "DJ batek 4 abesti ditu eta gau bakoitzean denak beste ordena batean jarri nahi ditu. Zenbat ordena ezberdin sor ditzake?", "hint": "Abesti guztiak jotzen dira eta ordena aldatzeak zerrenda ezberdina sortzen du." }
+  },
+  {
+    "id": "perm-006", "type": "permutation", "difficulty": 0, "n": 5, "k": 5,
+    "calc": "$P_5 = 5! = 120$", "formula": "$P_n = n!$",
+    "es": { "context": "Un chef prepara un menú degustación con 5 platos diferentes y los sirve uno a uno. ¿De cuántas formas distintas puede ordenar los platos?", "hint": "Se sirven todos los platos y el orden en que se presentan importa." },
+    "en": { "context": "A chef prepares a tasting menu with 5 different courses and serves them one by one. In how many different ways can the courses be ordered?", "hint": "All courses are served and the order in which they appear matters." },
+    "ca": { "context": "Un xef prepara un menú degustació amb 5 plats diferents i els serveix d'un en un. De quantes formes distintes pot ordenar els plats?", "hint": "Es serveixen tots els plats i l'ordre en el qual es presenten importa." },
+    "ga": { "context": "Un chef prepara un menú degustación con 5 pratos diferentes e sérveos un a un. De cantas formas distintas pode ordenar os pratos?", "hint": "Sérvense todos os pratos e a orde en que se presentan importa." },
+    "eu": { "context": "Chef batek 5 plater ezberdineko dastaketa-menua prestatzen du eta bata bestearen atzetik zerbitzatzen ditu. Zenbat modutan ordenatu ditzake platerak?", "hint": "Plater guztiak zerbitzatzen dira eta aurkezteko ordena garrantzitsua da." }
+  },
+  {
+    "id": "perm-007", "type": "permutation", "difficulty": 0, "n": 6, "k": 6,
+    "calc": "$P_6 = 6! = 720$", "formula": "$P_n = n!$",
+    "es": { "context": "Seis participantes presentan sus proyectos de uno en uno en una feria de ciencia. ¿De cuántas formas distintas pueden ordenarse las presentaciones?", "hint": "Se presentan los 6 proyectos y el orden en que actúan importa." },
+    "en": { "context": "Six participants present their projects one by one at a science fair. In how many different ways can the presentations be ordered?", "hint": "All 6 projects are presented and the order matters." },
+    "ca": { "context": "Sis participants presenten els seus projectes d'un en un en una fira de ciència. De quantes formes distintes es poden ordenar les presentacions?", "hint": "Es presenten els 6 projectes i l'ordre en que actuen importa." },
+    "ga": { "context": "Seis participantes presentan os seus proxectos de un en un nunha feira de ciencia. De cantas formas distintas poden ordenarse as presentacións?", "hint": "Preséntanse os 6 proxectos e a orde en que actúan importa." },
+    "eu": { "context": "Sei parte-hartzailek proiektuak banan-banan aurkezten dituzte zientzia-azoka batean. Zenbat modutan ordenatu daitezke aurkezpenak?", "hint": "6 proiektu guztiak aurkezten dira eta ordena garrantzitsua da." }
+  },
+  {
+    "id": "perm-008", "type": "permutation", "difficulty": 1, "n": 7, "k": 7,
+    "calc": "$P_7 = 7! = 5\\,040$", "formula": "$P_n = n!$",
+    "es": { "context": "Un festival de cine proyecta 7 cortometrajes a lo largo de una tarde. ¿De cuántas maneras distintas puede programar el orden de proyección?", "hint": "Se proyectan todos los cortometrajes y el orden de programa importa." },
+    "en": { "context": "A film festival screens 7 short films throughout an afternoon. In how many different ways can the screening order be scheduled?", "hint": "All short films are screened and their order in the programme matters." },
+    "ca": { "context": "Un festival de cinema projecta 7 curtmetratges al llarg d'una tarda. De quantes maneres distintes pot programar l'ordre de projecció?", "hint": "Es projecten tots els curtmetratges i l'ordre del programa importa." },
+    "ga": { "context": "Un festival de cine proxecta 7 curtametraxes ao longo dunha tarde. De cantas maneiras distintas pode programar a orde de proxección?", "hint": "Proxéctanse todas as curtametraxes e a orde de programa importa." },
+    "eu": { "context": "Zine-jaialdia batek 7 film-laburrak arratsalde batean proiektatzen ditu. Zenbat modutan programatu daiteke proiekzio-ordena?", "hint": "Film-laburrak guztiak proiektatzen dira eta programako ordena garrantzitsua da." }
+  },
+  {
+    "id": "perm-009", "type": "permutation", "difficulty": 1, "n": 8, "k": 8,
+    "calc": "$P_8 = 8! = 40\\,320$", "formula": "$P_n = n!$",
+    "es": { "context": "Un entrenador tiene 8 suplentes y debe decidir en qué orden los irá introduciendo a lo largo del partido. ¿Cuántos órdenes distintos puede planificar?", "hint": "Entran todos los suplentes y el orden en que sustituyen importa." },
+    "en": { "context": "A coach has 8 substitutes and must decide in what order to bring them on during the match. How many distinct orders can be planned?", "hint": "All substitutes come on and the order in which they are introduced matters." },
+    "ca": { "context": "Un entrenador té 8 suplents i ha de decidir en quin ordre els va introduint al llarg del partit. Quants ordres distints pot planificar?", "hint": "Entren tots els suplents i l'ordre en que substitueixen importa." },
+    "ga": { "context": "Un adestrador ten 8 suplentes e debe decidir en que orde os vai introducindo ao longo do partido. Cantos ordes distintos pode planificar?", "hint": "Entran todos os suplentes e a orde en que substitúen importa." },
+    "eu": { "context": "Entrenatzaile batek 8 ordezkari ditu eta partiduan zehar zein ordenan sartuko dituen erabaki behar du. Zenbat ordena ezberdin planifika ditzake?", "hint": "Ordezkari guztiak sartzen dira eta ordezkatzen duten ordena garrantzitsua da." }
+  },
+  {
     "id": "permRep-001", "type": "permutationRep", "difficulty": -1, "n": 4, "k": 4,
     "calc": "$\\dfrac{4!}{2!\\cdot2!} = 6$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
     "es": { "context": "¿Cuántas palabras distintas pueden formarse con todas las letras de ANNA? (A×2, N×2)", "hint": "Se usan todas las letras y el orden importa, pero A aparece 2 veces y N también." },
@@ -52,6 +106,60 @@
     "ca": { "context": "Quantes paraules distintes es poden formar amb totes les lletres de BANANA? (B×1, A×3, N×2)", "hint": "S'usen totes les lletres, l'ordre importa, però A apareix 3 vegades i N, 2 vegades." },
     "ga": { "context": "Cantas palabras distintas se poden formar con todas as letras de BANANA? (B×1, A×3, N×2)", "hint": "Úsanse todas as letras, a orde importa, pero A aparece 3 veces e N, 2 veces." },
     "eu": { "context": "Zenbat hitz ezberdin sor daitezke BANANA hitzaren letra guztiekin? (B×1, A×3, N×2)", "hint": "Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina A hirutan agertzen da eta N birritan." }
+  },
+  {
+    "id": "permRep-004", "type": "permutationRep", "difficulty": -1, "n": 4, "k": 4,
+    "calc": "$\\dfrac{4!}{2!} = 12$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "¿Cuántas palabras distintas pueden formarse con todas las letras de LORO? (L×1, O×2, R×1)", "hint": "Se usan todas las letras, el orden importa, pero O aparece 2 veces." },
+    "en": { "context": "How many distinct words can be formed using all the letters of LORO? (L×1, O×2, R×1)", "hint": "All letters are used, order matters, but O appears twice." },
+    "ca": { "context": "Quantes paraules distintes es poden formar amb totes les lletres de LORO? (L×1, O×2, R×1)", "hint": "S'usen totes les lletres, l'ordre importa, però O apareix 2 vegades." },
+    "ga": { "context": "Cantas palabras distintas se poden formar con todas as letras de LORO? (L×1, O×2, R×1)", "hint": "Úsanse todas as letras, a orde importa, pero O aparece 2 veces." },
+    "eu": { "context": "Zenbat hitz ezberdin sor daitezke LORO hitzaren letra guztiekin? (L×1, O×2, R×1)", "hint": "Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina O birritan agertzen da." }
+  },
+  {
+    "id": "permRep-005", "type": "permutationRep", "difficulty": -1, "n": 5, "k": 5,
+    "calc": "$\\dfrac{5!}{2!\\cdot2!} = 30$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "¿Cuántas palabras distintas pueden formarse con todas las letras de CACAO? (C×2, A×2, O×1)", "hint": "Se usan todas las letras y el orden importa, pero C aparece 2 veces y A también." },
+    "en": { "context": "How many distinct words can be formed using all the letters of CACAO? (C×2, A×2, O×1)", "hint": "All letters are used, order matters, but C appears twice and so does A." },
+    "ca": { "context": "Quantes paraules distintes es poden formar amb totes les lletres de CACAO? (C×2, A×2, O×1)", "hint": "S'usen totes les lletres i l'ordre importa, però C apareix 2 vegades i A també." },
+    "ga": { "context": "Cantas palabras distintas se poden formar con todas as letras de CACAO? (C×2, A×2, O×1)", "hint": "Úsanse todas as letras e a orde importa, pero C aparece 2 veces e A tamén." },
+    "eu": { "context": "Zenbat hitz ezberdin sor daitezke CACAO hitzaren letra guztiekin? (C×2, A×2, O×1)", "hint": "Letra guztiak erabiltzen dira eta ordena garrantzitsua da, baina C birritan agertzen da eta A ere bai." }
+  },
+  {
+    "id": "permRep-006", "type": "permutationRep", "difficulty": 0, "n": 6, "k": 6,
+    "calc": "$\\dfrac{6!}{3!\\cdot2!} = 60$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "¿Cuántas palabras distintas pueden formarse con todas las letras de PATATA? (P×1, A×3, T×2)", "hint": "Se usan todas las letras, el orden importa, pero A aparece 3 veces y T, 2 veces." },
+    "en": { "context": "How many distinct words can be formed using all the letters of PATATA? (P×1, A×3, T×2)", "hint": "All letters are used, order matters, but A appears 3 times and T appears 2 times." },
+    "ca": { "context": "Quantes paraules distintes es poden formar amb totes les lletres de PATATA? (P×1, A×3, T×2)", "hint": "S'usen totes les lletres, l'ordre importa, però A apareix 3 vegades i T, 2 vegades." },
+    "ga": { "context": "Cantas palabras distintas se poden formar con todas as letras de PATATA? (P×1, A×3, T×2)", "hint": "Úsanse todas as letras, a orde importa, pero A aparece 3 veces e T, 2 veces." },
+    "eu": { "context": "Zenbat hitz ezberdin sor daitezke PATATA hitzaren letra guztiekin? (P×1, A×3, T×2)", "hint": "Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina A hirutan agertzen da eta T birritan." }
+  },
+  {
+    "id": "permRep-007", "type": "permutationRep", "difficulty": 0, "n": 7, "k": 7,
+    "calc": "$\\dfrac{7!}{3!\\cdot2!\\cdot2!} = 210$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "Se quieren colocar en fila 7 banderines: 3 rojos (iguales), 2 azules (iguales) y 2 verdes (iguales). ¿De cuántas maneras distintas pueden ordenarse?", "hint": "Se colocan todos y el orden importa, pero los del mismo color son indistinguibles." },
+    "en": { "context": "7 pennants are to be placed in a row: 3 red (identical), 2 blue (identical) and 2 green (identical). In how many distinct ways can they be arranged?", "hint": "All are placed and order matters, but pennants of the same colour are identical." },
+    "ca": { "context": "Es volen col·locar en fila 7 banderins: 3 vermells (iguals), 2 blaus (iguals) i 2 verds (iguals). De quantes maneres distintes es poden ordenar?", "hint": "Es col·loquen tots i l'ordre importa, però els del mateix color són indistingibles." },
+    "ga": { "context": "Quérense colocar en fila 7 bandeirolas: 3 vermellas (iguais), 2 azuis (iguais) e 2 verdes (iguais). De cantas maneiras distintas poden ordenarse?", "hint": "Colócanse todas e a orde importa, pero as da mesma cor son indistinguibles." },
+    "eu": { "context": "7 banderatxo lerrokatu nahi dira: 3 gorri (berdinak), 2 urdin (berdinak) eta 2 berde (berdinak). Zenbat modutan ordenatu daitezke?", "hint": "Denak kokatzen dira eta ordena garrantzitsua da, baina kolore bereko banderatxoak berdinak dira." }
+  },
+  {
+    "id": "permRep-008", "type": "permutationRep", "difficulty": 1, "n": 7, "k": 7,
+    "calc": "$\\dfrac{7!}{2!\\cdot2!} = 1\\,260$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "¿Cuántas palabras distintas pueden formarse con todas las letras de CARACOL? (C×2, A×2, R×1, O×1, L×1)", "hint": "Se usan todas las letras, el orden importa, pero C y A aparecen 2 veces cada una." },
+    "en": { "context": "How many distinct words can be formed using all the letters of CARACOL? (C×2, A×2, R×1, O×1, L×1)", "hint": "All letters are used, order matters, but C and A each appear twice." },
+    "ca": { "context": "Quantes paraules distintes es poden formar amb totes les lletres de CARACOL? (C×2, A×2, R×1, O×1, L×1)", "hint": "S'usen totes les lletres, l'ordre importa, però C i A apareixen 2 vegades cadascuna." },
+    "ga": { "context": "Cantas palabras distintas se poden formar con todas as letras de CARACOL? (C×2, A×2, R×1, O×1, L×1)", "hint": "Úsanse todas as letras, a orde importa, pero C e A aparecen 2 veces cada unha." },
+    "eu": { "context": "Zenbat hitz ezberdin sor daitezke CARACOL hitzaren letra guztiekin? (C×2, A×2, R×1, O×1, L×1)", "hint": "Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina C eta A birritan agertzen dira bakoitza." }
+  },
+  {
+    "id": "permRep-009", "type": "permutationRep", "difficulty": 1, "n": 8, "k": 8,
+    "calc": "$\\dfrac{8!}{4!\\cdot2!\\cdot2!} = 420$", "formula": "$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$",
+    "es": { "context": "Una estantería tiene 8 libros: 4 de matemáticas (indistinguibles entre sí), 2 de física y 2 de química. ¿De cuántas maneras distintas pueden ordenarse?", "hint": "Se colocan todos, el orden importa, pero los libros de la misma materia son iguales." },
+    "en": { "context": "A shelf has 8 books: 4 maths books (identical), 2 physics books and 2 chemistry books. In how many distinct ways can they be arranged?", "hint": "All are placed, order matters, but books of the same subject are identical." },
+    "ca": { "context": "Una estanteria té 8 llibres: 4 de matemàtiques (indistingibles), 2 de física i 2 de química. De quantes maneres distintes es poden ordenar?", "hint": "Es col·loquen tots, l'ordre importa, però els llibres de la mateixa matèria són iguals." },
+    "ga": { "context": "Unha estante ten 8 libros: 4 de matemáticas (indistinguibles), 2 de física e 2 de química. De cantas maneiras distintas poden ordenarse?", "hint": "Colócanse todos, a orde importa, pero os libros da mesma materia son iguais." },
+    "eu": { "context": "Apalategiak 8 liburu ditu: 4 matematika (berdinak), 2 fisika eta 2 kimika. Zenbat modutan ordenatu daitezke?", "hint": "Denak kokatzen dira, ordena garrantzitsua da, baina materia bereko liburuak berdinak dira." }
   },
   {
     "id": "var-001", "type": "variation", "difficulty": -1, "n": 5, "k": 2,
@@ -81,6 +189,60 @@
     "eu": { "context": "Antzerki-zuzendari batek 10 aktore ditu eta protagonista, antagonista eta komiko-pertsonaiaren rolak esleitu behar ditu. Zenbat modutan egin daiteke?", "hint": "10etik 3 aktore aukeratzen dira rol ezberdinetarako eta ordena garrantzitsua da." }
   },
   {
+    "id": "var-004", "type": "variation", "difficulty": -1, "n": 4, "k": 2,
+    "calc": "$V_{4,2} = 4\\cdot3 = 12$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "Hay 4 colores de pintura para decorar la puerta y la ventana, que deben ser de colores distintos. ¿De cuántas maneras puede elegirse el color de cada una?", "hint": "Se eligen 2 de 4 colores, la puerta y la ventana son posiciones distintas y el orden importa." },
+    "en": { "context": "There are 4 paint colours to decorate a door and a window, which must be different colours. In how many ways can a colour be chosen for each?", "hint": "2 of 4 colours are chosen; the door and the window are different positions and order matters." },
+    "ca": { "context": "Hi ha 4 colors de pintura per decorar la porta i la finestra, que han de ser de colors distints. De quantes maneres pot triar-se el color de cadascuna?", "hint": "Es trien 2 de 4 colors; la porta i la finestra són posicions distintes i l'ordre importa." },
+    "ga": { "context": "Hai 4 cores de pintura para decorar a porta e a ventá, que deben ser de cores distintas. De cantas maneiras pode elixirse a cor de cada unha?", "hint": "Elíxense 2 de 4 cores; a porta e a ventá son posicións distintas e a orde importa." },
+    "eu": { "context": "4 kolore daude atea eta leihoa apaintzeko, eta kolore ezberdinekoak izan behar dira. Zenbat modutan hauta daiteke bakoitzaren kolorea?", "hint": "4tik 2 kolore aukeratzen dira; atea eta leihoa posizio ezberdinak dira eta ordena garrantzitsua da." }
+  },
+  {
+    "id": "var-005", "type": "variation", "difficulty": -1, "n": 6, "k": 2,
+    "calc": "$V_{6,2} = 6\\cdot5 = 30$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "En la final de un torneo participan 6 equipos. ¿De cuántas formas distintas pueden quedar el campeón y el subcampeón?", "hint": "Solo 2 de los 6 equipos ganan trofeo y el orden importa (campeón ≠ subcampeón)." },
+    "en": { "context": "Six teams take part in a tournament final. In how many distinct ways can the champion and runner-up finish?", "hint": "Only 2 of the 6 teams win a trophy and order matters (champion ≠ runner-up)." },
+    "ca": { "context": "A la final d'un torneig hi participen 6 equips. De quantes formes distintes poden quedar el campió i el subcampió?", "hint": "Només 2 dels 6 equips guanyen trofeu i l'ordre importa (campió ≠ subcampió)." },
+    "ga": { "context": "Na final dun torneo participan 6 equipos. De cantas formas distintas poden quedar o campión e o subcampión?", "hint": "Só 2 dos 6 equipos gañan trofeo e a orde importa (campión ≠ subcampión)." },
+    "eu": { "context": "6 talde txapelketako finalean lehiatzen dira. Zenbat modutan gera daitezke txapelduna eta txapelketako bigarrena?", "hint": "6tik 2 taldek bakarrik irabazten dute trofeo bat eta ordena garrantzitsua da (txapelduna ≠ bigarrena)." }
+  },
+  {
+    "id": "var-006", "type": "variation", "difficulty": 0, "n": 7, "k": 3,
+    "calc": "$V_{7,3} = 7\\cdot6\\cdot5 = 210$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "En un concurso de talentos con 7 participantes se otorgan el primer, segundo y tercer premio a personas distintas. ¿Cuántos resultados posibles hay?", "hint": "Se eligen 3 de 7 para puestos distintos y el orden importa (1.º ≠ 2.º ≠ 3.º)." },
+    "en": { "context": "In a talent show with 7 contestants, first, second and third prize are awarded to different people. How many possible results are there?", "hint": "3 of 7 are chosen for different prizes and order matters (1st ≠ 2nd ≠ 3rd)." },
+    "ca": { "context": "En un concurs de talents amb 7 participants s'atorguen el primer, segon i tercer premi a persones distintes. Quants resultats possibles hi ha?", "hint": "Es trien 3 de 7 per a premis distints i l'ordre importa (1r ≠ 2n ≠ 3r)." },
+    "ga": { "context": "Nun concurso de talentos con 7 participantes outórganse o primeiro, segundo e terceiro premio a persoas distintas. Cantos resultados posibles hai?", "hint": "Elíxense 3 de 7 para premios distintos e a orde importa (1.º ≠ 2.º ≠ 3.º)." },
+    "eu": { "context": "7 parte-hartzaileko talentuen lehiaketan lehen, bigarren eta hirugarren saria ematen zaizkie pertsona ezberdinei. Zenbat emaitza posible daude?", "hint": "7tik 3 aukeratzen dira sari ezberdinetarako eta ordena garrantzitsua da (1. ≠ 2. ≠ 3.)." }
+  },
+  {
+    "id": "var-007", "type": "variation", "difficulty": 0, "n": 9, "k": 2,
+    "calc": "$V_{9,2} = 9\\cdot8 = 72$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "Una agencia de viajes ofrece 9 destinos distintos. Un cliente quiere elegir el destino de verano y el de invierno, que deben ser distintos. ¿De cuántas formas puede hacerlo?", "hint": "Se eligen 2 de 9 destinos y el orden importa (verano ≠ invierno)." },
+    "en": { "context": "A travel agency offers 9 different destinations. A customer wants to choose a summer and a winter destination, which must be different. In how many ways can this be done?", "hint": "2 of 9 destinations are chosen and order matters (summer ≠ winter)." },
+    "ca": { "context": "Una agència de viatges ofereix 9 destinacions distintes. Un client vol triar la destinació d'estiu i la d'hivern, que han de ser distintes. De quantes formes pot fer-ho?", "hint": "Es trien 2 de 9 destinacions i l'ordre importa (estiu ≠ hivern)." },
+    "ga": { "context": "Unha axencia de viaxes ofrece 9 destinos distintos. Un cliente quere elixir o destino de verán e o de inverno, que deben ser distintos. De cantas formas pode facelo?", "hint": "Elíxense 2 de 9 destinos e a orde importa (verán ≠ inverno)." },
+    "eu": { "context": "Bidaia-agentzia batek 9 destino ezberdin eskaintzen ditu. Bezero batek udako eta neguko destinoak aukeratu nahi ditu, ezberdinak izanik. Zenbat modutan egin daiteke?", "hint": "9tik 2 destino aukeratzen dira eta ordena garrantzitsua da (uda ≠ negua)." }
+  },
+  {
+    "id": "var-008", "type": "variation", "difficulty": 1, "n": 12, "k": 3,
+    "calc": "$V_{12,3} = 12\\cdot11\\cdot10 = 1\\,320$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "Una empresa tiene 12 trabajadores y debe designar a tres de ellos para los cargos de director, subdirector y jefe de proyectos (distintas personas). ¿De cuántas formas puede hacerlo?", "hint": "Se eligen 3 de 12 para cargos distintos y el orden importa (director ≠ subdirector)." },
+    "en": { "context": "A company has 12 employees and must appoint three of them as director, deputy director and project manager (all different people). In how many ways can this be done?", "hint": "3 of 12 are chosen for different roles and order matters (director ≠ deputy)." },
+    "ca": { "context": "Una empresa té 12 treballadors i ha de designar tres d'ells per als càrrecs de director, subdirector i cap de projectes (persones distintes). De quantes formes pot fer-ho?", "hint": "Es trien 3 de 12 per a càrrecs distints i l'ordre importa (director ≠ subdirector)." },
+    "ga": { "context": "Unha empresa ten 12 traballadores e debe designar a tres deles para os cargos de director, subdirector e xefe de proxectos (persoas distintas). De cantas formas pode facelo?", "hint": "Elíxense 3 de 12 para cargos distintos e a orde importa (director ≠ subdirector)." },
+    "eu": { "context": "Enpresa batek 12 langile ditu eta horietako hiru zuzendari, zuzendariorde eta proiektu-buru izendatu behar ditu (pertsona ezberdinak). Zenbat modutan egin daiteke?", "hint": "12tik 3 aukeratzen dira kargu ezberdinetarako eta ordena garrantzitsua da (zuzendaria ≠ zuzendariordea)." }
+  },
+  {
+    "id": "var-009", "type": "variation", "difficulty": 1, "n": 10, "k": 4,
+    "calc": "$V_{10,4} = 10\\cdot9\\cdot8\\cdot7 = 5\\,040$", "formula": "$V_{n,k} = \\dfrac{n!}{(n-k)!}$",
+    "es": { "context": "En una maratón participan 10 corredores. ¿De cuántas formas distintas pueden repartirse los cuatro primeros puestos?", "hint": "Se eligen 4 de 10 corredores para posiciones distintas y el orden importa (1.º ≠ 2.º ≠ 3.º ≠ 4.º)." },
+    "en": { "context": "Ten runners take part in a marathon. In how many distinct ways can the top four places be filled?", "hint": "4 of 10 runners are chosen for different positions and order matters (1st ≠ 2nd ≠ 3rd ≠ 4th)." },
+    "ca": { "context": "En una marató participen 10 corredors. De quantes formes distintes es poden repartir els quatre primers llocs?", "hint": "Es trien 4 de 10 corredors per a posicions distintes i l'ordre importa (1r ≠ 2n ≠ 3r ≠ 4t)." },
+    "ga": { "context": "Nunha maratón participan 10 corredores. De cantas formas distintas poden repartirse os catro primeiros postos?", "hint": "Elíxense 4 de 10 corredores para posicións distintas e a orde importa (1.º ≠ 2.º ≠ 3.º ≠ 4.º)." },
+    "eu": { "context": "10 korrikalari maratoi batean parte hartzen dute. Zenbat modutan bana daitezke lehen lau postuak?", "hint": "10etik 4 korrikalari aukeratzen dira posizio ezberdinetarako eta ordena garrantzitsua da (1. ≠ 2. ≠ 3. ≠ 4.)." }
+  },
+  {
     "id": "varRep-001", "type": "variationRep", "difficulty": -1, "n": 3, "k": 2,
     "calc": "$VR_{3,2} = 3^2 = 9$", "formula": "$VR_{n,k} = n^k$",
     "es": { "context": "Con las vocales A, E, O, ¿cuántas secuencias de 2 letras (con repetición permitida) se pueden formar si el orden importa?", "hint": "El orden importa (AE ≠ EA) y se puede usar la misma vocal dos veces (AA es válido)." },
@@ -106,6 +268,60 @@
     "ca": { "context": "Quants codis PIN de 4 xifres (del 0 al 9) es poden generar si es permet repetir dígits?", "hint": "L'ordre importa (1234 ≠ 4321) i un dígit pot aparèixer més d'una vegada." },
     "ga": { "context": "Cantos códigos PIN de 4 cifras (do 0 ao 9) se poden xerar se se permite repetir díxitos?", "hint": "A orde importa (1234 ≠ 4321) e un díxito pode aparecer máis dunha vez." },
     "eu": { "context": "Zenbat 4 zifrako PIN kode (0tik 9ra) sor daitezke digituak errepika badaitezke?", "hint": "Ordena garrantzitsua da (1234 ≠ 4321) eta digitu bat behin baino gehiagotan ager daiteke." }
+  },
+  {
+    "id": "varRep-004", "type": "variationRep", "difficulty": -1, "n": 2, "k": 3,
+    "calc": "$VR_{2,3} = 2^3 = 8$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Se lanza una moneda 3 veces. ¿Cuántas secuencias de resultados distintas (cara o cruz) son posibles?", "hint": "El orden importa (CCC ≠ CCX) y en cada lanzamiento puede salir lo mismo que antes." },
+    "en": { "context": "A coin is flipped 3 times. How many distinct sequences of outcomes (heads or tails) are possible?", "hint": "Order matters (HHH ≠ HHT) and each flip can repeat a previous result." },
+    "ca": { "context": "Es llança una moneda 3 vegades. Quantes seqüències de resultats distintes (cara o creu) són possibles?", "hint": "L'ordre importa (CCX ≠ CXC) i a cada llançament pot sortir el mateix que abans." },
+    "ga": { "context": "Lánzase unha moeda 3 veces. Cantas secuencias de resultados distintas (cara ou cruz) son posibles?", "hint": "A orde importa (CCC ≠ CCX) e en cada lanzamento pode saír o mesmo que antes." },
+    "eu": { "context": "Txanpon bat 3 aldiz botatzen da. Zenbat emaitza-sekuentzia ezberdin (aurrealdea edo atzealdea) daude?", "hint": "Ordena garrantzitsua da (AUA ≠ AAU) eta throw bakoitzean aurreko bera atera daiteke." }
+  },
+  {
+    "id": "varRep-005", "type": "variationRep", "difficulty": -1, "n": 4, "k": 2,
+    "calc": "$VR_{4,2} = 4^2 = 16$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Una cerradura de combinación tiene 2 diales, cada uno con los números 1, 2, 3, 4. ¿Cuántos códigos distintos puede tener la cerradura?", "hint": "El orden importa (12 ≠ 21) y cada dial puede mostrar el mismo número." },
+    "en": { "context": "A combination lock has 2 dials, each showing the numbers 1, 2, 3, 4. How many distinct codes can the lock have?", "hint": "Order matters (12 ≠ 21) and each dial can show the same number." },
+    "ca": { "context": "Un cadenat de combinació té 2 dials, cada un amb els números 1, 2, 3, 4. Quants codis distints pot tenir el cadenat?", "hint": "L'ordre importa (12 ≠ 21) i cada dial pot mostrar el mateix número." },
+    "ga": { "context": "Unha cerradura de combinación ten 2 diais, cada un cos números 1, 2, 3, 4. Cantos códigos distintos pode ter a cerradura?", "hint": "A orde importa (12 ≠ 21) e cada dial pode mostrar o mesmo número." },
+    "eu": { "context": "Konbinazio-giltza batek 2 diskoa ditu, bakoitzak 1, 2, 3, 4 zenbakiak dituela. Zenbat kode ezberdin izan ditzake?", "hint": "Ordena garrantzitsua da (12 ≠ 21) eta disko bakoitzak zenbaki bera erakuts dezake." }
+  },
+  {
+    "id": "varRep-006", "type": "variationRep", "difficulty": 0, "n": 5, "k": 3,
+    "calc": "$VR_{5,3} = 5^3 = 125$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Un artista tiene 5 colores de pintura y pinta 3 franjas verticales en un lienzo. Puede usar el mismo color varias veces. ¿Cuántas combinaciones de franjas puede crear?", "hint": "El orden importa (rojo-azul-verde ≠ verde-azul-rojo) y se puede repetir color." },
+    "en": { "context": "An artist has 5 paint colours and paints 3 vertical stripes on a canvas. The same colour can be used more than once. How many distinct stripe combinations can be created?", "hint": "Order matters (red-blue-green ≠ green-blue-red) and colours can be repeated." },
+    "ca": { "context": "Un artista té 5 colors de pintura i pinta 3 franges verticals en un llenç. Pot usar el mateix color diverses vegades. Quantes combinacions de franges pot crear?", "hint": "L'ordre importa (vermell-blau-verd ≠ verd-blau-vermell) i es pot repetir color." },
+    "ga": { "context": "Un artista ten 5 cores de pintura e pinta 3 franxas verticais nun lenzo. Pode usar a mesma cor varias veces. Cantas combinacións de franxas pode crear?", "hint": "A orde importa (vermello-azul-verde ≠ verde-azul-vermello) e pódese repetir cor." },
+    "eu": { "context": "Artista batek 5 kolore ditu eta mihise batean 3 franja bertikalak margotzen ditu. Kolore bera behin baino gehiagotan erabil dezake. Zenbat franja-konbinazio sor ditzake?", "hint": "Ordena garrantzitsua da (gorri-urdin-berde ≠ berde-urdin-gorri) eta koloreak errepika daitezke." }
+  },
+  {
+    "id": "varRep-007", "type": "variationRep", "difficulty": 0, "n": 3, "k": 5,
+    "calc": "$VR_{3,5} = 3^5 = 243$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Un test tiene 5 preguntas, cada una con 3 opciones de respuesta (A, B o C). ¿Cuántas formas distintas hay de responder el test?", "hint": "El orden de las respuestas importa y se puede marcar la misma opción en varias preguntas." },
+    "en": { "context": "A test has 5 questions, each with 3 answer options (A, B or C). How many distinct ways are there to answer the test?", "hint": "The order of answers matters and the same option can be marked in several questions." },
+    "ca": { "context": "Un test té 5 preguntes, cadascuna amb 3 opcions de resposta (A, B o C). Quantes formes distintes hi ha de respondre el test?", "hint": "L'ordre de les respostes importa i es pot marcar la mateixa opció a diverses preguntes." },
+    "ga": { "context": "Un test ten 5 preguntas, cada unha con 3 opcións de resposta (A, B ou C). Cantas formas distintas hai de responder o test?", "hint": "A orde das respostas importa e pódese marcar a mesma opción en varias preguntas." },
+    "eu": { "context": "Test batek 5 galdera ditu, bakoitzak 3 erantzun-aukera dituela (A, B edo C). Zenbat modutan erantzun daiteke testa?", "hint": "Erantzunen ordena garrantzitsua da eta aukera bera hainbat galderetan marka daiteke." }
+  },
+  {
+    "id": "varRep-008", "type": "variationRep", "difficulty": 1, "n": 8, "k": 4,
+    "calc": "$VR_{8,4} = 8^4 = 4\\,096$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Un código de acceso tiene 4 dígitos, y cada dígito puede ser cualquiera del 0 al 7 (8 opciones). ¿Cuántos códigos distintos hay?", "hint": "El orden importa (1234 ≠ 4321) y los dígitos pueden repetirse." },
+    "en": { "context": "An access code has 4 digits, and each digit can be any value from 0 to 7 (8 options). How many distinct codes are there?", "hint": "Order matters (1234 ≠ 4321) and digits can be repeated." },
+    "ca": { "context": "Un codi d'accés té 4 dígits, i cada dígit pot ser qualsevol del 0 al 7 (8 opcions). Quants codis distints hi ha?", "hint": "L'ordre importa (1234 ≠ 4321) i els dígits es poden repetir." },
+    "ga": { "context": "Un código de acceso ten 4 díxitos, e cada díxito pode ser calquera do 0 ao 7 (8 opcións). Cantos códigos distintos hai?", "hint": "A orde importa (1234 ≠ 4321) e os díxitos pódense repetir." },
+    "eu": { "context": "Sarbide-kode batek 4 digitu ditu, eta digitu bakoitza 0tik 7ra artekoa izan daiteke (8 aukera). Zenbat kode ezberdin daude?", "hint": "Ordena garrantzitsua da (1234 ≠ 4321) eta digituak errepika daitezke." }
+  },
+  {
+    "id": "varRep-009", "type": "variationRep", "difficulty": 1, "n": 26, "k": 3,
+    "calc": "$VR_{26,3} = 26^3 = 17\\,576$", "formula": "$VR_{n,k} = n^k$",
+    "es": { "context": "Las siglas de una empresa tienen 3 letras del alfabeto (26 letras posibles). Las letras pueden repetirse. ¿Cuántas siglas distintas de 3 letras pueden crearse?", "hint": "El orden importa (IBM ≠ MBI) y una letra puede aparecer varias veces (AAA es válido)." },
+    "en": { "context": "A company's initials consist of 3 letters from the alphabet (26 possible letters). Letters can be repeated. How many distinct 3-letter acronyms can be created?", "hint": "Order matters (IBM ≠ MBI) and a letter can appear more than once (AAA is valid)." },
+    "ca": { "context": "Les sigles d'una empresa tenen 3 lletres de l'alfabet (26 lletres possibles). Les lletres es poden repetir. Quantes sigles distintes de 3 lletres es poden crear?", "hint": "L'ordre importa (IBM ≠ MBI) i una lletra pot aparèixer diverses vegades (AAA és vàlid)." },
+    "ga": { "context": "As siglas dunha empresa teñen 3 letras do alfabeto (26 letras posibles). As letras poden repetirse. Cantas siglas distintas de 3 letras poden crearse?", "hint": "A orde importa (IBM ≠ MBI) e unha letra pode aparecer varias veces (AAA é válido)." },
+    "eu": { "context": "Enpresa baten siglak alfabetoko 3 letratan osatuta daude (26 letra posible). Letrak errepika daitezke. Zenbat 3 hizkiko sigla ezberdin sor daitezke?", "hint": "Ordena garrantzitsua da (IBM ≠ MBI) eta letra bat behin baino gehiagotan ager daiteke (AAA baliozkoa da)." }
   },
   {
     "id": "comb-001", "type": "combination", "difficulty": -1, "n": 5, "k": 2,
@@ -135,6 +351,60 @@
     "eu": { "context": "Zientzia-batzorde batek 8 hautagairetatik 3 proiektu finantzatzeko aukeratu behar ditu. Zenbat modutan egin daiteke hautaketa?", "hint": "{A,B,C} multzoa {C,B,A} berdina da: hautaketa-ordena ez da garrantzitsua." }
   },
   {
+    "id": "comb-004", "type": "combination", "difficulty": -1, "n": 6, "k": 2,
+    "calc": "$C_{6,2} = 15$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "En una clase hay 6 alumnos y se quiere formar una pareja de estudio. ¿Cuántas parejas distintas pueden formarse?", "hint": "La pareja {Ana, Luis} es la misma que {Luis, Ana}: el orden no importa." },
+    "en": { "context": "In a class of 6 students, a study pair is to be formed. How many distinct pairs can be formed?", "hint": "The pair {Alice, Bob} is the same as {Bob, Alice}: order doesn't matter." },
+    "ca": { "context": "En una classe hi ha 6 alumnes i es vol formar una parella d'estudi. Quantes parelles distintes es poden formar?", "hint": "La parella {Anna, Lluís} és la mateixa que {Lluís, Anna}: l'ordre no importa." },
+    "ga": { "context": "Nunha clase hai 6 alumnos e quérese formar unha parella de estudo. Cantas parellas distintas poden formarse?", "hint": "A parella {Ana, Luis} é a mesma que {Luis, Ana}: a orde non importa." },
+    "eu": { "context": "6 ikasleko gela batean ikasketa-bikotea osatu nahi da. Zenbat bikote ezberdin sor daitezke?", "hint": "{Ana, Luis} bikotea {Luis, Ana} berdina da: ordena ez da garrantzitsua." }
+  },
+  {
+    "id": "comb-005", "type": "combination", "difficulty": -1, "n": 4, "k": 3,
+    "calc": "$C_{4,3} = 4$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "En una jardinería hay 4 plantas distintas. Quieres elegir 3 de ellas para decorar tu balcón. ¿De cuántas formas puedes hacerlo?", "hint": "El conjunto de plantas elegidas no tiene orden: {rosa, lirio, tulipán} = {tulipán, rosa, lirio}." },
+    "en": { "context": "A garden centre has 4 different plants. You want to choose 3 of them for your balcony. In how many ways can you do it?", "hint": "The set of chosen plants has no order: {rose, lily, tulip} = {tulip, rose, lily}." },
+    "ca": { "context": "En una jardineria hi ha 4 plantes distintes. Vols triar-ne 3 per decorar el teu balcó. De quantes formes pots fer-ho?", "hint": "El conjunt de plantes triades no té ordre: {rosa, lliri, tulipa} = {tulipa, rosa, lliri}." },
+    "ga": { "context": "Nunha xardinería hai 4 plantas distintas. Queres elixir 3 delas para decorar o teu balcón. De cantas formas podes facelo?", "hint": "O conxunto de plantas elixidas non ten orde: {rosa, lirio, tulipán} = {tulipán, rosa, lirio}." },
+    "eu": { "context": "Lorategiko denda batean 4 landare ezberdin daude. 3 aukeratu nahi dituzu balkoia apaintzeko. Zenbat modutan egin dezakezu?", "hint": "Aukeratutako landareen multzoak ez du ordenarik: {arrosa, lirio, tulipa} = {tulipa, arrosa, lirio}." }
+  },
+  {
+    "id": "comb-006", "type": "combination", "difficulty": 0, "n": 7, "k": 3,
+    "calc": "$C_{7,3} = 35$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "Un comité de 7 personas debe elegir 3 para asistir a un congreso internacional. ¿De cuántas formas puede hacerse la selección?", "hint": "El grupo de 3 elegidos es un conjunto; el orden en que se seleccionan no importa." },
+    "en": { "context": "A committee of 7 people must choose 3 to attend an international conference. In how many ways can the selection be made?", "hint": "The group of 3 chosen is a set; the order in which they are selected doesn't matter." },
+    "ca": { "context": "Un comitè de 7 persones ha de triar 3 per assistir a un congrés internacional. De quantes formes pot fer-se la selecció?", "hint": "El grup de 3 triats és un conjunt; l'ordre en què es seleccionen no importa." },
+    "ga": { "context": "Un comité de 7 persoas debe elixir 3 para asistir a un congreso internacional. De cantas formas pode facerse a selección?", "hint": "O grupo de 3 elixidos é un conxunto; a orde en que se seleccionan non importa." },
+    "eu": { "context": "7 pertsonako batzorde batek 3 aukeratu behar ditu nazioarteko kongresura joateko. Zenbat modutan egin daiteke hautaketa?", "hint": "3 aukeratutakoek osatutako taldea multzo bat da; hautatzeko ordena ez da garrantzitsua." }
+  },
+  {
+    "id": "comb-007", "type": "combination", "difficulty": 0, "n": 9, "k": 4,
+    "calc": "$C_{9,4} = 126$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "Una baraja especial tiene 9 cartas distintas. ¿De cuántas maneras se pueden elegir 4 cartas para la mano de un jugador?", "hint": "Una mano de cartas es un conjunto; el orden en que las tienes en la mano no importa." },
+    "en": { "context": "A special deck has 9 different cards. In how many ways can 4 cards be chosen for a player's hand?", "hint": "A hand of cards is a set; the order in which you hold them doesn't matter." },
+    "ca": { "context": "Una baralla especial té 9 cartes distintes. De quantes maneres es poden triar 4 cartes per a la mà d'un jugador?", "hint": "Una mà de cartes és un conjunt; l'ordre en què les tens a la mà no importa." },
+    "ga": { "context": "Unha baralla especial ten 9 cartas distintas. De cantas maneiras se poden elixir 4 cartas para a man dun xogador?", "hint": "Unha man de cartas é un conxunto; a orde en que as tes na man non importa." },
+    "eu": { "context": "Karta-joko berezi batek 9 karta ezberdin ditu. Zenbat modutan hauta daitezke 4 karta jokalari baten eskurako?", "hint": "Eskuko kartak multzo bat dira; dituzun kartak daramatzuzun ordenak ez du garrantzirik." }
+  },
+  {
+    "id": "comb-008", "type": "combination", "difficulty": 1, "n": 12, "k": 4,
+    "calc": "$C_{12,4} = 495$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "Una empresa recibe 12 solicitudes para 4 puestos iguales de becario. ¿De cuántas formas distintas puede seleccionar a los 4 becarios?", "hint": "Los 4 puestos son iguales; el grupo {A,B,C,D} es el mismo que {D,C,B,A}." },
+    "en": { "context": "A company receives 12 applications for 4 identical intern positions. In how many distinct ways can it select the 4 interns?", "hint": "The 4 positions are identical; the group {A,B,C,D} is the same as {D,C,B,A}." },
+    "ca": { "context": "Una empresa rep 12 sol·licituds per a 4 llocs iguals de becari. De quantes formes distintes pot seleccionar els 4 becaris?", "hint": "Els 4 llocs són iguals; el grup {A,B,C,D} és el mateix que {D,C,B,A}." },
+    "ga": { "context": "Unha empresa recibe 12 solicitudes para 4 postos iguais de becario. De cantas formas distintas pode seleccionar os 4 becarios?", "hint": "Os 4 postos son iguais; o grupo {A,B,C,D} é o mesmo que {D,C,B,A}." },
+    "eu": { "context": "Enpresa batek 4 bekadun-postu berdinetarako 12 eskaerak jasotzen ditu. Zenbat modutan hauta ditzake 4 bekarioak?", "hint": "4 postuak berdinak dira; {A,B,C,D} taldea {D,C,B,A} berdina da." }
+  },
+  {
+    "id": "comb-009", "type": "combination", "difficulty": 1, "n": 10, "k": 5,
+    "calc": "$C_{10,5} = 252$", "formula": "$C_{n,k} = \\dbinom{n}{k}$",
+    "es": { "context": "En un campeonato con 10 equipos, los 5 mejores clasificados pasan a la siguiente fase. ¿De cuántas formas distintas pueden clasificarse esos 5 equipos?", "hint": "Los 5 clasificados forman un conjunto; el orden en que se clasificaron no importa." },
+    "en": { "context": "In a championship with 10 teams, the top 5 teams advance to the next round. In how many distinct ways can those 5 teams qualify?", "hint": "The 5 qualifiers form a set; the order in which they finish doesn't matter." },
+    "ca": { "context": "En un campionat amb 10 equips, els 5 millors classificats passen a la fase següent. De quantes formes distintes poden classificar-se aquests 5 equips?", "hint": "Els 5 classificats formen un conjunt; l'ordre en què es van classificar no importa." },
+    "ga": { "context": "Nun campionato con 10 equipos, os 5 mellores clasificados pasan á seguinte fase. De cantas formas distintas poden clasificarse eses 5 equipos?", "hint": "Os 5 clasificados forman un conxunto; a orde en que se clasificaron non importa." },
+    "eu": { "context": "10 taldeko txapelketan, sailkatutako 5 onenak hurrengo fasera pasatzen dira. Zenbat modutan sailka daitezke 5 talde horiek?", "hint": "5 sailkatuek multzo bat osatzen dute; sailkatu ziren ordenak ez du garrantzirik." }
+  },
+  {
     "id": "combRep-001", "type": "combinationRep", "difficulty": -1, "n": 4, "k": 2,
     "calc": "$CR_{4,2} = \\dbinom{5}{2} = 10$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
     "es": { "context": "En una heladería hay 4 sabores. Pides un cucurucho con 2 bolas y puedes repetir sabor. ¿Cuántos cucuruchos distintos hay?", "hint": "El orden de las bolas no importa y puedes pedir dos del mismo sabor." },
@@ -160,5 +430,59 @@
     "ca": { "context": "Una empresa de sucs vol crear una barreja de 4 fruites triades entre 6 disponibles. Les fruites es poden repetir i l'ordre no importa. Quantes barreges distintes pot crear?", "hint": "El conjunt de fruites triat no té ordre i es pot repetir una mateixa fruita." },
     "ga": { "context": "Unha empresa de zumes quere crear unha mestura de 4 froitas escollidas entre 6 dispoñibles. As froitas poden repetirse e a orde non importa. Cantas misturas distintas pode crear?", "hint": "O conxunto de froitas elixidas non ten orde e pode repetirse a mesma froita." },
     "eu": { "context": "Zuku-enpresa batek 6 erabilgarrietatik 4 fruta aukeratuz nahasketa bat sortu nahi du. Frutak errepika daitezke eta ordena ez da garrantzitsua. Zenbat nahasketa ezberdin sor daitezke?", "hint": "Aukeratutako fruta-multzoak ez du ordenarik eta fruta bera errepika daiteke." }
+  },
+  {
+    "id": "combRep-004", "type": "combinationRep", "difficulty": -1, "n": 3, "k": 2,
+    "calc": "$CR_{3,2} = \\dbinom{4}{2} = 6$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "Una cafetería tiene 3 sabores de granizado (limón, fresa y melón). Pides 2 vasos y puedes repetir sabor. ¿Cuántas combinaciones distintas puedes pedir?", "hint": "El orden no importa (limón+fresa = fresa+limón) y puedes pedir dos del mismo sabor." },
+    "en": { "context": "A café has 3 slushy flavours (lemon, strawberry and melon). You order 2 cups and may repeat a flavour. How many distinct combinations can you order?", "hint": "Order doesn't matter (lemon+strawberry = strawberry+lemon) and you can have two of the same flavour." },
+    "ca": { "context": "Una cafeteria té 3 sabors de granissat (llimona, maduixa i meló). Demanes 2 gots i pots repetir sabor. Quantes combinacions distintes pots demanar?", "hint": "L'ordre no importa (llimona+maduixa = maduixa+llimona) i pots demanar dos del mateix sabor." },
+    "ga": { "context": "Unha cafetería ten 3 sabores de granizado (limón, fresa e melón). Pides 2 vasos e podes repetir sabor. Cantas combinacións distintas podes pedir?", "hint": "A orde non importa (limón+fresa = fresa+limón) e podes pedir dous do mesmo sabor." },
+    "eu": { "context": "Kafetegi batek 3 granizatu zapore ditu (limoia, marrubia eta meloia). 2 edalontzi eskatzen dituzu eta zapoera errepika dezakezu. Zenbat konbinazio ezberdin eska ditzakezu?", "hint": "Ordena ez da garrantzitsua (limoia+marrubia = marrubia+limoia) eta zapore bera birritan eska dezakezu." }
+  },
+  {
+    "id": "combRep-005", "type": "combinationRep", "difficulty": -1, "n": 5, "k": 2,
+    "calc": "$CR_{5,2} = \\dbinom{6}{2} = 15$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "En un quiosco hay 5 periódicos distintos. Compras 2 ejemplares y puedes comprar dos del mismo periódico. ¿Cuántas compras distintas puedes hacer?", "hint": "El orden no importa y puedes comprar dos veces el mismo periódico." },
+    "en": { "context": "A newsstand has 5 different newspapers. You buy 2 copies and can buy two of the same newspaper. How many distinct purchases can you make?", "hint": "Order doesn't matter and you can buy the same newspaper twice." },
+    "ca": { "context": "En un quiosc hi ha 5 diaris distints. Compres 2 exemplars i pots comprar-ne dos del mateix. Quantes compres distintes pots fer?", "hint": "L'ordre no importa i pots comprar dues vegades el mateix diari." },
+    "ga": { "context": "Nun quiosco hai 5 xornais distintos. Compras 2 exemplares e podes comprar dous do mesmo xornal. Cantas compras distintas podes facer?", "hint": "A orde non importa e podes mercar dúas veces o mesmo xornal." },
+    "eu": { "context": "Kiosko batean 5 egunkari ezberdin daude. 2 ale erosten dituzu eta egunkari bera birritan erosi dezakezu. Zenbat erosketa ezberdin egin ditzakezu?", "hint": "Ordena ez da garrantzitsua eta egunkari bera birritan erosi dezakezu." }
+  },
+  {
+    "id": "combRep-006", "type": "combinationRep", "difficulty": 0, "n": 3, "k": 4,
+    "calc": "$CR_{3,4} = \\dbinom{6}{4} = 15$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "Una floristería tiene 3 tipos de flores (rosas, tulipanes y lirios). Encargas un ramo de 4 flores y puedes mezclar tipos como quieras. ¿Cuántos ramos distintos puedes hacer?", "hint": "El orden de las flores en el ramo no importa y puedes usar el mismo tipo varias veces." },
+    "en": { "context": "A florist has 3 types of flowers (roses, tulips and lilies). You order a bouquet of 4 flowers and can mix types as you like. How many distinct bouquets can you make?", "hint": "The order of flowers in the bouquet doesn't matter and you can use the same type multiple times." },
+    "ca": { "context": "Una floristeria té 3 tipus de flors (roses, tulipes i lliris). Encarregues un ram de 4 flors i pots barrejar tipus com vulguis. Quants rams distints pots fer?", "hint": "L'ordre de les flors al ram no importa i pots usar el mateix tipus diverses vegades." },
+    "ga": { "context": "Unha floristería ten 3 tipos de flores (rosas, tulipáns e lirios). Encargas un ramo de 4 flores e podes mesturar tipos como queiras. Cantos ramos distintos podes facer?", "hint": "A orde das flores no ramo non importa e podes usar o mesmo tipo varias veces." },
+    "eu": { "context": "Lorategiko denda batek 3 lore mota ditu (arrosak, tulipanak eta lirioak). 4 loredun loratxo bat enkargatu eta motak nahi bezala nahas ditzakezu. Zenbat loratxo ezberdin sor ditzakezu?", "hint": "Loratxoko loren ordena ez da garrantzitsua eta mota bera behin baino gehiagotan erabil dezakezu." }
+  },
+  {
+    "id": "combRep-007", "type": "combinationRep", "difficulty": 0, "n": 5, "k": 3,
+    "calc": "$CR_{5,3} = \\dbinom{7}{3} = 35$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "Una tienda de chuches tiene 5 tipos de caramelo. Llenas una bolsa con 3 caramelos y puedes mezclar tipos. ¿Cuántas bolsas distintas puedes preparar?", "hint": "El orden de los caramelos en la bolsa no importa y puedes coger varios del mismo tipo." },
+    "en": { "context": "A sweet shop has 5 types of candy. You fill a bag with 3 sweets and can mix types. How many distinct bags can you make?", "hint": "The order of sweets in the bag doesn't matter and you can pick several of the same type." },
+    "ca": { "context": "Una granja de llaminadures té 5 tipus de caramel. Omplis una bossa amb 3 caramels i pots barrejar tipus. Quantes bosses distintes pots preparar?", "hint": "L'ordre dels caramels a la bossa no importa i pots agafar-ne diversos del mateix tipus." },
+    "ga": { "context": "Unha tenda de chuches ten 5 tipos de caramelo. Enchas unha bolsa con 3 caramelos e podes mesturar tipos. Cantas bolsas distintas podes preparar?", "hint": "A orde dos caramelos na bolsa non importa e podes coller varios do mesmo tipo." },
+    "eu": { "context": "Gozoki-denda batek 5 karamelu mota ditu. 3 karamelu dituen poltsatxo bat betetzen duzu eta motak nahas ditzakezu. Zenbat poltsatxo ezberdin sor ditzakezu?", "hint": "Poltsatxoko karameluen ordena ez da garrantzitsua eta mota bera behin baino gehiagotan har dezakezu." }
+  },
+  {
+    "id": "combRep-008", "type": "combinationRep", "difficulty": 1, "n": 7, "k": 4,
+    "calc": "$CR_{7,4} = \\dbinom{10}{4} = 210$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "Un restaurante ofrece 7 variedades de queso. Preparas una tabla de degustación con 4 porciones, pudiendo repetir variedad. ¿Cuántas tablas distintas puedes preparar?", "hint": "El orden de los quesos en la tabla no importa y puedes repetir variedad." },
+    "en": { "context": "A restaurant offers 7 cheese varieties. You prepare a tasting board with 4 portions, and may repeat a variety. How many distinct boards can you prepare?", "hint": "The order of cheeses on the board doesn't matter and you can repeat a variety." },
+    "ca": { "context": "Un restaurant ofereix 7 varietats de formatge. Prepares una taula de degustació amb 4 porcions, podent repetir varietat. Quantes taules distintes pots preparar?", "hint": "L'ordre dels formatges a la taula no importa i pots repetir varietat." },
+    "ga": { "context": "Un restaurante ofrece 7 variedades de queixo. Preparas unha táboa de degustación con 4 porcións, podendo repetir variedade. Cantas táboas distintas podes preparar?", "hint": "A orde dos queixos na táboa non importa e podes repetir variedade." },
+    "eu": { "context": "Jatetxe batek 7 gazta barietate eskaintzen ditu. 4 zatiko dastaketa-ohola prestatzen duzu, barietatea errepika dezakezula. Zenbat ohol ezberdin sor ditzakezu?", "hint": "Ohloko gazten ordena ez da garrantzitsua eta barietatea errepika dezakezu." }
+  },
+  {
+    "id": "combRep-009", "type": "combinationRep", "difficulty": 1, "n": 5, "k": 5,
+    "calc": "$CR_{5,5} = \\dbinom{9}{5} = 126$", "formula": "$CR_{n,k} = \\dbinom{n+k-1}{k}$",
+    "es": { "context": "Una frutería tiene 5 tipos de fruta. Llenas una cesta con 5 piezas de fruta combinando tipos como quieras. ¿Cuántas cestas distintas puedes hacer?", "hint": "El conjunto de frutas de la cesta no tiene orden y una misma fruta puede aparecer varias veces." },
+    "en": { "context": "A greengrocer has 5 types of fruit. You fill a basket with 5 pieces of fruit combining types as you like. How many distinct baskets can you make?", "hint": "The set of fruit in the basket has no order and the same fruit can appear multiple times." },
+    "ca": { "context": "Una fruiteria té 5 tipus de fruita. Omples una cistella amb 5 peces de fruita combinant tipus com vulguis. Quantes cistelles distintes pots fer?", "hint": "El conjunt de fruites de la cistella no té ordre i una mateixa fruita pot aparèixer diverses vegades." },
+    "ga": { "context": "Unha froitería ten 5 tipos de froita. Enchas unha cesta con 5 pezas de froita combinando tipos como queiras. Cantas cestas distintas podes facer?", "hint": "O conxunto de froitas da cesta non ten orde e a mesma froita pode aparecer varias veces." },
+    "eu": { "context": "Fruta-denda batek 5 fruta mota ditu. 5 fruta dituen saski bat betetzen duzu motak nahi bezala konbinatuz. Zenbat saski ezberdin sor ditzakezu?", "hint": "Saskiko fruten multzoak ez du ordenarik eta fruta bera behin baino gehiagotan ager daiteke." }
   }
 ]
