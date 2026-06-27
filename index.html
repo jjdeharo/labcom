@@ -3405,12 +3405,8 @@ function renderPracticeReport(){
           <div style="font-size:.86rem;font-weight:600;margin-bottom:6px">${typeLabels[type]}</div>
           <div style="position:relative">
             ${diagBar}${nowBar}
-            <div style="position:absolute;right:0;top:0;bottom:0;width:${100-BAYES_LEVEL_LOW_MAX}%;pointer-events:none;display:flex;align-items:stretch">
-              <div style="border-left:1px solid var(--border);height:100%;margin-left:0"></div>
-            </div>
-            <div style="position:absolute;right:0;top:0;bottom:0;width:${100-BAYES_LEVEL_HIGH_MIN}%;pointer-events:none;display:flex;align-items:stretch">
-              <div style="border-left:1px solid var(--border);height:100%;margin-left:0"></div>
-            </div>
+            <div style="position:absolute;left:${BAYES_LEVEL_LOW_MAX}%;top:0;bottom:0;width:1px;background:var(--border);pointer-events:none"></div>
+            <div style="position:absolute;left:${BAYES_LEVEL_HIGH_MIN}%;top:0;bottom:0;width:1px;background:var(--border);pointer-events:none"></div>
           </div>
         </div>
         <div style="text-align:right;min-width:80px">
