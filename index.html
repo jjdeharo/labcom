@@ -62,6 +62,16 @@ nav{display:flex;gap:2px;overflow-x:auto;flex:1}
 nav button{background:none;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;color:var(--text2);white-space:nowrap;transition:all .15s}
 nav button:hover{background:var(--surface2);color:var(--text)}
 nav button.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+.hamburger-btn{display:none;background:none;border:none;font-size:1.35rem;cursor:pointer;padding:6px 10px;border-radius:8px;color:var(--text2);line-height:1;transition:background .15s;flex-shrink:0;margin-left:8px}
+.hamburger-btn:hover{background:var(--surface2)}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;z-index:98}
+.mobile-nav-overlay.open{display:block}
+.mobile-nav-menu{display:none;position:fixed;left:0;right:0;background:var(--surface);border-bottom:2px solid var(--border);z-index:99;box-shadow:0 6px 20px rgba(0,0,0,.15);padding:6px 8px 10px}
+.mobile-nav-menu.open{display:block}
+.mobile-nav-menu button{display:block;width:100%;text-align:left;background:none;border:none;padding:12px 16px;border-radius:8px;font-size:.97rem;color:var(--text2);cursor:pointer;transition:all .15s;font-family:inherit}
+.mobile-nav-menu button:hover{background:var(--surface2);color:var(--text)}
+.mobile-nav-menu button.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+@media(max-width:640px){nav{display:none}.hamburger-btn{display:flex;align-items:center}}
 .lang-picker{display:flex;align-items:center;margin-left:12px}
 .lang-select-wrap{position:relative;display:flex;align-items:center;gap:5px}
 .lang-globe{font-size:1rem;line-height:1;pointer-events:none;flex-shrink:0}
@@ -292,7 +302,10 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
   <nav id="main-nav"></nav>
   <div id="theme-btn-wrap"></div>
   <div class="lang-picker" id="lang-picker"></div>
+  <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menú">☰</button>
 </header>
+<div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+<div class="mobile-nav-menu" id="mobile-nav-menu"></div>
 
 <main>
   <div id="inicio" class="section active"></div>
@@ -1666,12 +1679,33 @@ const SECTIONS = ['inicio','leccion','arbol','practica','laboratorio'];
 
 function buildNav() {
   const nav = document.getElementById('main-nav');
+  const mobileMenu = document.getElementById('mobile-nav-menu');
   const navLabels = t('nav');
   const active = document.querySelector('.section.active');
   const activeId = active ? active.id : 'inicio';
-  nav.innerHTML = SECTIONS.map((id,i)=>
+  const buttons = SECTIONS.map((id,i)=>
     `<button onclick="showSection('${id}')" class="${id===activeId?'active':''}">${navLabels[i]}</button>`
   ).join('');
+  nav.innerHTML = buttons;
+  if(mobileMenu) mobileMenu.innerHTML = SECTIONS.map((id,i)=>
+    `<button onclick="showSection('${id}');closeMobileNav()" class="${id===activeId?'active':''}">${navLabels[i]}</button>`
+  ).join('');
+}
+
+function toggleMobileNav(){
+  const menu = document.getElementById('mobile-nav-menu');
+  const overlay = document.getElementById('mobile-nav-overlay');
+  const isOpen = menu.classList.contains('open');
+  if(isOpen){ closeMobileNav(); return; }
+  const headerBottom = document.querySelector('header').getBoundingClientRect().bottom;
+  menu.style.top = headerBottom + 'px';
+  menu.classList.add('open');
+  overlay.classList.add('open');
+}
+
+function closeMobileNav(){
+  document.getElementById('mobile-nav-menu').classList.remove('open');
+  document.getElementById('mobile-nav-overlay').classList.remove('open');
 }
 
 const LANG_LABELS = { es:'Español', en:'English', ca:'Català', ga:'Galego', eu:'Euskera' };
