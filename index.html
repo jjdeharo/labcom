@@ -605,6 +605,8 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
     practicePhaseDiagnosis: 'Fase diagnóstica',
     practicePhaseReinforcement: 'Fase de refuerzo',
+    practiceDiagDoneMsg: '¡Diagnóstico completado! Ya puedes ver tu informe inicial.',
+    practiceDiagDoneLink: 'Ver informe inicial →',
     practiceReportBtn: 'Ver informe →',
     practiceReportTitle: 'Informe de práctica',
     practiceReportDiagDate: date => `Diagnóstico completado el ${date}`,
@@ -918,6 +920,8 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Session: ${correct}/${total} correct`,
     practicePhaseDiagnosis: 'Diagnostic phase',
     practicePhaseReinforcement: 'Reinforcement phase',
+    practiceDiagDoneMsg: 'Diagnosis complete! You can now view your initial report.',
+    practiceDiagDoneLink: 'View initial report →',
     practiceReportBtn: 'View report →',
     practiceReportTitle: 'Practice report',
     practiceReportDiagDate: date => `Diagnosis completed on ${date}`,
@@ -1170,6 +1174,8 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sessió: ${correct}/${total} correctes`,
     practicePhaseDiagnosis: 'Fase diagnòstica',
     practicePhaseReinforcement: 'Fase de reforç',
+    practiceDiagDoneMsg: 'Diagnòstic completat! Ja pots veure el teu informe inicial.',
+    practiceDiagDoneLink: 'Veure informe inicial →',
     practiceReportBtn: 'Veure informe →',
     practiceReportTitle: 'Informe de pràctica',
     practiceReportDiagDate: date => `Diagnòstic completat el ${date}`,
@@ -1405,6 +1411,8 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
     practicePhaseDiagnosis: 'Fase diagnóstica',
     practicePhaseReinforcement: 'Fase de reforzo',
+    practiceDiagDoneMsg: 'Diagnóstico completado! Xa podes ver o teu informe inicial.',
+    practiceDiagDoneLink: 'Ver informe inicial →',
     practiceReportBtn: 'Ver informe →',
     practiceReportTitle: 'Informe de práctica',
     practiceReportDiagDate: date => `Diagnóstico completado o ${date}`,
@@ -1640,6 +1648,8 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Saioa: ${correct}/${total} zuzen`,
     practicePhaseDiagnosis: 'Diagnostiko fasea',
     practicePhaseReinforcement: 'Indartzeko fasea',
+    practiceDiagDoneMsg: 'Diagnostikoa osatu da! Zure hasierako txostena ikus dezakezu.',
+    practiceDiagDoneLink: 'Hasierako txostena ikusi →',
     practiceReportBtn: 'Txostena ikusi →',
     practiceReportTitle: 'Praktika-txostena',
     practiceReportDiagDate: date => `Diagnostikoa ${date}n osatu da`,
@@ -2700,6 +2710,7 @@ let pracCurrentProb=null, pracCurrentType=null, pracCurrentFilter=null;
 let pracSelectedTypes=new Set();
 let pracSessionCorrect=0, pracSessionTotal=0;
 let pracIsDiagnosisPhase=false;
+let pracJustFinishedDiagnosis=false;
 
 // ══════════════════════════════════════════════════════════════
 // BANCO DE PROBLEMAS (JSON externo)
@@ -3152,7 +3163,7 @@ function saveDiagnosticSnapshot(bayesState){
 function maybeSnapshotDiagnosis(state){
   if(loadDiagnosticSnapshot()) return;
   const allDone=ALL_TYPE_KEYS.every(type=>(state[type]?.count||0)>=BAYES_DIAGNOSIS_MIN_TRIES);
-  if(allDone) saveDiagnosticSnapshot(state);
+  if(allDone){ saveDiagnosticSnapshot(state); pracJustFinishedDiagnosis=true; }
 }
 function updateBayesType(type,score,difficulty){
   // score ∈ [0,1]: 1=todo correcto, 0=todo incorrecto, parciales intermedios
@@ -3634,11 +3645,19 @@ function renderPractice(){
       <button class="classify-btn" ${!allAnswered?'disabled':''} onclick="pracCheckClassify('${type}')">
         ${typeLabels[type]}
       </button>`).join('');
+    const diagDoneBanner=pracJustFinishedDiagnosis
+      ?`<div style="background:#f0faf4;border:1.5px solid #22a65a;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span style="font-size:.88rem;color:#1a7a42;flex:1">${t('practiceDiagDoneMsg')}</span>
+          <button onclick="renderPracticeReport()" style="background:none;border:1.5px solid #22a65a;border-radius:7px;padding:4px 12px;cursor:pointer;font-size:.82rem;color:#22a65a;font-family:inherit;font-weight:600;white-space:nowrap">${t('practiceDiagDoneLink')}</button>
+        </div>`
+      :'';
+    pracJustFinishedDiagnosis=false;
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
           <span>${t('practiceTitle')}${phaseChip}${sessionChip}</span>${backBtn}
         </div>
+        ${diagDoneBanner}
         <div class="practice-context">${probText.context}</div>
         <p class="prac-phase-label">1 — ${t('practiceWhyTitle')}</p>
         <div class="prac-q-block">
