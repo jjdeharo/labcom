@@ -210,6 +210,8 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 /* Selección de fórmula */
 .prac-formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
 @media(max-width:500px){.prac-formula-grid{grid-template-columns:1fr}}
+.prac-dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+@media(max-width:500px){.prac-dim-grid{grid-template-columns:1fr;gap:14px}}
 .prac-formula-btn{background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.82rem;text-align:center;transition:all .15s;color:var(--text);font-family:inherit;width:100%}
 .prac-formula-btn:hover:not(.pf-sel){border-color:var(--accent);background:var(--accent-light)}
 .prac-formula-btn.pf-sel{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
@@ -3552,7 +3554,7 @@ function renderPracticeReport(){
     </p>
     <p style="font-size:.78rem;color:var(--text2);margin:2px 0 6px">${t('practiceReportDimNote')}</p>
     ${dimLegend}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px">
+    <div class="prac-dim-grid">
       <div>
         <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
         ${dimRows(dimGroup1)}
