@@ -3668,6 +3668,7 @@ function pracCheckNK(){
   pracSessionTotal++;
   if(fullyCorrect) pracSessionCorrect++;
   updateBayesType(prob.type,score,prob.difficulty);
+  if(prob.id&&!prob.id.startsWith('proc-')){ doneProblemIds.add(prob.id); saveDoneProblemIds(); }
   pracPhase=2;
   window._pracNOk=nOk; window._pracKOk=kOk;
   window._pracNVal=nVal; window._pracKVal=isAllScope?prob.n:kVal;
