@@ -3354,14 +3354,14 @@ function renderPractice(){
 
   // ══════════ PHASE 0: 3 preguntas → el alumno elige el tipo ══════════
   if(pracPhase===0){
-    function qBtns(key,curVal){
+    const qBtns=(key,curVal)=>{
       const ySel=curVal===true?'sel-y':'';
       const nSel=curVal===false?'sel-n':'';
       return `<div class="prac-q-btns">
         <button class="prac-q-btn ${ySel}" onclick="pracSetQ('${key}',true)">${t('practiceQYes')}</button>
         <button class="prac-q-btn ${nSel}" onclick="pracSetQ('${key}',false)">${t('practiceQNo')}</button>
       </div>`;
-    }
+    };
     const allAnswered=pracOrd!==null&&pracRep!==null&&pracAll!==null;
     const typeBtns=ALL_TYPE_KEYS.map(type=>`
       <button class="classify-btn" ${!allAnswered?'disabled':''} onclick="pracCheckClassify('${type}')">
@@ -3394,10 +3394,10 @@ function renderPractice(){
     const ordOk=pracOrd===d.order;
     const allOk=pracAll===(d.scope==='all');
     const repOk=pracRep===d.rep;
-    function qAns(ok,userLbl,corrLbl){
+    const qAns=(ok,userLbl,corrLbl)=>{
       if(ok) return `<strong style="color:var(--green)">${corrLbl}</strong>`;
       return `<strong style="color:var(--red)">${userLbl}</strong> → <strong style="color:var(--green)">${corrLbl}</strong>`;
-    }
+    };
     const whyInline=`<div style="font-size:.83rem;margin-top:8px;color:var(--text2)">
       ${sw('colOrder')} ${qAns(ordOk,pracOrd?sw('yes'):sw('no'),d.order?sw('yes'):sw('no'))} &nbsp;·&nbsp;
       ${sw('colScope')} ${qAns(allOk,pracAll?sw('all'):sw('some'),d.scope==='all'?sw('all'):sw('some'))} &nbsp;·&nbsp;
