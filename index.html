@@ -1722,13 +1722,20 @@ function buildLangPicker() {
 // ══════════════════════════════════════════════════════════════
 // Navegación
 // ══════════════════════════════════════════════════════════════
-function showSection(id) {
+function showSection(id, pushHistory=true) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   buildNav();
   renderSection(id);
   window.scrollTo(0,0);
+  closeMobileNav();
+  if(pushHistory) history.pushState({section:id}, '', '#'+id);
 }
+
+window.addEventListener('popstate', e=>{
+  const id = (e.state&&e.state.section) || 'inicio';
+  showSection(id, false);
+});
 
 function sample(arr, count) {
   const pool = [...arr];
@@ -3470,7 +3477,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   buildNav();
   buildLangPicker();
   buildThemeBtn();
-  renderSection('inicio');
+  const initId = SECTIONS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio';
+  history.replaceState({section:initId}, '', initId==='inicio' ? location.pathname : '#'+initId);
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(initId).classList.add('active');
+  renderSection(initId);
   loadProblemBank();
 });
 </script>
