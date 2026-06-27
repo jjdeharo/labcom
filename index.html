@@ -574,6 +574,13 @@ const LANG = {
     practiceKNote: 'k — posiciones o elementos elegidos',
     practiceKEqN: 'k = n (se usan todos)',
     practiceCalcBtn: 'Calcular →',
+    practiceValidationNK: 'Indica los valores de n y k antes de continuar.',
+    practiceValidationN: 'Indica el valor de n antes de continuar.',
+    practiceValidationK: 'Indica el valor de k antes de continuar.',
+    practiceValidationFormula: 'Elige una fórmula antes de continuar.',
+    practiceValidationNKFormula: 'Indica n y k y elige una fórmula antes de continuar.',
+    practiceValidationNFormula: 'Indica n y elige una fórmula antes de continuar.',
+    practiceValidationKFormula: 'Indica k y elige una fórmula antes de continuar.',
     practiceTypeOk: name => `¡Correcto! Es una <strong>${name}</strong>.`,
     practiceTypeErr: name => `El tipo correcto es <strong>${name}</strong>.`,
     practiceNKOk: '¡n y k correctos!',
@@ -889,6 +896,13 @@ const LANG = {
     practiceKNote: 'k — positions or elements chosen',
     practiceKEqN: 'k = n (all are used)',
     practiceCalcBtn: 'Calculate →',
+    practiceValidationNK: 'Enter the values of n and k before continuing.',
+    practiceValidationN: 'Enter the value of n before continuing.',
+    practiceValidationK: 'Enter the value of k before continuing.',
+    practiceValidationFormula: 'Choose a formula before continuing.',
+    practiceValidationNKFormula: 'Enter n and k and choose a formula before continuing.',
+    practiceValidationNFormula: 'Enter n and choose a formula before continuing.',
+    practiceValidationKFormula: 'Enter k and choose a formula before continuing.',
     practiceTypeOk: name => `Correct! It is a <strong>${name}</strong>.`,
     practiceTypeErr: name => `The correct type is <strong>${name}</strong>.`,
     practiceNKOk: 'n and k are correct!',
@@ -1143,6 +1157,13 @@ const LANG = {
     practiceKNote: 'k — posicions o elements triats',
     practiceKEqN: 'k = n (es fan servir tots)',
     practiceCalcBtn: 'Calcula →',
+    practiceValidationNK: 'Indica els valors de n i k abans de continuar.',
+    practiceValidationN: 'Indica el valor de n abans de continuar.',
+    practiceValidationK: 'Indica el valor de k abans de continuar.',
+    practiceValidationFormula: 'Tria una fórmula abans de continuar.',
+    practiceValidationNKFormula: 'Indica n i k i tria una fórmula abans de continuar.',
+    practiceValidationNFormula: 'Indica n i tria una fórmula abans de continuar.',
+    practiceValidationKFormula: 'Indica k i tria una fórmula abans de continuar.',
     practiceTypeOk: name => `Correcte! És una <strong>${name}</strong>.`,
     practiceTypeErr: name => `El tipus correcte és <strong>${name}</strong>.`,
     practiceNKOk: 'n i k correctes!',
@@ -1380,6 +1401,13 @@ const LANG = {
     practiceKNote: 'k — posicións ou elementos escollidos',
     practiceKEqN: 'k = n (úsanse todos)',
     practiceCalcBtn: 'Calcular →',
+    practiceValidationNK: 'Indica os valores de n e k antes de continuar.',
+    practiceValidationN: 'Indica o valor de n antes de continuar.',
+    practiceValidationK: 'Indica o valor de k antes de continuar.',
+    practiceValidationFormula: 'Escolle unha fórmula antes de continuar.',
+    practiceValidationNKFormula: 'Indica n e k e escolle unha fórmula antes de continuar.',
+    practiceValidationNFormula: 'Indica n e escolle unha fórmula antes de continuar.',
+    practiceValidationKFormula: 'Indica k e escolle unha fórmula antes de continuar.',
     practiceTypeOk: name => `Correcto! É unha <strong>${name}</strong>.`,
     practiceTypeErr: name => `O tipo correcto é <strong>${name}</strong>.`,
     practiceNKOk: 'n e k correctos!',
@@ -1617,6 +1645,13 @@ const LANG = {
     practiceKNote: 'k — posizio edo aukeratutako elementuak',
     practiceKEqN: 'k = n (guztiak erabiltzen dira)',
     practiceCalcBtn: 'Kalkulatu →',
+    practiceValidationNK: 'Sartu n eta k balioak jarraitu aurretik.',
+    practiceValidationN: 'Sartu n balioa jarraitu aurretik.',
+    practiceValidationK: 'Sartu k balioa jarraitu aurretik.',
+    practiceValidationFormula: 'Aukeratu formula bat jarraitu aurretik.',
+    practiceValidationNKFormula: 'Sartu n eta k eta aukeratu formula bat jarraitu aurretik.',
+    practiceValidationNFormula: 'Sartu n eta aukeratu formula bat jarraitu aurretik.',
+    practiceValidationKFormula: 'Sartu k eta aukeratu formula bat jarraitu aurretik.',
     practiceTypeOk: name => `Zuzena! <strong>${name}</strong> da.`,
     practiceTypeErr: name => `Mota zuzena <strong>${name}</strong> da.`,
     practiceNKOk: 'n eta k zuzenak dira!',
@@ -3591,15 +3626,34 @@ function pracSetFormula(type){
     const m=btn.getAttribute('onclick').match(/'([^']+)'/);
     btn.classList.toggle('pf-sel', m&&m[1]===type);
   });
-  const calcBtn=document.querySelector('[onclick="pracCheckNK()"]');
-  if(calcBtn) calcBtn.removeAttribute('disabled');
+  const msgEl=document.getElementById('prac-validation-msg');
+  if(msgEl) msgEl.textContent='';
 }
 function pracCheckNK(){
   const prob=pracCurrentProb;
-  const nVal=parseInt(document.getElementById('prac-n')?.value)||0;
-  const kVal=parseInt(document.getElementById('prac-k')?.value)||0;
+  const nInput=document.getElementById('prac-n');
+  const kInput=document.getElementById('prac-k');
+  const nVal=parseInt(nInput?.value)||0;
+  const kVal=parseInt(kInput?.value)||0;
   const d=TYPE_DECISIONS[prob.type];
   const isAllScope=(d.scope==='all');
+  const nEmpty=!nInput?.value.trim();
+  const kEmpty=!isAllScope&&!kInput?.value.trim();
+  const fEmpty=pracFormulaChosen===null;
+  if(nEmpty||kEmpty||fEmpty){
+    const msgKey=nEmpty&&kEmpty&&fEmpty?'practiceValidationNKFormula'
+      :nEmpty&&fEmpty?'practiceValidationNFormula'
+      :kEmpty&&fEmpty?'practiceValidationKFormula'
+      :nEmpty&&kEmpty?'practiceValidationNK'
+      :nEmpty?'practiceValidationN'
+      :kEmpty?'practiceValidationK'
+      :'practiceValidationFormula';
+    if(nEmpty&&nInput) nInput.closest('.prac-nk-card')?.classList.add('invalid');
+    if(kEmpty&&kInput) kInput.closest('.prac-nk-card')?.classList.add('invalid');
+    const errEl=document.getElementById('prac-validation-msg');
+    if(errEl) errEl.textContent=t(msgKey);
+    return;
+  }
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
   const formulaOk=pracFormulaChosen===prob.type;
@@ -3693,7 +3747,7 @@ function renderPractice(){
     </div>`;
     const kCard=isAllScope
       ?`<div class="prac-nk-card"><span class="prac-nk-label">${t('practiceKNote')}</span><div class="prac-nk-static">${t('practiceKEqN')}</div></div>`
-      :`<div class="prac-nk-card"><label class="prac-nk-label" for="prac-k">${t('practiceKNote')}</label><input class="prac-nk-input" id="prac-k" type="number" min="1" max="50" placeholder="?"></div>`;
+      :`<div class="prac-nk-card"><label class="prac-nk-label" for="prac-k">${t('practiceKNote')}</label><input class="prac-nk-input" id="prac-k" type="number" min="1" max="50" placeholder="?" oninput="this.closest('.prac-nk-card').classList.remove('invalid');document.getElementById('prac-validation-msg').textContent=''"></div>`;
     const shuffledTypes=[...ALL_TYPE_KEYS].sort(()=>Math.random()-0.5);
     const formulaBtns=shuffledTypes.map(type=>{
       const rawF=t('types')[type].formula;
@@ -3701,7 +3755,6 @@ function renderPractice(){
       const sel=pracFormulaChosen===type?' pf-sel':'';
       return `<button class="prac-formula-btn${sel}" onclick="pracSetFormula('${type}')">${f}</button>`;
     }).join('');
-    const calcEnabled=pracFormulaChosen!==null;
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
@@ -3711,13 +3764,14 @@ function renderPractice(){
         ${typeFb}${whyInline}
         <p class="prac-phase-label">2 — ${t('practiceNKTitle')}</p>
         <div class="prac-nk-grid">
-          <div class="prac-nk-card"><label class="prac-nk-label" for="prac-n">${t('practiceNNote')}</label><input class="prac-nk-input" id="prac-n" type="number" min="1" max="50" placeholder="?"></div>
+          <div class="prac-nk-card"><label class="prac-nk-label" for="prac-n">${t('practiceNNote')}</label><input class="prac-nk-input" id="prac-n" type="number" min="1" max="50" placeholder="?" oninput="this.closest('.prac-nk-card').classList.remove('invalid');document.getElementById('prac-validation-msg').textContent=''"></div>
           ${kCard}
         </div>
         <p class="prac-phase-label" style="margin-top:14px">3 — ${t('practiceFormulaTitle')}</p>
         <div class="prac-formula-grid">${formulaBtns}</div>
-        <div class="nav-row" style="justify-content:flex-end;margin-top:4px">
-          <button class="btn btn-primary" ${calcEnabled?'':'disabled'} onclick="pracCheckNK()">${t('practiceCalcBtn')}</button>
+        <div class="nav-row" style="justify-content:flex-end;align-items:center;gap:10px;margin-top:4px">
+          <span id="prac-validation-msg" style="font-size:.82rem;color:var(--red);flex:1;text-align:left"></span>
+          <button class="btn btn-primary" onclick="pracCheckNK()">${t('practiceCalcBtn')}</button>
         </div>
       </div>`;
     renderKatex();
