@@ -85,10 +85,10 @@ strong{color:var(--text)}
 .badge-purple{background:var(--purple-light);color:var(--purple)}
 .badge-red{background:var(--red-light);color:var(--red)}
 .btn{padding:9px 20px;border-radius:8px;border:2px solid transparent;cursor:pointer;font-size:.92rem;font-weight:600;color:var(--text);transition:all .15s}
-.btn-yes{background:var(--green-light);color:var(--green);border-color:var(--green)}
-.btn-yes:hover{background:var(--green);color:#fff}
-.btn-no{background:var(--red-light);color:var(--red);border-color:var(--red)}
-.btn-no:hover{background:var(--red);color:#fff}
+.btn-yes{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-yes:hover{opacity:.85}
+.btn-no{background:var(--surface2);color:var(--text);border-color:var(--border)}
+.btn-no:hover{border-color:var(--accent);color:var(--accent)}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-primary:hover{opacity:.85}
 .btn-secondary{background:var(--surface2);color:var(--text);border-color:var(--border)}
@@ -187,8 +187,8 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
 .prac-q-btns{display:flex;gap:6px;flex-shrink:0}
 .prac-q-btn{background:var(--surface);border:2px solid var(--border);color:var(--text);border-radius:20px;padding:5px 15px;cursor:pointer;font-size:.84rem;font-weight:600;transition:all .15s;line-height:1.2}
 .prac-q-btn:hover:not(.sel-y):not(.sel-n){border-color:var(--accent);color:var(--accent)}
-.prac-q-btn.sel-y{background:var(--green);border-color:var(--green);color:#fff}
-.prac-q-btn.sel-n{background:var(--red);border-color:var(--red);color:#fff}
+.prac-q-btn.sel-y{background:var(--accent);border-color:var(--accent);color:#fff}
+.prac-q-btn.sel-n{background:var(--text2);border-color:var(--text2);color:#fff}
 .prac-nk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 14px}
 .prac-nk-card{border:2px solid var(--border);border-radius:10px;padding:14px 12px;text-align:center;background:var(--surface2);transition:border-color .2s}
 .prac-nk-card.valid{border-color:var(--green)}
@@ -369,6 +369,8 @@ const LANG = {
     treeCalcK: 'k (elementos elegidos)',
     treeCalcResult: 'Resultado',
     treeCalcInvalid: 'Valores no válidos para este tipo',
+    treeCalcReps: 'Cantidad de cada elemento repetido (separados por coma)',
+    treeCalcRepsHint: 'Ej.: 2, 2 (para MAMA: M×2, A×2)',
     treeSteps: [
       { id:'order',   question:'¿Importa el orden?',                        hint:'Si cambias el orden de los elementos, ¿obtienes un resultado diferente?', yes:'all',    no:'rep2' },
       { id:'all',     question:'¿Usas todos los elementos disponibles?',     hint:'Si tienes n elementos, ¿los usas todos o solo eliges k de ellos?',          yes:'repAll', no:'rep1' },
@@ -385,7 +387,7 @@ const LANG = {
       variation:      { name:'Variación',                      color:'',       badge:'badge-accent', desc:'Eliges <strong>k</strong> de <strong>n</strong> elementos, el orden importa, sin repetición.', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',             exText:'Podios (oro, plata, bronce) en una carrera de 5 personas:',              exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
       variationRep:   { name:'Variación con repetición',       color:'orange', badge:'badge-orange', desc:'Eliges <strong>k</strong> de <strong>n</strong> elementos, el orden importa, con repetición.', formula:'$VR_{n,k} = n^k$',                            exText:'Contraseñas de 4 cifras (0–9):',                                         exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
       combination:    { name:'Combinación',                    color:'purple', badge:'badge-purple', desc:'Eliges <strong>k</strong> de <strong>n</strong>, el orden <strong>no</strong> importa, sin repetición.',formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$',exText:'¿Cuántos grupos de 2 se forman con 5 alumnos?',                    exCalc:'$C_{5,2} = 10$' },
-      combinationRep: { name:'Combinación con repetición',     color:'red',    badge:'badge-red',    desc:'Eliges <strong>k</strong> de <strong>n</strong>, el orden <strong>no</strong> importa, con repetición.',  formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',            exText:'Copas de 3 bolas con 4 sabores (puedes repetir):',                       exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+      combinationRep: { name:'Combinación con repetición',     color:'',       badge:'badge-accent',    desc:'Eliges <strong>k</strong> de <strong>n</strong>, el orden <strong>no</strong> importa, con repetición.',  formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',            exText:'Copas de 3 bolas con 4 sabores (puedes repetir):',                       exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
     },
 
     // Laboratorio
@@ -669,6 +671,8 @@ const LANG = {
     treeCalcK: 'k (chosen elements)',
     treeCalcResult: 'Result',
     treeCalcInvalid: 'Invalid values for this type',
+    treeCalcReps: 'Count of each repeated element (comma-separated)',
+    treeCalcRepsHint: 'e.g. 2, 2 (for MAMA: M×2, A×2)',
     treeSteps: [
       { id:'order',   question:'Does the order matter?',                        hint:'If you change the order of elements, do you get a different result?',           yes:'all',    no:'rep2' },
       { id:'all',     question:'Do you use all available elements?',             hint:'If you have n elements, do you use all of them or just pick k?',                yes:'repAll', no:'rep1' },
@@ -683,7 +687,7 @@ const LANG = {
       variation:      { name:'Variation',                color:'',       badge:'badge-accent', desc:'You choose <strong>k</strong> from <strong>n</strong> elements, order matters, no repetition.',      formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',             exText:'Podiums (gold, silver, bronze) in a race of 5 people:',                   exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
       variationRep:   { name:'Variation w/ repetition',  color:'orange', badge:'badge-orange', desc:'You choose <strong>k</strong> from <strong>n</strong> elements, order matters, with repetition.',    formula:'$VR_{n,k} = n^k$',                            exText:'4-digit passwords (0–9):',                                                exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
       combination:    { name:'Combination',              color:'purple', badge:'badge-purple', desc:'You choose <strong>k</strong> from <strong>n</strong>, order <strong>does not</strong> matter, no repetition.',formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$',exText:'How many pairs can be formed from 5 students?',               exCalc:'$C_{5,2} = 10$' },
-      combinationRep: { name:'Combination w/ repetition',color:'red',    badge:'badge-red',    desc:'You choose <strong>k</strong> from <strong>n</strong>, order <strong>does not</strong> matter, with repetition.',formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Ice cream cups of 3 scoops with 4 flavors (repeating allowed):',          exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+      combinationRep: { name:'Combination w/ repetition',color:'',       badge:'badge-accent',    desc:'You choose <strong>k</strong> from <strong>n</strong>, order <strong>does not</strong> matter, with repetition.',formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Ice cream cups of 3 scoops with 4 flavors (repeating allowed):',          exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
     },
     labTitle: 'Combinatorics lab',
     labSubtitle: 'Adjust the parameters and instantly see how the result changes.',
@@ -953,6 +957,8 @@ const LANG = {
     treeCalcK: 'k (elements triats)',
     treeCalcResult: 'Resultat',
     treeCalcInvalid: 'Valors no vàlids per a aquest tipus',
+    treeCalcReps: 'Quantitat de cada element repetit (separats per comes)',
+    treeCalcRepsHint: 'Ex.: 2, 2 (per MAMA: M×2, A×2)',
     treeSteps: [
       { id:'order',  question:'L\'ordre és important?',                      hint:'Si canvies l\'ordre dels elements, obtens un resultat diferent?',        yes:'all',    no:'rep2' },
       { id:'all',    question:'Fas servir tots els elements disponibles?',    hint:'Si tens n elements, els fas servir tots o només tries k?',               yes:'repAll', no:'rep1' },
@@ -967,7 +973,7 @@ const LANG = {
       variation:      { name:'Variació',                 color:'',       badge:'badge-accent', desc:'Tries <strong>k</strong> de <strong>n</strong> elements, l\'ordre importa, sense repetició.',       formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Pòdiums (or, plata, bronze) en una cursa de 5 persones:',              exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
       variationRep:   { name:'Variació amb repetició',   color:'orange', badge:'badge-orange', desc:'Tries <strong>k</strong> de <strong>n</strong> elements, l\'ordre importa, amb repetició.',         formula:'$VR_{n,k} = n^k$',                          exText:'Contrasenyes de 4 xifres (0–9):',                                      exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
       combination:    { name:'Combinació',               color:'purple', badge:'badge-purple', desc:'Tries <strong>k</strong> de <strong>n</strong>, l\'ordre <strong>no</strong> importa, sense repetició.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Quants grups de 2 es formen amb 5 alumnes?', exCalc:'$C_{5,2} = 10$' },
-      combinationRep: { name:'Combinació amb repetició', color:'red',    badge:'badge-red',    desc:'Tries <strong>k</strong> de <strong>n</strong>, l\'ordre <strong>no</strong> importa, amb repetició.',    formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Copes de 3 boles amb 4 sabors (pots repetir):',                        exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+      combinationRep: { name:'Combinació amb repetició', color:'',       badge:'badge-accent',    desc:'Tries <strong>k</strong> de <strong>n</strong>, l\'ordre <strong>no</strong> importa, amb repetició.',    formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',          exText:'Copes de 3 boles amb 4 sabors (pots repetir):',                        exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
     },
     labTitle: 'Laboratori de combinatòria',
     labSubtitle: 'Ajusta els paràmetres i observa com canvia el resultat a l\'instant.',
@@ -1166,6 +1172,8 @@ const LANG = {
     treeCalcK: 'k (elementos elixidos)',
     treeCalcResult: 'Resultado',
     treeCalcInvalid: 'Valores non válidos para este tipo',
+    treeCalcReps: 'Cantidade de cada elemento repetido (separados por coma)',
+    treeCalcRepsHint: 'Ex.: 2, 2 (para MAMA: M×2, A×2)',
     treeSteps: [
       { id:'order',  question:'Importa a orde?',                        hint:'Se cambias a orde dos elementos, obtés un resultado diferente?',       yes:'all',    no:'rep2' },
       { id:'all',    question:'Usas todos os elementos dispoñibles?',    hint:'Se tes n elementos, usas todos ou só escolles k?',                     yes:'repAll', no:'rep1' },
@@ -1180,7 +1188,7 @@ const LANG = {
       variation:      { name:'Variación',                 color:'',       badge:'badge-accent', desc:'Escolles <strong>k</strong> de <strong>n</strong> elementos, a orde importa, sen repetición.',   formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Pódiums (ouro, prata, bronce) nunha carreira de 5 persoas:',           exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
       variationRep:   { name:'Variación con repetición',  color:'orange', badge:'badge-orange', desc:'Escolles <strong>k</strong> de <strong>n</strong> elementos, a orde importa, con repetición.',   formula:'$VR_{n,k} = n^k$',                          exText:'Contrasinais de 4 cifras (0–9):',                                      exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
       combination:    { name:'Combinación',               color:'purple', badge:'badge-purple', desc:'Escolles <strong>k</strong> de <strong>n</strong>, a orde <strong>non</strong> importa, sen repetición.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Cantos grupos de 2 se forman con 5 alumnos?', exCalc:'$C_{5,2} = 10$' },
-      combinationRep: { name:'Combinación con repetición',color:'red',    badge:'badge-red',    desc:'Escolles <strong>k</strong> de <strong>n</strong>, a orde <strong>non</strong> importa, con repetición.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'Copas de 3 bolas con 4 sabores (podes repetir):',                      exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+      combinationRep: { name:'Combinación con repetición',color:'',       badge:'badge-accent',    desc:'Escolles <strong>k</strong> de <strong>n</strong>, a orde <strong>non</strong> importa, con repetición.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'Copas de 3 bolas con 4 sabores (podes repetir):',                      exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
     },
     labTitle: 'Laboratorio de combinatoria',
     labSubtitle: 'Axusta os parámetros e observa como cambia o resultado ao instante.',
@@ -1379,6 +1387,8 @@ const LANG = {
     treeCalcK: 'k (aukeratutako elementuak)',
     treeCalcResult: 'Emaitza',
     treeCalcInvalid: 'Balio ez-baliodunak mota honetarako',
+    treeCalcReps: 'Elementu errepikatu bakoitzaren kopurua (komaz bereizita)',
+    treeCalcRepsHint: 'Adib.: 2, 2 (MAMA: M×2, A×2)',
     treeSteps: [
       { id:'order',  question:'Garrantzitsua al da ordena?',                        hint:'Elementuen ordena aldatzen baduzu, emaitza ezberdina lortzen al duzu?',    yes:'all',    no:'rep2' },
       { id:'all',    question:'Erabilgarri dauden elementu guztiak erabiltzen al dituzu?', hint:'n elementu badituzu, denak erabiltzen dituzu ala k bakarrik aukeratzen?', yes:'repAll', no:'rep1' },
@@ -1393,7 +1403,7 @@ const LANG = {
       variation:      { name:'Bariazioa',                     color:'',       badge:'badge-accent', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena garrantzitsua, errepikapenik gabe.',          formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$',           exText:'Podiumak (urre, zilar, brontze) 5 pertsonako lasterketa batean:',       exCalc:'$V_{5,3} = \\dfrac{5!}{2!} = 60$' },
       variationRep:   { name:'Bariazioa errepikapenarekin',   color:'orange', badge:'badge-orange', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena garrantzitsua, errepikapenarekin.',            formula:'$VR_{n,k} = n^k$',                          exText:'4 zifrako pasahitzak (0–9):',                                          exCalc:'$VR_{10,4} = 10^4 = 10\\,000$' },
       combination:    { name:'Konbinazioa',                   color:'purple', badge:'badge-purple', desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena <strong>ez</strong> da garrantzitsua, errepikapenik gabe.', formula:'$C_{n,k} = \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}$', exText:'Zenbat 2ko talde sor daiteke 5 ikaslerekin?', exCalc:'$C_{5,2} = 10$' },
-      combinationRep: { name:'Konbinazioa errepikapenarekin', color:'red',    badge:'badge-red',    desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena <strong>ez</strong> da garrantzitsua, errepikapenarekin.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'3 bolazko kopak 4 zaporerekin (errepika daiteke):',                    exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
+      combinationRep: { name:'Konbinazioa errepikapenarekin', color:'',       badge:'badge-accent',    desc:'<strong>k</strong> aukeratzen duzu <strong>n</strong>tik, ordena <strong>ez</strong> da garrantzitsua, errepikapenarekin.', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$',         exText:'3 bolazko kopak 4 zaporerekin (errepika daiteke):',                    exCalc:'$CR_{4,3} = \\dbinom{6}{3} = 20$' }
     },
     labTitle: 'Konbinatoriaren laborategia',
     labSubtitle: 'Doitu parametroak eta ikusi emaitza nola aldatzen den berehala.',
@@ -1809,6 +1819,24 @@ function treeCalcUpdate(type){
   }
 }
 
+function treeCalcUpdatePermRep(){
+  const repsEl=document.getElementById('tree-calc-reps');
+  const resEl=document.getElementById('tree-calc-res');
+  if(!repsEl||!resEl) return;
+  const parts=repsEl.value.split(/[\s,]+/).map(s=>parseInt(s)).filter(v=>v>0&&Number.isFinite(v));
+  if(parts.length<2){
+    resEl.innerHTML=`<span style="color:var(--text2);font-size:.84rem">${t('treeCalcInvalid')}</span>`;
+    return;
+  }
+  const n=parts.reduce((a,b)=>a+b,0);
+  const denomVal=parts.reduce((acc,a)=>acc*factorial(a),1);
+  const value=factorial(n)/denomVal;
+  const denomStr=parts.map(a=>`${a}!`).join('\\cdot ');
+  const calcStr=`$P=\\dfrac{${n}!}{${denomStr}}=${fmtNumber(value)}$`;
+  resEl.innerHTML=`<div class="formula-box" style="margin:0">${calcStr}</div>`;
+  renderKatex();
+}
+
 function buildTreeShell() {
   document.getElementById('arbol').innerHTML = `
     <h1>${t('treeTitle')}</h1>
@@ -1867,7 +1895,17 @@ function renderTree(){
         <p>${typeData.desc}</p>
         <div class="formula-box">${typeData.formula}</div>
         <div class="example-box"><strong>${t('exampleLabel')}</strong> ${typeData.exText}<div style="margin-top:7px">${typeData.exCalc}</div></div>
-        ${currentId!=='permutationRep'?`
+        ${currentId==='permutationRep'?`
+        <div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
+          <div style="font-size:.86rem;font-weight:700;margin-bottom:10px">${t('treeCalcTitle')}</div>
+          <label style="font-size:.84rem;display:flex;flex-direction:column;gap:4px;margin-bottom:10px">${t('treeCalcReps')}
+            <input id="tree-calc-reps" type="text" value="2, 2"
+              style="padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem;background:var(--surface2);color:var(--text);font-family:inherit;max-width:220px"
+              oninput="treeCalcUpdatePermRep()">
+            <span style="font-size:.78rem;color:var(--text2)">${t('treeCalcRepsHint')}</span>
+          </label>
+          <div id="tree-calc-res"></div>
+        </div>`:`
         <div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
           <div style="font-size:.86rem;font-weight:700;margin-bottom:10px">${t('treeCalcTitle')}</div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px">
@@ -1883,14 +1921,14 @@ function renderTree(){
             </label>`:''}
           </div>
           <div id="tree-calc-res"></div>
-        </div>`:''}
+        </div>`}
         <div style="margin-top:18px;display:flex;gap:9px;flex-wrap:wrap">
           <button class="btn btn-secondary" onclick="initTree()">${t('treeBtnRestart')}</button>
           ${labAction}
         </div>
       </div>`;
     renderKatex();
-    if(currentId!=='permutationRep') treeCalcUpdate(currentId);
+    if(currentId==='permutationRep') treeCalcUpdatePermRep(); else treeCalcUpdate(currentId);
     return;
   }
   const step=treeGetStep(currentId);
