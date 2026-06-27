@@ -3301,6 +3301,7 @@ function selectAdaptiveProblem(filter){
 function renderPracticeReport(){
   const snap=loadDiagnosticSnapshot();
   const nowState=loadBayesState();
+  const hasReinforcement=ALL_TYPE_KEYS.some(type=>(nowState[type]?.count||0)>BAYES_DIAGNOSIS_MIN_TRIES);
   const typeLabels=t('typeLabels');
   const backBtn=`<button class="btn-ghost" style="margin-left:auto" onclick="renderPracticeHub()">${t('practiceReportBack')}</button>`;
   const chartStyle=[
@@ -3393,8 +3394,8 @@ function renderPracticeReport(){
       </div>
       ${snap?`<p style="font-size:.82rem;color:var(--text2);margin-bottom:12px">${t('practiceReportDiagDate')(snap.date)}</p>`:''}
       ${snapSection}
-      ${miniChart(nowState, t('practiceReportNowSection'))}
-      <p class="prac-phase-label" style="margin-top:20px">${t('practiceReportProgressSection')}</p>
+      ${hasReinforcement?miniChart(nowState, t('practiceReportNowSection')):''}
+      ${hasReinforcement?`<p class="prac-phase-label" style="margin-top:20px">${t('practiceReportProgressSection')}</p>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-family:inherit">
           <thead><tr style="border-bottom:1.5px solid var(--border)">
@@ -3405,7 +3406,8 @@ function renderPracticeReport(){
           </tr></thead>
           <tbody>${progressRows}</tbody>
         </table>
-      </div>
+      </div>`:''}
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
         <div>
           <p class="prac-phase-label">${t('practiceReportStrengths')}</p>
