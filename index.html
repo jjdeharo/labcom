@@ -3385,7 +3385,8 @@ function renderPracticeReport(){
   }
 
   function comparisonChart(snapState, nowState){
-    const sepStyle=`border-bottom:1px solid var(--border)`;
+    const lineColor='rgba(92,107,128,.45)';
+    const lineBg=`linear-gradient(to right,transparent ${BAYES_LEVEL_LOW_MAX}%,${lineColor} ${BAYES_LEVEL_LOW_MAX}%,${lineColor} calc(${BAYES_LEVEL_LOW_MAX}% + 1px),transparent calc(${BAYES_LEVEL_LOW_MAX}% + 1px),transparent ${BAYES_LEVEL_HIGH_MIN}%,${lineColor} ${BAYES_LEVEL_HIGH_MIN}%,${lineColor} calc(${BAYES_LEVEL_HIGH_MIN}% + 1px),transparent calc(${BAYES_LEVEL_HIGH_MIN}% + 1px))`;
     const rows=ALL_TYPE_KEYS.map(type=>{
       const diagPct=statePct(snapState,type)||0;
       const nowRaw=statePct(nowState,type)||0;
@@ -3395,34 +3396,40 @@ function renderPracticeReport(){
         ?`<span style="color:#22a65a;font-weight:700"> +${diff}%</span>`
         :diff<0?`<span style="color:var(--red);font-weight:700"> ${diff}%</span>`
         :'';
-      const diagBar=`<div style="height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-bottom:4px">
-        <div class="prac-progress-fill" style="width:${diagPct}%;${bayesProgressStyle(diagPct)};opacity:.55;border-radius:3px"></div></div>`;
-      const nowBar=`<div style="height:9px;border-radius:5px;background:var(--surface3);overflow:hidden">
+      const diagBar=`<div style="height:5px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-bottom:4px">
+        <div class="prac-progress-fill" style="width:${diagPct}%;${bayesProgressStyle(diagPct)};opacity:.5;border-radius:3px"></div></div>`;
+      const nowBar=`<div style="height:9px;border-radius:5px;background:var(--surface2);overflow:hidden">
         <div class="prac-progress-fill" style="width:${nowRaw}%;${bayesProgressStyle(nowRaw)};border-radius:5px"></div></div>`;
       const count=nowState[type]?.count||0;
-      return `<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 0;${sepStyle}">
+      return `<div style="display:grid;grid-template-columns:1fr 88px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
         <div>
           <div style="font-size:.86rem;font-weight:600;margin-bottom:6px">${typeLabels[type]}</div>
           <div style="position:relative">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:${lineBg}"></div>
             ${diagBar}${nowBar}
-            <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent ${BAYES_LEVEL_LOW_MAX}%,var(--border) ${BAYES_LEVEL_LOW_MAX}%,var(--border) calc(${BAYES_LEVEL_LOW_MAX}% + 1px),transparent calc(${BAYES_LEVEL_LOW_MAX}% + 1px),transparent ${BAYES_LEVEL_HIGH_MIN}%,var(--border) ${BAYES_LEVEL_HIGH_MIN}%,var(--border) calc(${BAYES_LEVEL_HIGH_MIN}% + 1px),transparent calc(${BAYES_LEVEL_HIGH_MIN}% + 1px))"></div>
           </div>
         </div>
-        <div style="text-align:right;min-width:80px">
+        <div style="text-align:right">
           <div style="font-size:.78rem;color:var(--text2)">${diagPct}%</div>
           <div style="font-size:.92rem;font-weight:700">${nowDisp}%${diffHtml}</div>
           <div style="font-size:.72rem;color:var(--text2)">${t('practiceSolvedCount')(count)}</div>
         </div>
       </div>`;
     }).join('');
-    const axisHtml=`<div style="display:flex;justify-content:space-around;font-size:.72rem;color:var(--text2);margin-bottom:4px;padding-right:92px">
-      <span>${t('practiceMasteryLow')}</span>
-      <span>${t('practiceMasteryMid')}</span>
-      <span>${t('practiceMasteryHigh')}</span>
+    const lowC=BAYES_LEVEL_LOW_MAX/2;
+    const midC=(BAYES_LEVEL_LOW_MAX+BAYES_LEVEL_HIGH_MIN)/2;
+    const highC=(BAYES_LEVEL_HIGH_MIN+100)/2;
+    const axisHtml=`<div style="display:grid;grid-template-columns:1fr 88px;gap:12px;margin-bottom:2px">
+      <div style="position:relative;height:16px;font-size:.72rem;color:var(--text2)">
+        <span style="position:absolute;left:${lowC}%;transform:translateX(-50%);white-space:nowrap">${t('practiceMasteryLow')}</span>
+        <span style="position:absolute;left:${midC}%;transform:translateX(-50%);white-space:nowrap">${t('practiceMasteryMid')}</span>
+        <span style="position:absolute;left:${highC}%;transform:translateX(-50%);white-space:nowrap">${t('practiceMasteryHigh')}</span>
+      </div>
+      <div></div>
     </div>`;
     return `<p class="prac-phase-label" style="margin-top:16px">${t('practiceReportProgressSection')}</p>
-    <div style="font-size:.72rem;color:var(--text2);margin-bottom:2px;display:flex;gap:16px">
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:4px;border-radius:2px;background:var(--accent);opacity:.55"></span>${t('practiceReportDiagSection')}</span>
+    <div style="font-size:.72rem;color:var(--text2);margin-bottom:6px;display:flex;gap:16px;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:4px;border-radius:2px;background:var(--accent);opacity:.5"></span>${t('practiceReportDiagSection')}</span>
       <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:8px;border-radius:4px;background:#22a65a"></span>${t('practiceReportNowSection')}</span>
     </div>
     ${axisHtml}
