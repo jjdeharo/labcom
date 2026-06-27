@@ -3396,9 +3396,9 @@ function renderPracticeReport(){
         :diff<0?`<span style="color:var(--red);font-weight:700"> ${diff}%</span>`
         :'';
       const diagBar=`<div style="height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-bottom:4px">
-        <div style="height:100%;width:${diagPct}%;${bayesProgressStyle(diagPct)};opacity:.55"></div></div>`;
+        <div class="prac-progress-fill" style="width:${diagPct}%;${bayesProgressStyle(diagPct)};opacity:.55;border-radius:3px"></div></div>`;
       const nowBar=`<div style="height:9px;border-radius:5px;background:var(--surface3);overflow:hidden">
-        <div style="height:100%;width:${nowRaw}%;${bayesProgressStyle(nowRaw)}"></div></div>`;
+        <div class="prac-progress-fill" style="width:${nowRaw}%;${bayesProgressStyle(nowRaw)};border-radius:5px"></div></div>`;
       const count=nowState[type]?.count||0;
       return `<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 0;${sepStyle}">
         <div>
