@@ -3552,10 +3552,16 @@ function renderPracticeReport(){
     </p>
     <p style="font-size:.78rem;color:var(--text2);margin:2px 0 6px">${t('practiceReportDimNote')}</p>
     ${dimLegend}
-    <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
-    ${dimRows(dimGroup1)}
-    <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:14px 0 4px">${t('practiceReportDimGroup2')}</p>
-    ${dimRows(dimGroup2)}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px">
+      <div>
+        <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
+        ${dimRows(dimGroup1)}
+      </div>
+      <div>
+        <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup2')}</p>
+        ${dimRows(dimGroup2)}
+      </div>
+    </div>
   </div>`;
 
   document.getElementById('prac-content').innerHTML=`
