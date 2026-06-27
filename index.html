@@ -2215,7 +2215,7 @@ function renderLessonHub(){
       }).join('')}
     </div>
     <div style="text-align:center;margin-top:18px">
-      <button onclick="resetLessonsData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--err)';this.style.color='var(--err)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('lessonResetData')}</button>
+      <button onclick="resetLessonsData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('lessonResetData')}</button>
     </div>`;
   renderKatex();
 }
@@ -2998,7 +2998,10 @@ function generateProceduralProblem(type){
 // ══════════════════════════════════════════════════════════════
 const BAYES_THETA=[-2,0,2];  // hipótesis: no aprendido / aprendiendo / dominado
 const BAYES_A=1.5;           // discriminación IRT
-const BAYES_C=1/6;           // factor de azar (6 tipos posibles)
+// Heurística de pseudoazar: el primer paso pide elegir entre seis tipos.
+// El ejercicio completo también incluye n, k y fórmula, por eso esto no es
+// una calibración psicométrica, sino una verosimilitud inicial razonable.
+const BAYES_C=1/6;
 const BAYES_MIN_TRIES_FOR_MID=2;
 const BAYES_MIN_TRIES_FOR_HIGH=4;
 const BAYES_DIAGNOSIS_MIN_TRIES=2;
@@ -3113,12 +3116,6 @@ function bayesExpectedTheta(prior){
 function bayesDifficultyFit(prior,difficulty){
   const gap=Math.abs(difficulty-bayesExpectedTheta(prior));
   return Math.exp(-0.5*gap*gap);
-}
-function bayesPracticePriority(type,state){
-  const ts=state[type];
-  const weakness=1-bayesExpectedSuccess(ts.prior,0);
-  const uncertainty=bayesEntropy(ts.prior)/Math.log2(BAYES_THETA.length);
-  return 0.7*weakness+0.3*uncertainty;
 }
 function pickAmongTop(items, scores, tolerance){
   const maxScore=Math.max(...scores);
@@ -3264,7 +3261,7 @@ function renderPracticeHub(){
         </div>
       </div>
       <div style="margin-top:16px;text-align:center">
-        <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--err)';this.style.color='var(--err)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
+        <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
       </div>
     </div>`;
 }
