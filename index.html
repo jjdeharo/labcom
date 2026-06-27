@@ -3533,9 +3533,10 @@ function renderPracticeReport(){
     return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0">
       <span style="font-size:1rem">${emoji}</span>
       <span style="font-size:.88rem">${t(labelKey)}</span>
-      <span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${pct===null?t('practiceBayesNoData'):pct+'%'} <span class="prac-progress-count">${t('practiceSolvedCount')(ts?.count||0)}</span></span>
+      <span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${pct===null?t('practiceBayesNoData'):pct+'%'}</span>
     </div>`;
   }).join('');
+  const dimCount=Math.max(0,...DIM_KEYS.map(k=>dimState[k]?.count||0));
   const dimGroup1=[['order','practiceQ1'],['scope','practiceQ3'],['rep','practiceQ2']];
   const dimGroup2=[['type','skillType'],['nk','skillNK'],['formula','skillFormula']];
   const dimLegend=`<div style="font-size:.74rem;color:var(--text2);margin:2px 0 10px;display:flex;gap:14px;flex-wrap:wrap">
@@ -3545,7 +3546,10 @@ function renderPracticeReport(){
     <span>⚪ ${t('practiceMasteryNone')}</span>
   </div>`;
   const dimSection=`<div style="margin-top:20px">
-    <p class="prac-phase-label">${t('practiceReportDimTitle')}</p>
+    <p class="prac-phase-label" style="display:flex;align-items:baseline;gap:8px">
+      <span>${t('practiceReportDimTitle')}</span>
+      ${dimCount>0?`<span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text2)">· ${t('practiceSolvedCount')(dimCount)}</span>`:''}
+    </p>
     <p style="font-size:.78rem;color:var(--text2);margin:2px 0 6px">${t('practiceReportDimNote')}</p>
     ${dimLegend}
     <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
