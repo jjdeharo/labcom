@@ -605,6 +605,24 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
     practicePhaseDiagnosis: 'Fase diagnóstica',
     practicePhaseReinforcement: 'Fase de refuerzo',
+    practiceReportBtn: 'Ver informe →',
+    practiceReportTitle: 'Informe de práctica',
+    practiceReportDiagDate: date => `Diagnóstico completado el ${date}`,
+    practiceReportDiagSection: 'Nivel al terminar el diagnóstico',
+    practiceReportNowSection: 'Nivel actual',
+    practiceReportProgressSection: 'Progreso por tipo',
+    practiceReportStrengths: 'Puntos fuertes',
+    practiceReportWeaknesses: 'Necesita práctica',
+    practiceReportRecommendation: 'Recomendación',
+    practiceReportRecommText: types => types.length===0
+      ? 'Buen trabajo. Sigue practicando para consolidar tu nivel.'
+      : `Centra tu práctica en: ${types.join(', ')}.`,
+    practiceReportNoSnapshot: 'Completa la fase diagnóstica (2 ejercicios de cada tipo) para ver el informe.',
+    practiceReportBack: '← Volver',
+    practiceReportProgress: (before, now) => `${before}% → ${now}%`,
+    practiceReportNoChange: 'Sin cambio',
+    practiceReportImproved: diff => `+${diff}%`,
+    practiceReportDeclined: diff => `${diff}%`,
     practiceResetData: 'Reiniciar datos de progreso',
     practiceResetConfirm: '¿Seguro? Se borrarán todos los datos de práctica.',
     lessonResetData: 'Reiniciar lecciones',
@@ -900,6 +918,24 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Session: ${correct}/${total} correct`,
     practicePhaseDiagnosis: 'Diagnostic phase',
     practicePhaseReinforcement: 'Reinforcement phase',
+    practiceReportBtn: 'View report →',
+    practiceReportTitle: 'Practice report',
+    practiceReportDiagDate: date => `Diagnosis completed on ${date}`,
+    practiceReportDiagSection: 'Level at end of diagnosis',
+    practiceReportNowSection: 'Current level',
+    practiceReportProgressSection: 'Progress by type',
+    practiceReportStrengths: 'Strengths',
+    practiceReportWeaknesses: 'Needs practice',
+    practiceReportRecommendation: 'Recommendation',
+    practiceReportRecommText: types => types.length===0
+      ? 'Good work. Keep practising to consolidate your level.'
+      : `Focus your practice on: ${types.join(', ')}.`,
+    practiceReportNoSnapshot: 'Complete the diagnostic phase (2 exercises per type) to see the report.',
+    practiceReportBack: '← Back',
+    practiceReportProgress: (before, now) => `${before}% → ${now}%`,
+    practiceReportNoChange: 'No change',
+    practiceReportImproved: diff => `+${diff}%`,
+    practiceReportDeclined: diff => `${diff}%`,
     practiceResetData: 'Reset progress data',
     practiceResetConfirm: 'Are you sure? All practice data will be deleted.',
     lessonResetData: 'Reset lessons',
@@ -1134,6 +1170,24 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sessió: ${correct}/${total} correctes`,
     practicePhaseDiagnosis: 'Fase diagnòstica',
     practicePhaseReinforcement: 'Fase de reforç',
+    practiceReportBtn: 'Veure informe →',
+    practiceReportTitle: 'Informe de pràctica',
+    practiceReportDiagDate: date => `Diagnòstic completat el ${date}`,
+    practiceReportDiagSection: 'Nivell en acabar el diagnòstic',
+    practiceReportNowSection: 'Nivell actual',
+    practiceReportProgressSection: 'Progrés per tipus',
+    practiceReportStrengths: 'Punts forts',
+    practiceReportWeaknesses: 'Necessita pràctica',
+    practiceReportRecommendation: 'Recomanació',
+    practiceReportRecommText: types => types.length===0
+      ? 'Bon treball. Continua practicant per consolidar el teu nivell.'
+      : `Centra la teva pràctica en: ${types.join(', ')}.`,
+    practiceReportNoSnapshot: 'Completa la fase diagnòstica (2 exercicis de cada tipus) per veure l\'informe.',
+    practiceReportBack: '← Tornar',
+    practiceReportProgress: (before, now) => `${before}% → ${now}%`,
+    practiceReportNoChange: 'Sense canvi',
+    practiceReportImproved: diff => `+${diff}%`,
+    practiceReportDeclined: diff => `${diff}%`,
     practiceResetData: 'Reiniciar dades de progrés',
     practiceResetConfirm: 'Segur? S\'esborraran totes les dades de pràctica.',
     lessonResetData: 'Reiniciar lliçons',
@@ -1351,6 +1405,24 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
     practicePhaseDiagnosis: 'Fase diagnóstica',
     practicePhaseReinforcement: 'Fase de reforzo',
+    practiceReportBtn: 'Ver informe →',
+    practiceReportTitle: 'Informe de práctica',
+    practiceReportDiagDate: date => `Diagnóstico completado o ${date}`,
+    practiceReportDiagSection: 'Nivel ao rematar o diagnóstico',
+    practiceReportNowSection: 'Nivel actual',
+    practiceReportProgressSection: 'Progreso por tipo',
+    practiceReportStrengths: 'Puntos fortes',
+    practiceReportWeaknesses: 'Necesita práctica',
+    practiceReportRecommendation: 'Recomendación',
+    practiceReportRecommText: types => types.length===0
+      ? 'Bo traballo. Segue practicando para consolidar o teu nivel.'
+      : `Centra a túa práctica en: ${types.join(', ')}.`,
+    practiceReportNoSnapshot: 'Completa a fase diagnóstica (2 exercicios de cada tipo) para ver o informe.',
+    practiceReportBack: '← Volver',
+    practiceReportProgress: (before, now) => `${before}% → ${now}%`,
+    practiceReportNoChange: 'Sen cambio',
+    practiceReportImproved: diff => `+${diff}%`,
+    practiceReportDeclined: diff => `${diff}%`,
     practiceResetData: 'Reiniciar datos de progreso',
     practiceResetConfirm: 'Seguro? Borraranse todos os datos de práctica.',
     lessonResetData: 'Reiniciar leccións',
@@ -1568,6 +1640,24 @@ const LANG = {
     practiceSessionStats: (total, correct) => `Saioa: ${correct}/${total} zuzen`,
     practicePhaseDiagnosis: 'Diagnostiko fasea',
     practicePhaseReinforcement: 'Indartzeko fasea',
+    practiceReportBtn: 'Txostena ikusi →',
+    practiceReportTitle: 'Praktika-txostena',
+    practiceReportDiagDate: date => `Diagnostikoa ${date}n osatu da`,
+    practiceReportDiagSection: 'Maila diagnostikoa amaitzerakoan',
+    practiceReportNowSection: 'Uneko maila',
+    practiceReportProgressSection: 'Aurrerapena motaren arabera',
+    practiceReportStrengths: 'Indarguneak',
+    practiceReportWeaknesses: 'Praktika behar du',
+    practiceReportRecommendation: 'Gomendioa',
+    practiceReportRecommText: types => types.length===0
+      ? 'Ondo eginda. Jarraitu praktikatzen zure maila finkatzeko.'
+      : `Zentratu zure praktika honetan: ${types.join(', ')}.`,
+    practiceReportNoSnapshot: 'Osatu diagnostiko fasea (mota bakoitzeko 2 ariketa) txostena ikusteko.',
+    practiceReportBack: '← Itzuli',
+    practiceReportProgress: (before, now) => `${before}% → ${now}%`,
+    practiceReportNoChange: 'Aldaketarik ez',
+    practiceReportImproved: diff => `+${diff}%`,
+    practiceReportDeclined: diff => `${diff}%`,
     practiceResetData: 'Berrezarri aurrerapen-datuak',
     practiceResetConfirm: 'Ziur? Praktikako datu guztiak ezabatuko dira.',
     lessonResetData: 'Berrezarri ikasgaiak',
@@ -3049,6 +3139,21 @@ function loadBayesState(){
 function saveBayesState(state){
   const p=loadProgress(); p.bayes=state; saveProgress(p);
 }
+function loadDiagnosticSnapshot(){
+  try{ return JSON.parse(localStorage.getItem('comb_diag_snapshot')||'null'); }catch{ return null; }
+}
+function saveDiagnosticSnapshot(bayesState){
+  const snap={
+    date: new Date().toLocaleDateString(currentLang==='en'?'en-GB':currentLang==='eu'?'eu-ES':currentLang==='ca'?'ca-ES':currentLang==='ga'?'gl-ES':'es-ES',{day:'numeric',month:'long',year:'numeric'}),
+    bayes: JSON.parse(JSON.stringify(bayesState))
+  };
+  try{ localStorage.setItem('comb_diag_snapshot', JSON.stringify(snap)); }catch{}
+}
+function maybeSnapshotDiagnosis(state){
+  if(loadDiagnosticSnapshot()) return;
+  const allDone=ALL_TYPE_KEYS.every(type=>(state[type]?.count||0)>=BAYES_DIAGNOSIS_MIN_TRIES);
+  if(allDone) saveDiagnosticSnapshot(state);
+}
 function updateBayesType(type,score,difficulty){
   // score ∈ [0,1]: 1=todo correcto, 0=todo incorrecto, parciales intermedios
   // Likelihood suave: L(θ) = score·P(A|θ) + (1-score)·P(F|θ)
@@ -3063,6 +3168,7 @@ function updateBayesType(type,score,difficulty){
   state[type].prior=marginal>1e-10?prior.map((p,i)=>p*veros[i]/marginal):[1/3,1/3,1/3];
   state[type].count++;
   saveBayesState(state);
+  maybeSnapshotDiagnosis(state);
 }
 function getTrafficLight(type){
   const state=loadBayesState();
@@ -3181,6 +3287,131 @@ function selectAdaptiveProblem(filter){
   return {prob:candidates[Math.floor(Math.random()*candidates.length)],type:targetType};
 }
 
+function renderPracticeReport(){
+  const snap=loadDiagnosticSnapshot();
+  const nowState=loadBayesState();
+  const typeLabels=t('typeLabels');
+  const backBtn=`<button class="btn-ghost" style="margin-left:auto" onclick="renderPracticeHub()">${t('practiceReportBack')}</button>`;
+  const chartStyle=[
+    `--low-max:${BAYES_LEVEL_LOW_MAX}%`,
+    `--high-min:${BAYES_LEVEL_HIGH_MIN}%`,
+    `--low-label:${BAYES_LEVEL_LOW_MAX/2}%`,
+    `--mid-label:${(BAYES_LEVEL_LOW_MAX+BAYES_LEVEL_HIGH_MIN)/2}%`,
+    `--high-label:${(BAYES_LEVEL_HIGH_MIN+100)/2}%`
+  ].join(';');
+  const axis=`<div class="prac-progress-axis">
+    <div class="prac-progress-axis-spacer"></div>
+    <div class="prac-progress-scale">
+      <span class="prac-progress-level-low">${t('practiceMasteryLow')}</span>
+      <span class="prac-progress-level-mid">${t('practiceMasteryMid')}</span>
+      <span class="prac-progress-level-high">${t('practiceMasteryHigh')}</span>
+    </div>
+    <div class="prac-progress-axis-end"></div>
+  </div>`;
+
+  function statePct(stateObj, type){
+    const ts=stateObj[type];
+    if(!ts||ts.count===0) return null;
+    return Math.round(ts.prior.reduce((s,p,i)=>s+p*bayesIRT(BAYES_THETA[i],0),0)*100);
+  }
+
+  function miniChart(stateObj, label){
+    const names=ALL_TYPE_KEYS.map(type=>`<div class="prac-progress-name">${typeLabels[type]}</div>`).join('');
+    const bars=ALL_TYPE_KEYS.map(type=>{
+      const pct=statePct(stateObj,type)||0;
+      return `<div class="prac-progress-track"><div class="prac-progress-fill" style="width:${pct}%;${bayesProgressStyle(pct)}"></div></div>`;
+    }).join('');
+    const pcts=ALL_TYPE_KEYS.map(type=>{
+      const ts=stateObj[type];
+      const pct=statePct(stateObj,type);
+      return `<div class="prac-progress-pct">${pct===null?t('practiceBayesNoData'):`${pct}%`}<span class="prac-progress-count">${t('practiceSolvedCount')(ts?.count||0)}</span></div>`;
+    }).join('');
+    return `<p class="prac-phase-label" style="margin-top:16px">${label}</p>
+    <div class="prac-progress-chart" style="${chartStyle}">
+      ${axis}
+      <div class="prac-progress-body">
+        <div class="prac-progress-names">${names}</div>
+        <div class="prac-progress-bars">${bars}</div>
+        <div class="prac-progress-pcts">${pcts}</div>
+      </div>
+    </div>`;
+  }
+
+  // Tabla de progreso (diagnóstico → ahora)
+  const progressRows=ALL_TYPE_KEYS.map(type=>{
+    const nowPct=bayesDisplayEstimate(type,0);
+    const beforePct=snap?statePct(snap.bayes,type):null;
+    let diffHtml='';
+    if(nowPct!==null&&beforePct!==null){
+      const diff=nowPct-beforePct;
+      if(diff>0) diffHtml=`<span style="color:#22a65a;font-weight:700">${t('practiceReportImproved')(diff)}</span>`;
+      else if(diff<0) diffHtml=`<span style="color:var(--red);font-weight:700">${t('practiceReportDeclined')(diff)}</span>`;
+      else diffHtml=`<span style="color:var(--text2)">${t('practiceReportNoChange')}</span>`;
+    }
+    const beforeStr=beforePct===null?'—':`${beforePct}%`;
+    const nowStr=nowPct===null?'—':`${nowPct}%`;
+    return `<tr>
+      <td style="padding:6px 8px;font-size:.88rem">${typeLabels[type]}</td>
+      <td style="padding:6px 8px;text-align:center;font-size:.88rem;color:var(--text2)">${beforeStr}</td>
+      <td style="padding:6px 8px;text-align:center;font-size:.88rem">${nowStr}</td>
+      <td style="padding:6px 8px;text-align:center;font-size:.88rem">${diffHtml}</td>
+    </tr>`;
+  }).join('');
+
+  // Fortalezas y debilidades (estado actual)
+  const sorted=ALL_TYPE_KEYS.map(type=>({type,pct:bayesDisplayEstimate(type,0)||0})).sort((a,b)=>b.pct-a.pct);
+  const strengths=sorted.filter(x=>x.pct>=BAYES_LEVEL_HIGH_MIN);
+  const weaknesses=sorted.filter(x=>x.pct<BAYES_LEVEL_LOW_MAX&&(nowState[x.type]?.count||0)>0);
+  const strengthsHtml=strengths.length
+    ?strengths.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:#22a65a;font-size:1rem">✓</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.pct}%</span></div>`).join('')
+    :`<p style="font-size:.84rem;color:var(--text2)">—</p>`;
+  const weaknessesHtml=weaknesses.length
+    ?weaknesses.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:var(--red);font-size:1rem">✗</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.pct}%</span></div>`).join('')
+    :`<p style="font-size:.84rem;color:var(--text2)">—</p>`;
+
+  const recommTypes=weaknesses.map(x=>typeLabels[x.type]);
+
+  const snapSection=snap
+    ?miniChart(snap.bayes, t('practiceReportDiagSection'))
+    :`<p style="font-size:.85rem;color:var(--text2);margin-top:8px">${t('practiceReportNoSnapshot')}</p>`;
+
+  document.getElementById('prac-content').innerHTML=`
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <span style="font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">${t('practiceReportTitle')}</span>${backBtn}
+      </div>
+      ${snap?`<p style="font-size:.82rem;color:var(--text2);margin-bottom:12px">${t('practiceReportDiagDate')(snap.date)}</p>`:''}
+      ${snapSection}
+      ${miniChart(nowState, t('practiceReportNowSection'))}
+      <p class="prac-phase-label" style="margin-top:20px">${t('practiceReportProgressSection')}</p>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-family:inherit">
+          <thead><tr style="border-bottom:1.5px solid var(--border)">
+            <th style="padding:6px 8px;text-align:left;font-size:.78rem;color:var(--text2);font-weight:600"></th>
+            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">${t('practiceReportDiagSection')}</th>
+            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">${t('practiceReportNowSection')}</th>
+            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">Δ</th>
+          </tr></thead>
+          <tbody>${progressRows}</tbody>
+        </table>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
+        <div>
+          <p class="prac-phase-label">${t('practiceReportStrengths')}</p>
+          ${strengthsHtml}
+        </div>
+        <div>
+          <p class="prac-phase-label">${t('practiceReportWeaknesses')}</p>
+          ${weaknessesHtml}
+        </div>
+      </div>
+      <div style="margin-top:20px;background:var(--bg2);border-radius:10px;padding:14px 16px">
+        <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:6px">${t('practiceReportRecommendation')}</p>
+        <p style="font-size:.9rem">${t('practiceReportRecommText')(recommTypes)}</p>
+      </div>
+    </div>`;
+}
+
 function togglePracticeTypeSelection(type){
   if(pracSelectedTypes.has(type)) pracSelectedTypes.delete(type);
   else pracSelectedTypes.add(type);
@@ -3277,7 +3508,8 @@ function renderPracticeHub(){
           </div>
         </div>
       </div>
-      <div style="margin-top:16px;text-align:center">
+      <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        ${loadDiagnosticSnapshot()?`<button onclick="renderPracticeReport()" style="background:none;border:1.5px solid var(--accent);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--accent);font-family:inherit;font-weight:600;transition:all .15s" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='var(--accent)'">${t('practiceReportBtn')}</button>`:''}
         <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
       </div>
     </div>`;
@@ -3301,6 +3533,7 @@ function resetBayesData(){
   delete p.bayes; delete p.doneProblems;
   // Escribe directamente para evitar el merge de saveProgress
   localStorage.setItem('comb_progress',JSON.stringify(p));
+  localStorage.removeItem('comb_diag_snapshot');
   doneProblemIds.clear();
   pracSessionCorrect=0; pracSessionTotal=0;
   renderPracticeHub();
