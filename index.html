@@ -57,6 +57,7 @@ window.addEventListener('load', function () {
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:0}
+@media(max-width:640px){body.home-section header{position:sticky}}
 .logo{font-size:1.05rem;font-weight:700;color:var(--accent);padding:14px 0;margin-right:20px;white-space:nowrap}
 nav{display:flex;gap:2px;overflow-x:auto;flex:1}
 nav button{background:none;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;color:var(--text2);white-space:nowrap;transition:all .15s}
@@ -1710,7 +1711,14 @@ function syncHeaderOffset(){
   const header = document.querySelector('header');
   const main   = document.querySelector('main');
   if(!header||!main) return;
-  main.style.paddingTop = (header.offsetHeight + 28) + 'px';
+  const isMobileHome = document.body.classList.contains('home-section') &&
+    window.matchMedia('(max-width:640px)').matches;
+  main.style.paddingTop = (isMobileHome ? 28 : header.offsetHeight + 28) + 'px';
+}
+
+function setActiveSectionClass(id){
+  document.body.classList.toggle('home-section', id === 'inicio');
+  syncHeaderOffset();
 }
 
 const LANG_LABELS = { es:'Español', en:'English', ca:'Català', ga:'Galego', eu:'Euskera' };
@@ -1731,6 +1739,7 @@ function buildLangPicker() {
 function showSection(id, pushHistory=true) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  setActiveSectionClass(id);
   buildNav();
   renderSection(id);
   window.scrollTo(0,0);
@@ -1743,6 +1752,7 @@ window.addEventListener('popstate', e=>{
   const id = s.section || 'inicio';
   document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  setActiveSectionClass(id);
   buildNav();
   window.scrollTo(0,0);
   closeMobileNav();
@@ -3526,6 +3536,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   history.replaceState({section:initId}, '', initId==='inicio' ? location.pathname : '#'+initId);
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(initId).classList.add('active');
+  setActiveSectionClass(initId);
   renderSection(initId);
   loadProblemBank();
 });
