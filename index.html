@@ -3406,14 +3406,19 @@ function renderPracticeReport(){
   }).join('');
 
   // Fortalezas y debilidades (estado actual)
-  const sorted=ALL_TYPE_KEYS.map(type=>({type,pct:bayesDisplayEstimate(type,0)||0})).sort((a,b)=>b.pct-a.pct);
-  const strengths=sorted.filter(x=>x.pct>=BAYES_LEVEL_HIGH_MIN);
+  // Usar pct crudo (sin techo) para clasificar; displayPct para mostrar al usuario
+  const sorted=ALL_TYPE_KEYS.map(type=>({
+    type,
+    pct: statePct(nowState,type)||0,
+    displayPct: bayesDisplayEstimate(type,0)
+  })).sort((a,b)=>b.pct-a.pct);
+  const strengths=sorted.filter(x=>x.pct>=BAYES_LEVEL_HIGH_MIN&&(nowState[x.type]?.count||0)>0);
   const weaknesses=sorted.filter(x=>x.pct<BAYES_LEVEL_LOW_MAX&&(nowState[x.type]?.count||0)>0);
   const strengthsHtml=strengths.length
-    ?strengths.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:#22a65a;font-size:1rem">✓</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.pct}%</span></div>`).join('')
+    ?strengths.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:#22a65a;font-size:1rem">✓</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.displayPct??x.pct}%</span></div>`).join('')
     :`<p style="font-size:.84rem;color:var(--text2)">—</p>`;
   const weaknessesHtml=weaknesses.length
-    ?weaknesses.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:var(--red);font-size:1rem">✗</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.pct}%</span></div>`).join('')
+    ?weaknesses.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="color:var(--red);font-size:1rem">✗</span><span style="font-size:.88rem">${typeLabels[x.type]}</span><span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${x.displayPct??x.pct}%</span></div>`).join('')
     :`<p style="font-size:.84rem;color:var(--text2)">—</p>`;
 
   const recommTypes=weaknesses.map(x=>typeLabels[x.type]);
