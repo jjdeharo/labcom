@@ -3622,6 +3622,10 @@ function renderPractice(){
   const typeLabels=t('typeLabels');
   const sw=k=>t('summary.'+k);
   const isAllScope=(d.scope==='all');
+  const qAns=(ok,userLbl,corrLbl)=>{
+    if(ok) return `<strong style="color:var(--green)">${corrLbl}</strong>`;
+    return `<strong style="color:var(--red)">${userLbl}</strong> → <strong style="color:var(--green)">${corrLbl}</strong>`;
+  };
   const sessionChip=pracSessionTotal>0
     ?`<span style="font-size:.78rem;color:var(--text2);font-weight:400"> · ${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span>`:'';
   const isAdaptive=Array.isArray(pracCurrentFilter)?pracCurrentFilter.length>1:pracCurrentFilter==='all';
@@ -3680,10 +3684,6 @@ function renderPractice(){
     const ordOk=pracOrd===d.order;
     const allOk=pracAll===(d.scope==='all');
     const repOk=pracRep===d.rep;
-    const qAns=(ok,userLbl,corrLbl)=>{
-      if(ok) return `<strong style="color:var(--green)">${corrLbl}</strong>`;
-      return `<strong style="color:var(--red)">${userLbl}</strong> → <strong style="color:var(--green)">${corrLbl}</strong>`;
-    };
     const whyInline=`<div style="font-size:.83rem;margin-top:8px;color:var(--text2)">
       ${sw('colOrder')} ${qAns(ordOk,pracOrd?sw('yes'):sw('no'),d.order?sw('yes'):sw('no'))} &nbsp;·&nbsp;
       ${sw('colScope')} ${qAns(allOk,pracAll?sw('all'):sw('some'),d.scope==='all'?sw('all'):sw('some'))} &nbsp;·&nbsp;
@@ -3750,12 +3750,15 @@ function renderPractice(){
     <span style="font-weight:400;font-size:.82rem;margin-left:8px">${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span></span>
     <span style="font-size:.88rem;opacity:.8">${pct}%</span>
   </div>`;
+  const ordOk2=pracOrd===d.order;
+  const allOk2=pracAll===(d.scope==='all');
+  const repOk2=pracRep===d.rep;
   const whyBlock=`<div style="margin-top:10px;font-size:.86rem">
     <strong>${t('practiceWhyTitle')}</strong>
     <ul style="margin:6px 0 0;padding-left:18px">
-      <li>${sw('colOrder')} <strong>${d.order?sw('yes'):sw('no')}</strong></li>
-      <li>${sw('colScope')} <strong>${d.scope==='all'?sw('all'):sw('some')}</strong></li>
-      <li>${sw('colRep')} <strong>${d.rep?sw('yes'):sw('no')}</strong></li>
+      <li>${sw('colOrder')} ${qAns(ordOk2,pracOrd!=null?(pracOrd?sw('yes'):sw('no')):'—',d.order?sw('yes'):sw('no'))}</li>
+      <li>${sw('colScope')} ${qAns(allOk2,pracAll!=null?(pracAll?sw('all'):sw('some')):'—',d.scope==='all'?sw('all'):sw('some'))}</li>
+      <li>${sw('colRep')} ${qAns(repOk2,pracRep!=null?(pracRep?sw('yes'):sw('no')):'—',d.rep?sw('yes'):sw('no'))}</li>
     </ul>
   </div>`;
   document.getElementById('prac-content').innerHTML=`
