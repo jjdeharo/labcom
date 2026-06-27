@@ -3384,26 +3384,55 @@ function renderPracticeReport(){
     </div>`;
   }
 
-  // Tabla de progreso (diagnóstico → ahora)
-  const progressRows=ALL_TYPE_KEYS.map(type=>{
-    const nowPct=bayesDisplayEstimate(type,0);
-    const beforePct=snap?statePct(snap.bayes,type):null;
-    let diffHtml='';
-    if(nowPct!==null&&beforePct!==null){
-      const diff=nowPct-beforePct;
-      if(diff>0) diffHtml=`<span style="color:#22a65a;font-weight:700">${t('practiceReportImproved')(diff)}</span>`;
-      else if(diff<0) diffHtml=`<span style="color:var(--red);font-weight:700">${t('practiceReportDeclined')(diff)}</span>`;
-      else diffHtml=`<span style="color:var(--text2)">${t('practiceReportNoChange')}</span>`;
-    }
-    const beforeStr=beforePct===null?'—':`${beforePct}%`;
-    const nowStr=nowPct===null?'—':`${nowPct}%`;
-    return `<tr>
-      <td style="padding:6px 8px;font-size:.88rem">${typeLabels[type]}</td>
-      <td style="padding:6px 8px;text-align:center;font-size:.88rem;color:var(--text2)">${beforeStr}</td>
-      <td style="padding:6px 8px;text-align:center;font-size:.88rem">${nowStr}</td>
-      <td style="padding:6px 8px;text-align:center;font-size:.88rem">${diffHtml}</td>
-    </tr>`;
-  }).join('');
+  function comparisonChart(snapState, nowState){
+    const sepStyle=`border-bottom:1px solid var(--border)`;
+    const rows=ALL_TYPE_KEYS.map(type=>{
+      const diagPct=statePct(snapState,type)||0;
+      const nowRaw=statePct(nowState,type)||0;
+      const nowDisp=bayesDisplayEstimate(type,0)??nowRaw;
+      const diff=nowDisp-diagPct;
+      const diffHtml=diff>0
+        ?`<span style="color:#22a65a;font-weight:700"> +${diff}%</span>`
+        :diff<0?`<span style="color:var(--red);font-weight:700"> ${diff}%</span>`
+        :'';
+      const diagBar=`<div style="height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-bottom:4px">
+        <div style="height:100%;width:${diagPct}%;${bayesProgressStyle(diagPct)};opacity:.55"></div></div>`;
+      const nowBar=`<div style="height:9px;border-radius:5px;background:var(--surface3);overflow:hidden">
+        <div style="height:100%;width:${nowRaw}%;${bayesProgressStyle(nowRaw)}"></div></div>`;
+      const count=nowState[type]?.count||0;
+      return `<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 0;${sepStyle}">
+        <div>
+          <div style="font-size:.86rem;font-weight:600;margin-bottom:6px">${typeLabels[type]}</div>
+          <div style="position:relative">
+            ${diagBar}${nowBar}
+            <div style="position:absolute;right:0;top:0;bottom:0;width:${100-BAYES_LEVEL_LOW_MAX}%;pointer-events:none;display:flex;align-items:stretch">
+              <div style="border-left:1px solid var(--border);height:100%;margin-left:0"></div>
+            </div>
+            <div style="position:absolute;right:0;top:0;bottom:0;width:${100-BAYES_LEVEL_HIGH_MIN}%;pointer-events:none;display:flex;align-items:stretch">
+              <div style="border-left:1px solid var(--border);height:100%;margin-left:0"></div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;min-width:80px">
+          <div style="font-size:.78rem;color:var(--text2)">${diagPct}%</div>
+          <div style="font-size:.92rem;font-weight:700">${nowDisp}%${diffHtml}</div>
+          <div style="font-size:.72rem;color:var(--text2)">${t('practiceSolvedCount')(count)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    const axisHtml=`<div style="display:flex;justify-content:space-around;font-size:.72rem;color:var(--text2);margin-bottom:4px;padding-right:92px">
+      <span>${t('practiceMasteryLow')}</span>
+      <span>${t('practiceMasteryMid')}</span>
+      <span>${t('practiceMasteryHigh')}</span>
+    </div>`;
+    return `<p class="prac-phase-label" style="margin-top:16px">${t('practiceReportProgressSection')}</p>
+    <div style="font-size:.72rem;color:var(--text2);margin-bottom:2px;display:flex;gap:16px">
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:4px;border-radius:2px;background:var(--accent);opacity:.55"></span>${t('practiceReportDiagSection')}</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:8px;border-radius:4px;background:#22a65a"></span>${t('practiceReportNowSection')}</span>
+    </div>
+    ${axisHtml}
+    ${rows}`;
+  }
 
   // Fortalezas y debilidades (estado actual)
   // Usar pct crudo (sin techo) para clasificar; displayPct para mostrar al usuario
@@ -3423,9 +3452,11 @@ function renderPracticeReport(){
 
   const recommTypes=weaknesses.map(x=>typeLabels[x.type]);
 
-  const snapSection=snap
-    ?miniChart(snap.bayes, t('practiceReportDiagSection'))
-    :`<p style="font-size:.85rem;color:var(--text2);margin-top:8px">${t('practiceReportNoSnapshot')}</p>`;
+  const mainChartSection=hasReinforcement&&snap
+    ?comparisonChart(snap.bayes, nowState)
+    :snap
+      ?miniChart(snap.bayes, t('practiceReportDiagSection'))
+      :`<p style="font-size:.85rem;color:var(--text2);margin-top:8px">${t('practiceReportNoSnapshot')}</p>`;
 
   document.getElementById('prac-content').innerHTML=`
     <div class="card">
@@ -3433,20 +3464,7 @@ function renderPracticeReport(){
         <span style="font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">${t('practiceReportTitle')}</span>${backBtn}
       </div>
       ${snap?`<p style="font-size:.82rem;color:var(--text2);margin-bottom:12px">${t('practiceReportDiagDate')(snap.date)}</p>`:''}
-      ${snapSection}
-      ${hasReinforcement?miniChart(nowState, t('practiceReportNowSection')):''}
-      ${hasReinforcement?`<p class="prac-phase-label" style="margin-top:20px">${t('practiceReportProgressSection')}</p>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-family:inherit">
-          <thead><tr style="border-bottom:1.5px solid var(--border)">
-            <th style="padding:6px 8px;text-align:left;font-size:.78rem;color:var(--text2);font-weight:600"></th>
-            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">${t('practiceReportDiagSection')}</th>
-            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">${t('practiceReportNowSection')}</th>
-            <th style="padding:6px 8px;text-align:center;font-size:.78rem;color:var(--text2);font-weight:600">Δ</th>
-          </tr></thead>
-          <tbody>${progressRows}</tbody>
-        </table>
-      </div>`:''}
+      ${mainChartSection}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
         <div>
