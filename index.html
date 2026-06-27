@@ -3538,9 +3538,16 @@ function renderPracticeReport(){
   }).join('');
   const dimGroup1=[['order','practiceQ1'],['scope','practiceQ3'],['rep','practiceQ2']];
   const dimGroup2=[['type','skillType'],['nk','skillNK'],['formula','skillFormula']];
+  const dimLegend=`<div style="font-size:.74rem;color:var(--text2);margin:2px 0 10px;display:flex;gap:14px;flex-wrap:wrap">
+    <span>🔴 ${t('practiceMasteryLow')}</span>
+    <span>🟡 ${t('practiceMasteryMid')}</span>
+    <span>🟢 ${t('practiceMasteryHigh')}</span>
+    <span>⚪ ${t('practiceMasteryNone')}</span>
+  </div>`;
   const dimSection=`<div style="margin-top:20px">
     <p class="prac-phase-label">${t('practiceReportDimTitle')}</p>
-    <p style="font-size:.78rem;color:var(--text2);margin:2px 0 10px">${t('practiceReportDimNote')}</p>
+    <p style="font-size:.78rem;color:var(--text2);margin:2px 0 6px">${t('practiceReportDimNote')}</p>
+    ${dimLegend}
     <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
     ${dimRows(dimGroup1)}
     <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:14px 0 4px">${t('practiceReportDimGroup2')}</p>
