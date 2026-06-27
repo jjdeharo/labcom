@@ -3199,6 +3199,9 @@ function renderPracticeHub(){
   pracCurrentProb=null;
   const bayesState=loadBayesState();
   const typeLabels=t('typeLabels');
+  const hubUnderSampled=ALL_TYPE_KEYS.filter(type=>(bayesState[type]?.count||0)<BAYES_DIAGNOSIS_MIN_TRIES);
+  const hubIsDiagnosis=hubUnderSampled.length>0;
+  const hubPhaseChip=`<span style="font-size:.7rem;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:8px;background:${hubIsDiagnosis?'var(--accent)':'#22a65a'};color:#fff;vertical-align:middle">${hubIsDiagnosis?t('practicePhaseDiagnosis'):t('practicePhaseReinforcement')}</span>`;
   const bayesItems=ALL_TYPE_KEYS.map(type=>{
     const pct=bayesDisplayEstimate(type,0);
     const count=bayesState[type]?.count||0;
@@ -3263,7 +3266,7 @@ function renderPracticeHub(){
       </div>
       ${selectionActions}
       <div class="prac-progress-panel">
-        <div class="prac-progress-title">${t('practiceBayesTitle')}</div>
+        <div class="prac-progress-title">${t('practiceBayesTitle')}${hubPhaseChip}</div>
         <div class="prac-progress-sub">${t('practiceBayesSubtitle')}</div>
         <div class="prac-progress-chart" style="${bayesChartStyle}">
           ${bayesAxis}
