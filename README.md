@@ -41,6 +41,8 @@ La práctica usa probabilidades para orientar la selección de ejercicios, no pa
 
 En paralelo, y solo con fines de diagnóstico (no influye en la selección de ejercicios), el modelo mantiene una segunda estimación bayesiana **por habilidad transversal** —independiente del tipo de problema— para cada uno de los seis pasos: las tres preguntas de lectura del enunciado y los tres pasos de resolución (tipo, *n* y *k*, fórmula). Esto permite localizar en qué paso concreto falla el alumno, de forma complementaria a la estimación por tipo.
 
+**Cómo leer los porcentajes.** Cada % no es el porcentaje de aciertos del alumno, sino la probabilidad estimada de que acierte ese paso en un problema de dificultad media, derivada de la creencia bayesiana sobre su nivel. Por eso no llega al 100 % ni baja a 0: cada paso tiene un **suelo de adivinación** que refleja la probabilidad de acertar al azar — **1/2** en las preguntas de sí/no y en la identificación de *n* y *k* (el enunciado muestra dos números que basta con asignar), y **1/6** en la elección del tipo y de la fórmula (seis opciones). Como consecuencia, los porcentajes de pasos con distinto suelo no son directamente comparables entre sí; el juicio de dominio (🔴/🟡/🟢) se basa en el **nivel estimado**, no en el porcentaje mostrado.
+
 El diseño sigue el enfoque descrito en [Recursos educativos adaptativos bayesianos](https://jjdeharo.github.io/recursos-adaptativos/): inferencia bayesiana para actualizar el estado estimado del alumno, entropía de Shannon para medir incertidumbre y selección adaptativa de ejercicios combinando información diagnóstica con utilidad pedagógica.
 
 ## Idiomas
