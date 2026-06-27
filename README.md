@@ -13,6 +13,7 @@ Aplicación web interactiva para aprender combinatoria sin memorizar fórmulas. 
   - **Selección manual** — elige uno o varios tipos concretos para practicarlos.
   - **Panel de progreso** — muestra la probabilidad estimada de acierto por tipo con barras de color codificadas (🔴 Iniciando · 🟡 En proceso · 🟢 Dominado).
   - **Informe de práctica** — al terminar el diagnóstico se genera un informe con el nivel inicial por tipo, puntos fuertes, debilidades y una recomendación personalizada. Durante la fase de refuerzo el informe se actualiza y muestra la comparativa de progreso (nivel al terminar el diagnóstico vs. nivel actual).
+  - **Diagnóstico por habilidad** — además del nivel por tipo, el informe muestra en qué *paso* del proceso acierta o falla el alumno, en dos bloques: *lectura del enunciado* (¿importa el orden?, ¿se usan todos los elementos?, ¿hay repetición?) y *pasos de resolución* (nombrar el tipo, identificar *n* y *k*, elegir la fórmula), cada uno con su semáforo 🔴/🟡/🟢. Es un corte complementario al nivel por tipo: indica *en qué falla*, no solo *con qué tipo de problema*.
 - **Laboratorio** — ajusta *n* y *k* en tiempo real y visualiza todas las posibilidades.
 - **Tabla resumen** — los 6 tipos con las tres preguntas clave y las fórmulas.
 
@@ -36,7 +37,9 @@ Aplicación web interactiva para aprender combinatoria sin memorizar fórmulas. 
 
 ## Nota sobre el sistema adaptativo
 
-La práctica usa probabilidades para orientar la selección de ejercicios, no para emitir una calificación psicométrica. El modelo mantiene una estimación separada por tipo de problema y la actualiza con una puntuación parcial del ejercicio: clasificación del tipo, identificación de \(n\) y \(k\), y elección de la fórmula. Los parámetros IRT se usan como heurística inicial de dificultad; no proceden de una calibración empírica con alumnado.
+La práctica usa probabilidades para orientar la selección de ejercicios, no para emitir una calificación psicométrica. El modelo mantiene una estimación separada por tipo de problema y la actualiza con una puntuación parcial del ejercicio, ponderada entre cuatro componentes: lectura de los parámetros que definen el tipo (las tres preguntas sobre orden, alcance y repetición, con crédito parcial) 20 %, clasificación del tipo 20 %, identificación de \(n\) y \(k\) 30 %, y elección de la fórmula 30 %. El resultado numérico final del ejercicio no interviene en la puntuación. Los parámetros IRT se usan como heurística inicial de dificultad; no proceden de una calibración empírica con alumnado.
+
+En paralelo, y solo con fines de diagnóstico (no influye en la selección de ejercicios), el modelo mantiene una segunda estimación bayesiana **por habilidad transversal** —independiente del tipo de problema— para cada uno de los seis pasos: las tres preguntas de lectura del enunciado y los tres pasos de resolución (tipo, *n* y *k*, fórmula). Esto permite localizar en qué paso concreto falla el alumno, de forma complementaria a la estimación por tipo.
 
 El diseño sigue el enfoque descrito en [Recursos educativos adaptativos bayesianos](https://jjdeharo.github.io/recursos-adaptativos/): inferencia bayesiana para actualizar el estado estimado del alumno, entropía de Shannon para medir incertidumbre y selección adaptativa de ejercicios combinando información diagnóstica con utilidad pedagógica.
 

@@ -626,6 +626,13 @@ const LANG = {
     practiceReportRecommText: types => types.length===0
       ? 'Buen trabajo. Sigue practicando para consolidar tu nivel.'
       : `Centra tu práctica en: ${types.join(', ')}.`,
+    practiceReportDimTitle: 'Diagnóstico por dimensión',
+    practiceReportDimNote: 'El % es tu probabilidad estimada de acertar cada paso en un problema típico (no es tu porcentaje de aciertos), para ver qué conviene repasar.',
+    practiceReportDimGroup1: 'Lectura del enunciado',
+    practiceReportDimGroup2: 'Pasos de resolución',
+    skillType: 'Nombrar el tipo',
+    skillNK: 'Identificar n y k',
+    skillFormula: 'Elegir la fórmula',
     practiceReportNoSnapshot: 'Completa la fase diagnóstica (2 ejercicios de cada tipo) para ver el informe.',
     practiceReportBack: '← Volver',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
@@ -948,6 +955,13 @@ const LANG = {
     practiceReportRecommText: types => types.length===0
       ? 'Good work. Keep practising to consolidate your level.'
       : `Focus your practice on: ${types.join(', ')}.`,
+    practiceReportDimTitle: 'Diagnosis by dimension',
+    practiceReportDimNote: 'The % is your estimated chance of getting each step right on a typical problem (not your hit rate), so you can see what to review.',
+    practiceReportDimGroup1: 'Reading the statement',
+    practiceReportDimGroup2: 'Solving steps',
+    skillType: 'Naming the type',
+    skillNK: 'Identifying n and k',
+    skillFormula: 'Choosing the formula',
     practiceReportNoSnapshot: 'Complete the diagnostic phase (2 exercises per type) to see the report.',
     practiceReportBack: '← Back',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
@@ -1209,6 +1223,13 @@ const LANG = {
     practiceReportRecommText: types => types.length===0
       ? 'Bon treball. Continua practicant per consolidar el teu nivell.'
       : `Centra la teva pràctica en: ${types.join(', ')}.`,
+    practiceReportDimTitle: 'Diagnòstic per dimensió',
+    practiceReportDimNote: 'El % és la teva probabilitat estimada d\'encertar cada pas en un problema típic (no és el teu percentatge d\'encerts), per veure què convé repassar.',
+    practiceReportDimGroup1: 'Lectura de l\'enunciat',
+    practiceReportDimGroup2: 'Passos de resolució',
+    skillType: 'Anomenar el tipus',
+    skillNK: 'Identificar n i k',
+    skillFormula: 'Triar la fórmula',
     practiceReportNoSnapshot: 'Completa la fase diagnòstica (2 exercicis de cada tipus) per veure l\'informe.',
     practiceReportBack: '← Tornar',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
@@ -1453,6 +1474,13 @@ const LANG = {
     practiceReportRecommText: types => types.length===0
       ? 'Bo traballo. Segue practicando para consolidar o teu nivel.'
       : `Centra a túa práctica en: ${types.join(', ')}.`,
+    practiceReportDimTitle: 'Diagnóstico por dimensión',
+    practiceReportDimNote: 'A % é a túa probabilidade estimada de acertar cada paso nun problema típico (non é a túa porcentaxe de acertos), para ver que convén repasar.',
+    practiceReportDimGroup1: 'Lectura do enunciado',
+    practiceReportDimGroup2: 'Pasos de resolución',
+    skillType: 'Nomear o tipo',
+    skillNK: 'Identificar n e k',
+    skillFormula: 'Escoller a fórmula',
     practiceReportNoSnapshot: 'Completa a fase diagnóstica (2 exercicios de cada tipo) para ver o informe.',
     practiceReportBack: '← Volver',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
@@ -1697,6 +1725,13 @@ const LANG = {
     practiceReportRecommText: types => types.length===0
       ? 'Ondo eginda. Jarraitu praktikatzen zure maila finkatzeko.'
       : `Zentratu zure praktika honetan: ${types.join(', ')}.`,
+    practiceReportDimTitle: 'Dimentsioaren araberako diagnostikoa',
+    practiceReportDimNote: 'Ehunekoa urrats bakoitza problema arrunt batean asmatzeko duzun probabilitate estimatua da (ez da zure asmatze-ehunekoa), zer errepasatu ikusteko.',
+    practiceReportDimGroup1: 'Enuntziatuaren irakurketa',
+    practiceReportDimGroup2: 'Ebazpen urratsak',
+    skillType: 'Mota izendatu',
+    skillNK: 'n eta k identifikatu',
+    skillFormula: 'Formula aukeratu',
     practiceReportNoSnapshot: 'Osatu diagnostiko fasea (mota bakoitzeko 2 ariketa) txostena ikusteko.',
     practiceReportBack: '← Itzuli',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
@@ -3153,8 +3188,11 @@ const BAYES_MIN_TRIES_FOR_MID=2;
 const BAYES_MIN_TRIES_FOR_HIGH=4;
 const BAYES_DIAGNOSIS_MIN_TRIES=2;
 
+function bayesIRTc(theta,b,c){
+  return c+(1-c)/(1+Math.exp(-BAYES_A*(theta-b)));
+}
 function bayesIRT(theta,b){
-  return BAYES_C+(1-BAYES_C)/(1+Math.exp(-BAYES_A*(theta-b)));
+  return bayesIRTc(theta,b,BAYES_C);
 }
 const BAYES_LEVEL_LOW_MAX=Math.round(bayesIRT(-0.3,0)*100);
 const BAYES_LEVEL_HIGH_MIN=Math.round(bayesIRT(1.4,0)*100);
@@ -3184,6 +3222,29 @@ function loadBayesState(){
 }
 function saveBayesState(state){
   const p=loadProgress(); p.bayes=state; saveProgress(p);
+}
+// Diagnóstico fino por dimensión (solo lectura): mismo modelo bayesiano que por tipo,
+// pero indexado por el rasgo que define el tipo (orden, alcance, repetición).
+const DIM_KEYS=['order','scope','rep','type','nk','formula'];
+// Suelo de adivinación real de cada paso: preguntas sí/no = 1/2; tipo y fórmula = 6 opciones = 1/6;
+// n y k = el enunciado muestra dos números, asignarlos al azar acierta ambos con prob. 1/2.
+const DIM_GUESS={order:1/2,scope:1/2,rep:1/2,type:1/6,nk:1/2,formula:1/6};
+function loadDimState(){
+  const p=loadProgress();
+  if(!p.dims){ const init={}; DIM_KEYS.forEach(d=>init[d]={prior:[1/3,1/3,1/3],count:0}); return init; }
+  DIM_KEYS.forEach(d=>{ if(!p.dims[d]) p.dims[d]={prior:[1/3,1/3,1/3],count:0}; });
+  return p.dims;
+}
+function updateDim(dimKey,ok,difficulty){
+  const state=loadDimState();
+  const prior=state[dimKey].prior;
+  const score=ok?1:0;
+  const c=DIM_GUESS[dimKey];
+  const veros=BAYES_THETA.map(th=>{ const pA=bayesIRTc(th,difficulty,c); return score*pA+(1-score)*(1-pA); });
+  const m=prior.reduce((s,p,i)=>s+p*veros[i],0);
+  state[dimKey].prior=m>1e-10?prior.map((p,i)=>p*veros[i]/m):[1/3,1/3,1/3];
+  state[dimKey].count++;
+  saveProgress({dims:state});
 }
 function loadDiagnosticSnapshot(){
   try{ return JSON.parse(localStorage.getItem('comb_diag_snapshot')||'null'); }catch{ return null; }
@@ -3216,9 +3277,7 @@ function updateBayesType(type,score,difficulty){
   saveBayesState(state);
   maybeSnapshotDiagnosis(state);
 }
-function getTrafficLight(type){
-  const state=loadBayesState();
-  const ts=state[type];
+function trafficLightFromStats(ts){
   if(!ts||ts.count===0) return 'none';
   // Usa la theta esperada para saber si el alumno domina (no solo qué hipótesis tiene más masa)
   const expectedTheta=ts.prior.reduce((s,p,i)=>s+p*BAYES_THETA[i],0);
@@ -3227,6 +3286,9 @@ function getTrafficLight(type){
   if(expectedTheta>=1.4) return 'green';
   if(expectedTheta>=-0.3) return 'yellow';
   return 'red';
+}
+function getTrafficLight(type){
+  return trafficLightFromStats(loadBayesState()[type]);
 }
 function trafficEmoji(type){
   const tl=getTrafficLight(type);
@@ -3460,6 +3522,31 @@ function renderPracticeReport(){
       ?miniChart(snap.bayes, t('practiceReportDiagSection'))
       :`<p style="font-size:.85rem;color:var(--text2);margin-top:8px">${t('practiceReportNoSnapshot')}</p>`;
 
+  // Diagnóstico por habilidad (solo lectura): dos grupos ortogonales al modelo por tipo
+  const dimState=loadDimState();
+  const dimPct=(ts,c)=>(!ts||ts.count===0)?null:Math.round(ts.prior.reduce((s,p,i)=>s+p*bayesIRTc(BAYES_THETA[i],0,c),0)*100);
+  const dimRows=meta=>meta.map(([key,labelKey])=>{
+    const ts=dimState[key];
+    const tl=trafficLightFromStats(ts);
+    const emoji=tl==='green'?'🟢':tl==='yellow'?'🟡':tl==='red'?'🔴':'⚪';
+    const pct=dimPct(ts,DIM_GUESS[key]);
+    return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0">
+      <span style="font-size:1rem">${emoji}</span>
+      <span style="font-size:.88rem">${t(labelKey)}</span>
+      <span style="margin-left:auto;font-size:.82rem;color:var(--text2)">${pct===null?t('practiceBayesNoData'):pct+'%'} <span class="prac-progress-count">${t('practiceSolvedCount')(ts?.count||0)}</span></span>
+    </div>`;
+  }).join('');
+  const dimGroup1=[['order','practiceQ1'],['scope','practiceQ3'],['rep','practiceQ2']];
+  const dimGroup2=[['type','skillType'],['nk','skillNK'],['formula','skillFormula']];
+  const dimSection=`<div style="margin-top:20px">
+    <p class="prac-phase-label">${t('practiceReportDimTitle')}</p>
+    <p style="font-size:.78rem;color:var(--text2);margin:2px 0 10px">${t('practiceReportDimNote')}</p>
+    <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:0 0 4px">${t('practiceReportDimGroup1')}</p>
+    ${dimRows(dimGroup1)}
+    <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin:14px 0 4px">${t('practiceReportDimGroup2')}</p>
+    ${dimRows(dimGroup2)}
+  </div>`;
+
   document.getElementById('prac-content').innerHTML=`
     <div class="card">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
@@ -3478,6 +3565,7 @@ function renderPracticeReport(){
           ${weaknessesHtml}
         </div>
       </div>
+      ${dimSection}
       <div style="margin-top:20px;background:var(--bg2);border-radius:10px;padding:14px 16px">
         <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:6px">${t('practiceReportRecommendation')}</p>
         <p style="font-size:.9rem">${t('practiceReportRecommText')(recommTypes)}</p>
@@ -3682,12 +3770,22 @@ function pracCheckNK(){
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
   const formulaOk=pracFormulaChosen===prob.type;
-  // Score ponderado para progreso/adaptatividad: tipo 40%, n+k 30%, fórmula 30%
-  const score=(pracClassifyCorrect?0.4:0)+(nOk&&kOk?0.3:0)+(formulaOk?0.3:0);
-  const fullyCorrect=pracClassifyCorrect&&nOk&&kOk&&formulaOk;
+  // Aciertos en las 3 preguntas de parámetros (orden, alcance, repetición): crédito parcial 1/3 cada una
+  const ordOk=pracOrd===d.order, allOk=pracAll===(d.scope==='all'), repOk=pracRep===d.rep;
+  const questionsScore=((ordOk?1:0)+(allOk?1:0)+(repOk?1:0))/3;
+  // Score ponderado para progreso/adaptatividad: preguntas 20%, tipo 20%, n+k 30%, fórmula 30%
+  const score=0.2*questionsScore+(pracClassifyCorrect?0.2:0)+(nOk&&kOk?0.3:0)+(formulaOk?0.3:0);
+  const fullyCorrect=ordOk&&allOk&&repOk&&pracClassifyCorrect&&nOk&&kOk&&formulaOk;
   pracSessionTotal++;
   if(fullyCorrect) pracSessionCorrect++;
   updateBayesType(prob.type,score,prob.difficulty);
+  // Diagnóstico por dimensión (solo lectura): registra el acierto de cada pregunta de parámetros
+  updateDim('order',ordOk,prob.difficulty);
+  updateDim('scope',allOk,prob.difficulty);
+  updateDim('rep',repOk,prob.difficulty);
+  updateDim('type',pracClassifyCorrect,prob.difficulty);
+  updateDim('nk',nOk&&kOk,prob.difficulty);
+  updateDim('formula',formulaOk,prob.difficulty);
   if(prob.id&&!prob.id.startsWith('proc-')){ doneProblemIds.add(prob.id); saveDoneProblemIds(); }
   pracPhase=2;
   window._pracNOk=nOk; window._pracKOk=kOk;
