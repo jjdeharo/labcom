@@ -603,6 +603,8 @@ const LANG = {
     practiceHubBack: '← Menú',
     practiceNextSame: 'Otro problema →',
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
+    practicePhaseDiagnosis: 'Fase diagnóstica',
+    practicePhaseReinforcement: 'Fase de refuerzo',
     practiceResetData: 'Reiniciar datos de progreso',
     practiceResetConfirm: '¿Seguro? Se borrarán todos los datos de práctica.',
     lessonResetData: 'Reiniciar lecciones',
@@ -896,6 +898,8 @@ const LANG = {
     practiceHubBack: '← Menu',
     practiceNextSame: 'Next problem →',
     practiceSessionStats: (total, correct) => `Session: ${correct}/${total} correct`,
+    practicePhaseDiagnosis: 'Diagnostic phase',
+    practicePhaseReinforcement: 'Reinforcement phase',
     practiceResetData: 'Reset progress data',
     practiceResetConfirm: 'Are you sure? All practice data will be deleted.',
     lessonResetData: 'Reset lessons',
@@ -1128,6 +1132,8 @@ const LANG = {
     practiceHubBack: '← Menú',
     practiceNextSame: 'Altre problema →',
     practiceSessionStats: (total, correct) => `Sessió: ${correct}/${total} correctes`,
+    practicePhaseDiagnosis: 'Fase diagnòstica',
+    practicePhaseReinforcement: 'Fase de reforç',
     practiceResetData: 'Reiniciar dades de progrés',
     practiceResetConfirm: 'Segur? S\'esborraran totes les dades de pràctica.',
     lessonResetData: 'Reiniciar lliçons',
@@ -1343,6 +1349,8 @@ const LANG = {
     practiceHubBack: '← Menú',
     practiceNextSame: 'Outro problema →',
     practiceSessionStats: (total, correct) => `Sesión: ${correct}/${total} correctos`,
+    practicePhaseDiagnosis: 'Fase diagnóstica',
+    practicePhaseReinforcement: 'Fase de reforzo',
     practiceResetData: 'Reiniciar datos de progreso',
     practiceResetConfirm: 'Seguro? Borraranse todos os datos de práctica.',
     lessonResetData: 'Reiniciar leccións',
@@ -1558,6 +1566,8 @@ const LANG = {
     practiceHubBack: '← Menua',
     practiceNextSame: 'Beste arazo bat →',
     practiceSessionStats: (total, correct) => `Saioa: ${correct}/${total} zuzen`,
+    practicePhaseDiagnosis: 'Diagnostiko fasea',
+    practicePhaseReinforcement: 'Indartzeko fasea',
     practiceResetData: 'Berrezarri aurrerapen-datuak',
     practiceResetConfirm: 'Ziur? Praktikako datu guztiak ezabatuko dira.',
     lessonResetData: 'Berrezarri ikasgaiak',
@@ -2599,6 +2609,7 @@ let pracFormulaChosen=null;
 let pracCurrentProb=null, pracCurrentType=null, pracCurrentFilter=null;
 let pracSelectedTypes=new Set();
 let pracSessionCorrect=0, pracSessionTotal=0;
+let pracIsDiagnosisPhase=false;
 
 // ══════════════════════════════════════════════════════════════
 // BANCO DE PROBLEMAS (JSON externo)
@@ -3128,16 +3139,19 @@ function selectAdaptiveProblem(filter){
   const typePool=Array.isArray(filter)&&filter.length ? filter : filter==='all' ? ALL_TYPE_KEYS : [filter];
   let targetType=typePool[0];
   let isDiagnosisPhase=false;
+  pracIsDiagnosisPhase=false;
   if(typePool.length>1){
     const underSampled=typePool.filter(type=>(state[type]?.count||0)<BAYES_DIAGNOSIS_MIN_TRIES);
     if(underSampled.length){
       isDiagnosisPhase=true;
+      pracIsDiagnosisPhase=true;
       const diagnosisScores=underSampled.map(type=>{
         const missing=BAYES_DIAGNOSIS_MIN_TRIES-(state[type]?.count||0);
         return missing+bayesEntropy(state[type].prior)/Math.log2(BAYES_THETA.length);
       });
       targetType=pickAmongTop(underSampled,diagnosisScores,0.05);
     }else{
+      pracIsDiagnosisPhase=false;
       const weaknessScores=typePool.map(type=>1-bayesExpectedSuccess(state[type].prior,0));
       targetType=pickAmongTop(typePool,weaknessScores,0.03);
     }
@@ -3363,6 +3377,10 @@ function renderPractice(){
   const isAllScope=(d.scope==='all');
   const sessionChip=pracSessionTotal>0
     ?`<span style="font-size:.78rem;color:var(--text2);font-weight:400"> · ${t('practiceSessionStats')(pracSessionTotal,pracSessionCorrect)}</span>`:'';
+  const isAdaptive=Array.isArray(pracCurrentFilter)?pracCurrentFilter.length>1:pracCurrentFilter==='all';
+  const phaseChip=isAdaptive
+    ?`<span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;background:${pracIsDiagnosisPhase?'var(--accent)':'#22a65a'};color:#fff;vertical-align:middle">${pracIsDiagnosisPhase?t('practicePhaseDiagnosis'):t('practicePhaseReinforcement')}</span>`
+    :'';
   const backBtn=`<button class="btn-ghost" style="margin-left:auto" onclick="renderPracticeHub()">${t('practiceHubBack')}</button>`;
 
   // ══════════ PHASE 0: 3 preguntas → el alumno elige el tipo ══════════
@@ -3383,7 +3401,7 @@ function renderPractice(){
     document.getElementById('prac-content').innerHTML=`
       <div class="practice-card">
         <div class="step-indicator" style="display:flex;align-items:center;gap:6px">
-          <span>${t('practiceTitle')}${sessionChip}</span>${backBtn}
+          <span>${t('practiceTitle')}${phaseChip}${sessionChip}</span>${backBtn}
         </div>
         <div class="practice-context">${probText.context}</div>
         <p class="prac-phase-label">1 — ${t('practiceWhyTitle')}</p>
