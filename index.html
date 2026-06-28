@@ -684,7 +684,6 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicación conceptual de cómo el sistema estima el nivel del alumno, elige ejercicios y genera el informe de diagnóstico.',
     fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT y Shannon',
     fundamentosDoc2Desc: 'Especificación formal: distribuciones de probabilidad, función IRT, verosimilitud suave, ganancia de información y detalles de implementación.',
-    fundamentosNote: 'Estos documentos están disponibles solo en español.'
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1020,7 +1019,6 @@ const LANG = {
     fundamentosDoc1Desc: 'Conceptual explanation of how the system estimates student level, selects exercises and generates the diagnostic report.',
     fundamentosDoc2Title: 'Mathematical appendix: Bayes, IRT and Shannon',
     fundamentosDoc2Desc: 'Formal specification: probability distributions, IRT function, soft likelihood, information gain and implementation details.',
-    fundamentosNote: 'These documents are available in Spanish only.'
   },
   // ─────────────────────────────────────────────────────────────
   ca: {
@@ -1277,7 +1275,6 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicació conceptual de com el sistema estima el nivell de l\'alumne, tria exercicis i genera l\'informe de diagnòstic.',
     fundamentosDoc2Title: 'Apèndix matemàtic: Bayes, IRT i Shannon',
     fundamentosDoc2Desc: 'Especificació formal: distribucions de probabilitat, funció IRT, versemblança suau, guany d\'informació i detalls d\'implementació.',
-    fundamentosNote: 'Aquests documents estan disponibles només en espanyol.'
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1535,7 +1532,6 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicación conceptual de como o sistema estima o nivel do alumno, escolle exercicios e xera o informe de diagnóstico.',
     fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT e Shannon',
     fundamentosDoc2Desc: 'Especificación formal: distribucións de probabilidade, función IRT, verosimilitude suave, ganancia de información e detalles de implementación.',
-    fundamentosNote: 'Estes documentos están dispoñibles só en español.'
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1793,7 +1789,6 @@ const LANG = {
     fundamentosDoc1Desc: 'Azalpen kontzeptuala: sistemak nola estimatzen duen ikaslearen maila, ariketak nola hautatzen dituen eta diagnostiko-txostena nola sortzen duen.',
     fundamentosDoc2Title: 'Eranskin matematikoa: Bayes, IRT eta Shannon',
     fundamentosDoc2Desc: 'Zehaztapen formala: probabilitate-banaketak, IRT funtzioa, antzekotasun biguna, informazio-irabazia eta inplementazio-xehetasunak.',
-    fundamentosNote: 'Dokumentu hauek gaztelaniaz soilik daude eskuragarri.'
   }
   // ── Para añadir un idioma: duplica el bloque 'en' y traduce los valores ──
 };
@@ -2021,6 +2016,7 @@ function rerenderSection(id) {
   }
   else if(id==='leccion'){ rerenderLesson(); }
   else if(id==='practica'){ buildPracticeShell(); if(pracCurrentProb) renderPractice(); else renderPracticeHub(); }
+  else if(id==='fundamentos'){ renderFundamentos(); }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2082,14 +2078,12 @@ function renderInicio() {
 // FUNDAMENTOS
 // ══════════════════════════════════════════════════════════════
 function renderFundamentos() {
-  const note = t('fundamentosNote') ? `<p style="font-size:.8rem;color:var(--text2);margin-top:4px">${t('fundamentosNote')}</p>` : '';
   const langSuffix = ['en','ca','ga','eu'].includes(currentLang) ? `-${currentLang}` : '';
   document.getElementById('fundamentos').innerHTML = `
     <div class="hero">
       <h1>${t('fundamentosTitle')}</h1>
       <p>${t('fundamentosSubtitle')}</p>
     </div>
-    ${note}
     <div style="display:grid;gap:14px;margin-top:4px">
       <a href="funcionamiento${langSuffix}.html" style="text-decoration:none;color:inherit">
         <div class="home-card" style="display:block">
