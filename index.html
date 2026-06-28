@@ -684,6 +684,7 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicación conceptual de cómo el sistema estima el nivel del alumno, elige ejercicios y genera el informe de diagnóstico.',
     fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT y Shannon',
     fundamentosDoc2Desc: 'Especificación formal: distribuciones de probabilidad, función IRT, verosimilitud suave, ganancia de información y detalles de implementación.',
+    fundamentosOrigin: 'La metodología de evaluación y práctica adaptativas descrita en estos documentos tiene su origen en el proyecto <a href="https://jjdeharo.github.io/recursos-adaptativos/" target="_blank" rel="noopener" style="color:var(--accent)">Recursos adaptativos</a>, donde se recoge la especificación completa, los fundamentos matemáticos y la guía de implementación para otros contextos.',
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1019,6 +1020,7 @@ const LANG = {
     fundamentosDoc1Desc: 'Conceptual explanation of how the system estimates student level, selects exercises and generates the diagnostic report.',
     fundamentosDoc2Title: 'Mathematical appendix: Bayes, IRT and Shannon',
     fundamentosDoc2Desc: 'Formal specification: probability distributions, IRT function, soft likelihood, information gain and implementation details.',
+    fundamentosOrigin: 'The adaptive assessment and practice methodology described in these documents originates from the <a href="https://jjdeharo.github.io/recursos-adaptativos/" target="_blank" rel="noopener" style="color:var(--accent)">Recursos adaptativos</a> project, which contains the full specification, the mathematical foundations and an implementation guide for other contexts.',
   },
   // ─────────────────────────────────────────────────────────────
   ca: {
@@ -1275,6 +1277,7 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicació conceptual de com el sistema estima el nivell de l\'alumne, tria exercicis i genera l\'informe de diagnòstic.',
     fundamentosDoc2Title: 'Apèndix matemàtic: Bayes, IRT i Shannon',
     fundamentosDoc2Desc: 'Especificació formal: distribucions de probabilitat, funció IRT, versemblança suau, guany d\'informació i detalls d\'implementació.',
+    fundamentosOrigin: 'La metodologia d\'avaluació i pràctica adaptatives descrita en aquests documents té el seu origen en el projecte <a href="https://jjdeharo.github.io/recursos-adaptativos/" target="_blank" rel="noopener" style="color:var(--accent)">Recursos adaptativos</a>, on trobareu l\'especificació completa, els fonaments matemàtics i la guia d\'implementació per a altres contextos.',
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1532,6 +1535,7 @@ const LANG = {
     fundamentosDoc1Desc: 'Explicación conceptual de como o sistema estima o nivel do alumno, escolle exercicios e xera o informe de diagnóstico.',
     fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT e Shannon',
     fundamentosDoc2Desc: 'Especificación formal: distribucións de probabilidade, función IRT, verosimilitude suave, ganancia de información e detalles de implementación.',
+    fundamentosOrigin: 'A metodoloxía de avaliación e práctica adaptativas descrita nestes documentos ten a súa orixe no proxecto <a href="https://jjdeharo.github.io/recursos-adaptativos/" target="_blank" rel="noopener" style="color:var(--accent)">Recursos adaptativos</a>, onde se recolle a especificación completa, os fundamentos matemáticos e a guía de implementación para outros contextos.',
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -1789,6 +1793,7 @@ const LANG = {
     fundamentosDoc1Desc: 'Azalpen kontzeptuala: sistemak nola estimatzen duen ikaslearen maila, ariketak nola hautatzen dituen eta diagnostiko-txostena nola sortzen duen.',
     fundamentosDoc2Title: 'Eranskin matematikoa: Bayes, IRT eta Shannon',
     fundamentosDoc2Desc: 'Zehaztapen formala: probabilitate-banaketak, IRT funtzioa, antzekotasun biguna, informazio-irabazia eta inplementazio-xehetasunak.',
+    fundamentosOrigin: 'Dokumentu hauetan deskribatutako ebaluazio eta praktika metodologia adaptatiboak <a href="https://jjdeharo.github.io/recursos-adaptativos/" target="_blank" rel="noopener" style="color:var(--accent)">Recursos adaptativos</a> proiektuan du jatorria, non zehaztapen osoa, oinarri matematikoak eta beste testuinguru batzuetarako inplementazio-gida aurki baitaitezke.',
   }
   // ── Para añadir un idioma: duplica el bloque 'en' y traduce los valores ──
 };
@@ -2105,7 +2110,8 @@ function renderFundamentos() {
           <p style="font-size:.86rem;margin:0;color:var(--text2)">${t('fundamentosDoc2Desc')}</p>
         </div>
       </a>
-    </div>`;
+    </div>
+    <p style="font-size:.84rem;color:var(--text2);margin-top:18px;line-height:1.55">${t('fundamentosOrigin')}</p>`;
 }
 
 // ══════════════════════════════════════════════════════════════
