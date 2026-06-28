@@ -3182,10 +3182,25 @@ function generateProceduralProblem(type){
 // ══════════════════════════════════════════════════════════════
 const BAYES_THETA=[-2,0,2];  // hipótesis: no aprendido / aprendiendo / dominado
 const BAYES_A=1.5;           // discriminación IRT
-// Heurística de pseudoazar: el primer paso pide elegir entre seis tipos.
-// El ejercicio completo también incluye n, k y fórmula, por eso esto no es
-// una calibración psicométrica, sino una verosimilitud inicial razonable.
-const BAYES_C=1/6;
+const SCORE_W={
+  order:0.10,
+  scope:0.10,
+  rep:0.10,
+  type:0.25,
+  n:0.15,
+  k:0.15,
+  formula:0.15
+};
+// Azar esperado del proceso completo: lectura 3×sí/no, tipo 1/6, n/k 1/2 cada uno,
+// fórmula 1/6. Es una heurística formativa, no una calibración psicométrica.
+const TYPE_PROCESS_GUESS=
+  SCORE_W.order*(1/2)+
+  SCORE_W.scope*(1/2)+
+  SCORE_W.rep*(1/2)+
+  SCORE_W.type*(1/6)+
+  SCORE_W.n*(1/2)+
+  SCORE_W.k*(1/2)+
+  SCORE_W.formula*(1/6);
 const BAYES_MIN_TRIES_FOR_MID=2;
 const BAYES_MIN_TRIES_FOR_HIGH=4;
 const BAYES_DIAGNOSIS_MIN_TRIES=2;
@@ -3194,7 +3209,7 @@ function bayesIRTc(theta,b,c){
   return c+(1-c)/(1+Math.exp(-BAYES_A*(theta-b)));
 }
 function bayesIRT(theta,b){
-  return bayesIRTc(theta,b,BAYES_C);
+  return bayesIRTc(theta,b,TYPE_PROCESS_GUESS);
 }
 const BAYES_LEVEL_LOW_MAX=Math.round(bayesIRT(-0.3,0)*100);
 const BAYES_LEVEL_HIGH_MIN=Math.round(bayesIRT(1.4,0)*100);
@@ -3789,11 +3804,17 @@ function pracCheckNK(){
   const nOk=nVal===prob.n;
   const kOk=isAllScope||kVal===prob.k;
   const formulaOk=pracFormulaChosen===prob.type;
-  // Aciertos en las 3 preguntas de parámetros (orden, alcance, repetición): crédito parcial 1/3 cada una
   const ordOk=pracOrd===d.order, allOk=pracAll===(d.scope==='all'), repOk=pracRep===d.rep;
-  const questionsScore=((ordOk?1:0)+(allOk?1:0)+(repOk?1:0))/3;
-  // Score ponderado para progreso/adaptatividad: preguntas 20%, tipo 20%, n+k 30%, fórmula 30%
-  const score=0.2*questionsScore+(pracClassifyCorrect?0.2:0)+(nOk&&kOk?0.3:0)+(formulaOk?0.3:0);
+  // Score ponderado para progreso/adaptatividad:
+  // lectura 30%, tipo 25%, n 15%, k 15%, fórmula 15%.
+  const score=
+    SCORE_W.order*(ordOk?1:0)+
+    SCORE_W.scope*(allOk?1:0)+
+    SCORE_W.rep*(repOk?1:0)+
+    SCORE_W.type*(pracClassifyCorrect?1:0)+
+    SCORE_W.n*(nOk?1:0)+
+    SCORE_W.k*(kOk?1:0)+
+    SCORE_W.formula*(formulaOk?1:0);
   const fullyCorrect=ordOk&&allOk&&repOk&&pracClassifyCorrect&&nOk&&kOk&&formulaOk;
   pracSessionTotal++;
   if(fullyCorrect) pracSessionCorrect++;
