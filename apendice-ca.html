@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Apèndix matemàtic — Laboratori de Combinatòria</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+  --purple:#6b3d9e;--purple-light:#f0e8f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+.badge-impl{background:var(--purple-light);color:var(--purple)}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Laboratori de Combinatòria</a>
+  <span class="logo">Fonaments del sistema adaptatiu</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Especificació matemàtica</div>
+<h1>Apèndix matemàtic: mecanisme bayesià, IRT i entropia de Shannon</h1>
+
+<p>Aquest apèndix descriu amb més detall el mecanisme matemàtic del sistema adaptatiu: com representa el nivell de l'alumne, com actualitza les seves creences amb Bayes, com fa servir una funció de tipus IRT per relacionar nivell i dificultat, com mesura la incertesa amb l'entropia de Shannon i com tria la propera pregunta.</p>
+
+<h2>1. Representació del nivell com a distribució de probabilitat</h2>
+
+<p>Per a cada tipus de problema, el sistema no guarda un sol valor de nivell, sinó una distribució de probabilitat sobre tres hipòtesis:</p>
+
+\[\Theta=\{-2,0,2\}\]
+
+<p>on \(\theta=-2\) representa «no après», \(\theta=0\) representa «aprenent» i \(\theta=2\) representa «dominat».</p>
+
+<p>Per a cada tipus \(t\), l'estat de l'alumne és:</p>
+
+\[P_t(\theta)=\bigl(P_t(-2),\ P_t(0),\ P_t(2)\bigr)\]
+
+<p>Al principi, sense informació prèvia:</p>
+
+\[P_t(-2)=P_t(0)=P_t(2)=\frac13\]
+
+<p>Això es fa de manera independent per a cada tipus de problema. Si els tipus són:</p>
+
+\[T=\{\text{perm},\ \text{permRep},\ \text{var},\ \text{varRep},\ \text{comb},\ \text{combRep}\}\]
+
+<p>el sistema manté sis distribucions separades. L'alumne no té «un sol nivell global»: té una estimació independent per a cada tipus de problema.</p>
+
+<h2>2. Nivell esperat</h2>
+
+<p>A partir de la distribució per a cada tipus, el sistema pot calcular un valor mitjà de nivell:</p>
+
+\[E_t[\theta] = \sum_{\theta_i \in \{-2,0,2\}} P_t(\theta_i)\cdot \theta_i = P_t(-2)(-2)+P_t(0)(0)+P_t(2)(2)\]
+
+<p>Exemple: si \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\), aleshores:</p>
+
+\[E_t[\theta] = 0{,}20(-2)+0{,}30(0)+0{,}50(2) = -0{,}40+0+1 = 0{,}60\]
+
+<p>Aquest valor resumeix la distribució, però no la substitueix completament. La informació més rica continua sent la distribució completa.</p>
+
+<h2>3. Probabilitat d'encert mitjançant una funció de tipus IRT</h2>
+
+<p>Per actualitzar el model, el sistema necessita estimar la probabilitat que un alumne amb un cert nivell \(\theta\) encerti un exercici de dificultat \(b\). Fa servir una funció logística amb terra d'atzar:</p>
+
+\[P(A\mid \theta,b) = c+\frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>on \(A\) significa resposta correcta, \(a\) és el paràmetre de discriminació (\(a=1{,}5\)) i \(c\) és el terra d'atzar.</p>
+
+<p>Les dificultats dels exercicis prenen valors \(b=-1\) (fàcil), \(b=0\) (mitjà) o \(b=1\) (difícil).</p>
+
+<h2>4. Interpretació de la funció IRT</h2>
+
+<p>La quantitat decisiva és \(\theta-b\). Si \(\theta&gt;b\), el nivell hipotètic és per sobre de la dificultat i la probabilitat d'encert és alta. Si \(\theta=b\), la logística bàsica val \(1/2\), de manera que \(P(A\mid\theta=b)=c+\frac{1-c}{2}\). Si \(\theta&lt;b\), la probabilitat baixa, però no per sota de \(c\).</p>
+
+<table>
+  <thead><tr><th>Hipòtesi</th><th style="text-align:right">\(\theta\)</th><th>Relació amb \(b=0\)</th><th>Interpretació</th></tr></thead>
+  <tbody>
+    <tr><td>No après</td><td style="text-align:right">−2</td><td>\(\theta&lt;b\)</td><td>Encert poc probable</td></tr>
+    <tr><td>Aprenent</td><td style="text-align:right">0</td><td>\(\theta=b\)</td><td>Probabilitat intermèdia</td></tr>
+    <tr><td>Dominat</td><td style="text-align:right">2</td><td>\(\theta&gt;b\)</td><td>Encert molt probable</td></tr>
+  </tbody>
+</table>
+
+<p>Per això, encertar una pregunta difícil desplaça la creença cap a «dominat» més que encertar-ne una de fàcil.</p>
+
+<h2>5. Terra d'atzar</h2>
+
+<p>El terra d'atzar per al domini del tipus global es calcula a partir del rendiment esperat per atzar en tot el procés:</p>
+
+<table>
+  <thead><tr><th>Part</th><th style="text-align:right">Pes</th><th style="text-align:right">Atzar aprox.</th></tr></thead>
+  <tbody>
+    <tr><td>Lectura: ordre, abast, repetició</td><td style="text-align:right">30 %</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Tipus de problema</td><td style="text-align:right">25 %</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>Identificació de \(n\) i \(k\)</td><td style="text-align:right">30 %</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">15 %</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[c_{\text{tipus}} = 0{,}30\cdot\tfrac12 + 0{,}25\cdot\tfrac16 + 0{,}30\cdot\tfrac12 + 0{,}15\cdot\tfrac16 = 0{,}15+0{,}042+0{,}15+0{,}025 = \frac{11}{30} \approx 0{,}367\]
+
+<h2>6. Puntuació parcial de l'exercici</h2>
+
+<p>Cada exercici produeix una puntuació parcial \(s\in[0,1]\), obtinguda ponderant set senyals:</p>
+
+<table>
+  <thead><tr><th>Senyal</th><th style="text-align:right">Pes</th></tr></thead>
+  <tbody>
+    <tr><td>Ordre correcte \((x_{\text{ordre}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Abast correcte \((x_{\text{abast}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Repetició correcta \((x_{\text{rep}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Tipus correcte \((x_{\text{tipus}})\)</td><td style="text-align:right">0,25</td></tr>
+    <tr><td>\(n\) correcta \((x_n)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>\(k\) correcta \((x_k)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>Fórmula correcta \((x_{\text{fórmula}})\)</td><td style="text-align:right">0,15</td></tr>
+  </tbody>
+</table>
+
+\[s = 0{,}10x_{\text{ordre}} + 0{,}10x_{\text{abast}} + 0{,}10x_{\text{rep}} + 0{,}25x_{\text{tipus}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{fórmula}}\]
+
+<p>Cada variable val 1 si la resposta és correcta i 0 si és incorrecta. Els pesos sumen 1, per tant \(0\leq s\leq1\).</p>
+
+<h2>7. Versemblança suau a partir de la puntuació</h2>
+
+<p>El resultat d'un exercici no és simplement correcte o incorrecte, sinó una puntuació parcial \(s\). El sistema fa servir per tant una versemblança interpolada:</p>
+
+\[L(\theta) = s\cdot P(A\mid \theta,b) + (1-s)\cdot P(F\mid \theta,b)\]
+
+<p>Com que \(P(F\mid\theta,b)=1-P(A\mid\theta,b)\), escrivint \(p_\theta=P(A\mid\theta,b)\):</p>
+
+\[L(\theta) = s\,p_\theta + (1-s)(1-p_\theta)\]
+
+<p>Casos especials:</p>
+
+<ul>
+  <li>Si \(s=1\): \(L(\theta)=P(A\mid\theta,b)\) — encert complet.</li>
+  <li>Si \(s=0\): \(L(\theta)=P(F\mid\theta,b)\) — error complet.</li>
+  <li>Si \(s=0{,}5\): \(L(\theta)=0{,}5\) per a qualsevol \(\theta\) — l'actualització bayesiana és pràcticament nul·la.</li>
+</ul>
+
+<h2>8. Actualització bayesiana</h2>
+
+<p>Abans de l'exercici, l'estat del tipus \(t\) és \(P_t^{\text{antic}}(\theta_i)\). Per a cada hipòtesi es calcula la versemblança \(L(\theta_i)\), després el valor no normalitzat \(q_i=P_t^{\text{antic}}(\theta_i)\cdot L(\theta_i)\), i finalment es normalitza:</p>
+
+\[P_t^{\text{nou}}(\theta_i) = \frac{P_t^{\text{antic}}(\theta_i)\cdot L(\theta_i)}{\sum_j P_t^{\text{antic}}(\theta_j)\cdot L(\theta_j)}\]
+
+<p>Això és la regla de Bayes aplicada a les tres hipòtesis discretes.</p>
+
+<h2>9. Exemple complet d'actualització</h2>
+
+<p>Exercici de dificultat mitjana (\(b=0\)) amb distribució inicial uniforme \(P^{\text{antic}}=(1/3,1/3,1/3)\). Probabilitats d'encert IRT aproximades: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>
+
+<h3>Cas 1: encert complet (\(s=1\))</h3>
+
+<p>Versemblances: \(L(-2)=0{,}40\), \(L(0)=0{,}68\), \(L(2)=0{,}97\). Posterior:</p>
+
+\[P^{\text{nou}}(-2)\approx0{,}195\quad P^{\text{nou}}(0)\approx0{,}332\quad P^{\text{nou}}(2)\approx0{,}473\]
+
+<p>La hipòtesi «dominat» guanya pes.</p>
+
+<h3>Cas 2: error complet (\(s=0\))</h3>
+
+<p>Versemblances d'error: \(L(-2)=0{,}60\), \(L(0)=0{,}32\), \(L(2)=0{,}03\). Posterior:</p>
+
+\[P^{\text{nou}}(-2)\approx0{,}632\quad P^{\text{nou}}(0)\approx0{,}337\quad P^{\text{nou}}(2)\approx0{,}032\]
+
+<p>La hipòtesi «no après» guanya pes.</p>
+
+<h3>Cas 3: resultat parcial (\(s=0{,}75\))</h3>
+
+\[L(-2)=0{,}75(0{,}40)+0{,}25(0{,}60)=0{,}45\]
+\[L(0)=0{,}75(0{,}68)+0{,}25(0{,}32)=0{,}59\]
+\[L(2)=0{,}75(0{,}97)+0{,}25(0{,}03)=0{,}735\]
+
+<p>El posterior s'inclina cap a «dominat», però menys que amb \(s=1\).</p>
+
+<h2>10. Estimació visible d'èxit</h2>
+
+<p>El percentatge mostrat a l'alumne és la probabilitat esperada d'encertar bé un exercici mitjà:</p>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)\cdot P(A\mid \theta_i,b=0)\]
+
+<p>Exemple amb \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\):</p>
+
+\[\widehat{P}_t(A) = 0{,}20(0{,}40)+0{,}30(0{,}68)+0{,}50(0{,}97) = 0{,}08+0{,}204+0{,}485 = 0{,}769 \approx 77\%\]
+
+<h2>11. Entropia de Shannon</h2>
+
+<p>La incertesa d'una distribució es mesura amb l'entropia de Shannon:</p>
+
+\[H(P) = -\sum_i p_i\log_2(p_i)\]
+
+<p>Per a una distribució uniforme \((1/3,1/3,1/3)\), l'entropia és màxima: \(H=\log_2(3)\). El sistema fa servir l'entropia normalitzada:</p>
+
+\[H_{\text{norm}}(P) = \frac{H(P)}{\log_2(3)} \in [0,1]\]
+
+<p>Si \(H_{\text{norm}}=1\), la incertesa és màxima. Si \(H_{\text{norm}}\approx0\), el sistema té molta confiança.</p>
+
+<h2>12. Guany d'informació esperat</h2>
+
+<p>Per triar un exercici, el sistema calcula quanta incertesa espera reduir:</p>
+
+\[GI = H(P) - \bigl[P(A)\,H(P_{\text{post},A}) + P(F)\,H(P_{\text{post},F})\bigr]\]
+
+<p>on:</p>
+
+\[P(A) = \sum_i P(\theta_i)P(A\mid\theta_i,b)\qquad P(F)=1-P(A)\]
+
+\[P_{\text{post},A}(\theta_i) = \frac{P(\theta_i)P(A\mid\theta_i,b)}{P(A)}\qquad P_{\text{post},F}(\theta_i) = \frac{P(\theta_i)P(F\mid\theta_i,b)}{P(F)}\]
+
+<p>Un exercici té un guany d'informació alt si, en ser respost, redueix molt la incertesa sobre la distribució de l'alumne.</p>
+
+<h2>13. Intuïció del guany d'informació</h2>
+
+<p>Un exercici molt fàcil tendeix a tenir un guany d'informació baix: si l'alumne l'encerta, aprenem poc perquè l'encert era esperable. Un exercici molt difícil també pot tenir un guany baix: si l'alumne falla, aprenem poc perquè el fracàs era esperable.</p>
+
+<p>Els exercicis més informatius solen ser els que tenen una dificultat propera al nivell estimat de l'alumne, perquè allà tant l'encert com l'error són possibles i tots dos escenaris ajuden a diferenciar hipòtesis.</p>
+
+<h2>14. Ajust de dificultat</h2>
+
+<p>En la fase de reforç, el sistema també valora si la dificultat de l'exercici s'ajusta al nivell estimat de l'alumne. Primer calcula el nivell esperat \(\bar{\theta}=E[\theta]\), després l'ajust:</p>
+
+\[Ajust(b,\bar{\theta}) = e^{-0{,}5(b-\bar{\theta})^2}\]
+
+<p>Si \(b=\bar{\theta}\), l'ajust és màxim (\(Ajust=1\)). A mesura que \(b\) s'allunya de \(\bar{\theta}\), l'ajust decreix:</p>
+
+<table>
+  <thead><tr><th>\(|b-\bar{\theta}|\)</th><th>\(Ajust\)</th></tr></thead>
+  <tbody>
+    <tr><td>0</td><td>1,000</td></tr>
+    <tr><td>1</td><td>\(e^{-0{,}5}\approx0{,}607\)</td></tr>
+    <tr><td>2</td><td>\(e^{-2}\approx0{,}135\)</td></tr>
+  </tbody>
+</table>
+
+<h2>15. Puntuació d'un exercici candidat</h2>
+
+<p>Durant la fase de diagnòstic, el sistema prioritza el guany d'informació:</p>
+
+\[Puntuació_{\text{diagnòstic}}(p)=GI(p)\]
+
+<p>Durant la fase de reforç, combina guany d'informació i ajust de dificultat:</p>
+
+\[Puntuació_{\text{reforç}}(p) = 0{,}65\cdot GI_{\text{norm}}(p) + 0{,}35\cdot Ajust(p)\]
+
+<p>on \(GI_{\text{norm}}(p)=GI(p)/GI_{\max}\) normalitza el guany respecte al millor candidat disponible.</p>
+
+<h2>16. Selecció del tipus de problema</h2>
+
+<h3>Fase de diagnòstic</h3>
+
+<p>El sistema prioritza els tipus amb el valor de diagnòstic més alt:</p>
+
+\[D_t = pending_t + H_{\text{norm}}(P_t)\]
+
+<p>on \(pending_t = \max(0, 2-n_t)\) és el nombre d'intents que encara falten per arribar al mínim de dos. Això combina manca de mostra i incertesa sobre el nivell.</p>
+
+<h3>Fase de reforç</h3>
+
+<p>Quan tots els tipus tenen prou intents, el sistema prioritza els tipus més febles:</p>
+
+\[F_t = 1-\widehat{P}_t(A)\]
+
+<p>El sistema tria entre els tipus amb la feblesa més alta, introduint una mica d'aleatorietat entre candidats propers per evitar una repetició excessiva.</p>
+
+<h2>17. Diagnòstic per habilitats transversals</h2>
+
+<p>A més de les distribucions per tipus, el sistema manté distribucions bayesianes per a sis habilitats transversals:</p>
+
+\[D = \{\text{ordre},\ \text{abast},\ \text{repetició},\ \text{tipus},\ \text{nk},\ \text{fórmula}\}\]
+
+<p>Per a cada habilitat \(d\), hi ha una distribució \(P_d(\theta)\) actualitzada amb un senyal binari \(r_d\in\{0,1\}\). Cada habilitat té el seu propi terra d'atzar:</p>
+
+<table>
+  <thead><tr><th>Habilitat</th><th style="text-align:right">Terra d'atzar</th></tr></thead>
+  <tbody>
+    <tr><td>Ordre</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Abast</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Repetició</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Tipus</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>\(n,k\)</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[P(A_d\mid\theta,b) = c_d + \frac{1-c_d}{1+e^{-a(\theta-b)}}\]
+
+<h2>18. Per què els percentatges d'habilitats no són directament comparables</h2>
+
+<p>El terra d'atzar per a «ordre» és \(1/2\) i per a «tipus» és \(1/6\). Això significa que el mateix nivell \(\theta\) produeix percentatges visibles diferents segons l'habilitat: per a una pregunta de sí/no el terra ja és del 50 %, mentre que triar entre sis tipus té un terra de ~16,7 %.</p>
+
+<p>Per tant, un 75 % en ordre no té exactament el mateix significat que un 75 % en tipus. El percentatge depèn del terra d'atzar. El nivell latent \(\theta\) és la referència comuna.</p>
+
+<h2>19. Desament del diagnòstic inicial</h2>
+
+<p>Quan tots els tipus han completat almenys dos exercicis, el sistema desa una còpia de l'estat:</p>
+
+\[Foto = \{P_t(\theta)\}_{t\in T}\]
+
+<p>Aquesta foto permet comparar el nivell en acabar el diagnòstic amb el nivell actual després de la fase de reforç:</p>
+
+\[\Delta_t = \widehat{P}_t^{\text{actual}}(A) - \widehat{P}_t^{\text{diagnòstic}}(A)\]
+
+<p>Si \(\Delta_t&gt;0\) hi ha millora estimada; si \(\Delta_t&lt;0\) hi ha retrocés; si \(\Delta_t\approx0\) el nivell és estable.</p>
+
+<h2>20. Resum formal del cicle complet</h2>
+
+<h3>Pas 1: estat previ</h3>
+
+<p>Per a cada tipus: \(P_t^{\text{antic}}(\theta)\). Per a cada habilitat: \(P_d^{\text{antic}}(\theta)\).</p>
+
+<h3>Pas 2: selecció del tipus</h3>
+
+<p>En diagnòstic: \(t^*=\arg\max_t\bigl(pending_t + H_{\text{norm}}(P_t)\bigr)\). En reforç: \(t^*=\arg\max_t\bigl(1-\widehat{P}_t(A)\bigr)\), amb selecció aleatòria entre candidats propers al màxim.</p>
+
+<h3>Pas 3: selecció de l'exercici</h3>
+
+<p>En diagnòstic: \(p^*=\arg\max_p GI(p)\). En reforç: \(p^*=\arg\max_p\bigl(0{,}65\,GI_{\text{norm}}(p)+0{,}35\,Ajust(p)\bigr)\).</p>
+
+<h3>Pas 4: resposta de l'alumne</h3>
+
+<p>L'alumne produeix senyals: \(x_{\text{ordre}}, x_{\text{abast}}, x_{\text{rep}}, x_{\text{tipus}}, x_n, x_k, x_{\text{fórmula}}\).</p>
+
+<h3>Pas 5: càlcul de la puntuació</h3>
+
+\[s = 0{,}10x_{\text{ordre}} + 0{,}10x_{\text{abast}} + 0{,}10x_{\text{rep}} + 0{,}25x_{\text{tipus}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{fórmula}}\]
+
+<h3>Pas 6: actualització del tipus</h3>
+
+\[P_{t^*}^{\text{nou}}(\theta_i) = \frac{P_{t^*}^{\text{antic}}(\theta_i)\,L(\theta_i)}{\sum_j P_{t^*}^{\text{antic}}(\theta_j)\,L(\theta_j)} \qquad L(\theta_i)=s\,P(A\mid\theta_i,b)+(1-s)\,P(F\mid\theta_i,b)\]
+
+<h3>Pas 7: actualització de les habilitats</h3>
+
+<p>Per a cada habilitat \(d\): mateixa regla de Bayes amb \(L_d\) utilitzant el resultat binari per a aquella habilitat i el seu terra d'atzar \(c_d\).</p>
+
+<h3>Pas 8: estimació visible</h3>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)P(A\mid\theta_i,0) \qquad E_t[\theta] = \sum_i P_t(\theta_i)\,\theta_i\]
+
+<p>Aquests valors generen barres, semàfor i informe.</p>
+
+<h2>21. Idea matemàtica central</h2>
+
+\[\boxed{\text{Bayes} + \text{IRT} + \text{Shannon} + \text{puntuació parcial}}\]
+
+<p>Bayes actualitza la creença: \(P(\theta\mid R)\). IRT estima la probabilitat d'encert donat nivell i dificultat: \(P(A\mid\theta,b)\). Shannon mesura la incertesa: \(H(P)\). El guany d'informació decideix quina pregunta redueix més aquella incertesa: \(GI=H_{\text{abans}}-E[H_{\text{després}}]\). La puntuació parcial transforma una resposta complexa en un senyal gradual: \(s\in[0,1]\).</p>
+
+<p>El resultat és un sistema en el qual cada resposta modifica l'estat intern de l'alumne, i aquest nou estat modifica la propera pregunta.</p>
+
+<hr>
+
+<div class="badge badge-impl">Detalls d'implementació</div>
+<h2>22. Detalls d'implementació</h2>
+
+<p>Les seccions anteriors descriuen el mecanisme matemàtic. Aquesta secció recull les decisions concretes d'implementació que afecten el que veu l'alumne, però que no formen part del nucli bayesià.</p>
+
+<h3>22.1 Límits del percentatge visible en funció del nombre d'intents</h3>
+
+<p>L'estimació bruta \(\widehat{P}_t(A)\) no sempre es mostra directament. Per evitar conclusions excessivament optimistes amb poca evidència, el sistema limita el percentatge visible en funció del nombre d'intents \(n_t\). Els llindars es deriven de la funció IRT a dificultat mitjana:</p>
+
+\[\text{LOW\_MAX} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=-0{,}3,\,b=0)\bigr) = 61\]
+\[\text{HIGH\_MIN} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=1{,}4,\,b=0)\bigr) = 93\]
+
+<p>El percentatge mostrat és:</p>
+
+\[\widehat{P}_t^{\text{visible}} = \begin{cases} \min\bigl(\widehat{P}_t(A),\ 60\bigr) & \text{si } n_t &lt; 2 \\ \min\bigl(\widehat{P}_t(A),\ 92\bigr) & \text{si } 2 \le n_t &lt; 4 \\ \widehat{P}_t(A) & \text{si } n_t \ge 4 \end{cases}\]
+
+<h3>22.2 Llindars del semàfor</h3>
+
+<p>El color del semàfor depèn del nivell esperat \(\bar{\theta}_t\) i del nombre d'intents \(n_t\):</p>
+
+<table>
+  <thead><tr><th>Condició</th><th>Color</th></tr></thead>
+  <tbody>
+    <tr><td>\(n_t=0\)</td><td>Gris (sense dades)</td></tr>
+    <tr><td>\(n_t &lt; 2\)</td><td>Vermell</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) i \(\bar{\theta}_t\ge-0{,}3\)</td><td>Groc</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) i \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Vermell</td></tr>
+    <tr><td>\(n_t\ge4\) i \(\bar{\theta}_t\ge1{,}4\)</td><td>Verd</td></tr>
+    <tr><td>\(n_t\ge4\) i \(-0{,}3\le\bar{\theta}_t&lt;1{,}4\)</td><td>Groc</td></tr>
+    <tr><td>\(n_t\ge4\) i \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Vermell</td></tr>
+  </tbody>
+</table>
+
+<p>Les talles \(\bar{\theta}=-0{,}3\) i \(\bar{\theta}=1{,}4\) són les mateixes que generen les bandes LOW_MAX i HIGH_MIN de la secció 22.1, de manera que color i percentatge són coherents entre si.</p>
+
+<h3>22.3 Aleatorietat en la selecció</h3>
+
+<p>Un candidat \(p\) entra al conjunt d'elegibles si \(Puntuació(p)\ge Puntuació_{\max}-\tau\), amb toleràncies diferents per context:</p>
+
+<table>
+  <thead><tr><th>Context</th><th style="text-align:right">Tolerància \(\tau\)</th></tr></thead>
+  <tbody>
+    <tr><td>Tipus en fase de diagnòstic</td><td style="text-align:right">0,05</td></tr>
+    <tr><td>Tipus en fase de reforç</td><td style="text-align:right">0,03</td></tr>
+    <tr><td>Exercici en fase de diagnòstic</td><td style="text-align:right">\(\max(0{,}10\cdot Puntuació_{\max},\ \varepsilon)\)</td></tr>
+    <tr><td>Exercici en fase de reforç</td><td style="text-align:right">0,04</td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 Generació d'exercicis i assignació de dificultat</h3>
+
+<p>Quan s'esgoten els exercicis disponibles per a un tipus al banc, el sistema en genera de nous de manera procedimental. La dificultat \(b\in\{-1,0,1\}\) s'assigna mitjançant regles basades en la mida de \(n\) i \(k\) (o en el resultat numèric, depenent del tipus). Aquestes regles són una heurística de disseny, no una calibració psicomètrica.</p>
+
+<h3>22.5 Diagnòstic de \(n\) i \(k\) com a habilitat única</h3>
+
+<p>En el càlcul de la puntuació, \(n\) i \(k\) són dos senyals independents amb pes 0,15 cadascun. En el diagnòstic per habilitats transversals, en canvi, tots dos s'agrupen en l'habilitat única \(nk\), que es considera correcta només si \(n\) <strong>i</strong> \(k\) són tots dos correctes:</p>
+
+\[r_{nk} = x_n\cdot x_k\]
+
+<p>La puntuació pot atorgar crèdit parcial per encertar-ne un de sol, però l'habilitat transversal \(nk\) exigeix que tots dos siguin correctes.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Vegeu també: <a href="funcionamiento-ca.html" style="color:var(--accent)">Funcionament bayesià del sistema adaptatiu de pràctica</a>
+</p>
+
+</div>
+</body>
+</html>

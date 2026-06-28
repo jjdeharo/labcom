@@ -314,18 +314,19 @@ input[type=range]{flex:1;accent-color:var(--accent);height:6px}
   <div id="laboratorio" class="section"></div>
   <div id="leccion" class="section"></div>
   <div id="practica" class="section"></div>
+  <div id="fundamentos" class="section"></div>
 </main>
 
 <footer class="site-footer">
-  © <a href="https://bilateria.org" target="_blank" rel="noopener">Juan José de Haro</a>
+  © <a href="https://bilateria.org">Juan José de Haro</a>
   <span class="sep">·</span>
-  Contenido: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
+  Contenido: <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
   <span class="sep">·</span>
-  Código: <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">AGPL-3.0</a>
+  Código: <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0</a>
   <span class="sep">·</span>
-  <a href="https://github.com/jjdeharo/labcom" target="_blank" rel="noopener"><svg style="vertical-align:middle;margin-right:3px" width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+  <a href="https://github.com/jjdeharo/labcom"><svg style="vertical-align:middle;margin-right:3px" width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
   <span class="sep">·</span>
-  <a href="https://github.com/jjdeharo/labcom/issues" target="_blank" rel="noopener">Sugerencias y problemas</a>
+  <a href="https://github.com/jjdeharo/labcom/issues">Sugerencias y problemas</a>
 </footer>
 
 <script>
@@ -340,7 +341,7 @@ const LANG = {
     locale: 'es-ES',
     // Cabecera
     logo: 'Combinatoria',
-    nav: ['Inicio', 'Lecciones', '¿Qué tipo?', 'Práctica', 'Laboratorio'],
+    nav: ['Inicio', 'Lecciones', '¿Qué tipo?', 'Práctica', 'Laboratorio', 'Fundamentos'],
 
     // Inicio
     heroTitle: 'Laboratorio de Combinatoria',
@@ -674,7 +675,16 @@ const LANG = {
       { context:'Quieres comprar 3 croissants en una pastelería con 4 tipos. Puedes comprar varios del mismo tipo. ¿Cuántas compras distintas puedes hacer?', hint:'No importa el orden y se puede repetir: 2 de chocolate + 1 de jamón es válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
       { context:'¿Cuántas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se pueden formar si el orden importa?', hint:'Se eligen 4 de 5 letras y el orden importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
       { context:'¿Cuántas palabras distintas se pueden formar con todas las letras de la palabra LEVEL?', hint:'Se usan todas las letras, el orden importa, pero hay letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
-    ]
+    ],
+
+    // Fundamentos
+    fundamentosTitle: 'Cómo funciona el sistema adaptativo',
+    fundamentosSubtitle: 'Fundamentos matemáticos y pedagógicos del motor de práctica inteligente.',
+    fundamentosDoc1Title: 'Funcionamiento bayesiano del sistema',
+    fundamentosDoc1Desc: 'Explicación conceptual de cómo el sistema estima el nivel del alumno, elige ejercicios y genera el informe de diagnóstico.',
+    fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT y Shannon',
+    fundamentosDoc2Desc: 'Especificación formal: distribuciones de probabilidad, función IRT, verosimilitud suave, ganancia de información y detalles de implementación.',
+    fundamentosNote: 'Estos documentos están disponibles solo en español.'
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -682,7 +692,7 @@ const LANG = {
     htmlLang: 'en',
     locale: 'en-US',
     logo: 'Combinatorics',
-    nav: ['Home', 'Lessons', 'Which type?', 'Practice', 'Lab'],
+    nav: ['Home', 'Lessons', 'Which type?', 'Practice', 'Lab', 'About'],
     heroTitle: 'Combinatorics Lab',
     heroSubtitle: 'Learn to count possibilities by making decisions, not memorizing formulas.',
     homeCards: [
@@ -1003,13 +1013,20 @@ const LANG = {
       { context:'You want to buy 3 croissants from a bakery with 4 types. You can buy several of the same type. How many distinct purchases can you make?', hint:'Order does not matter and repetition is allowed: 2 chocolate + 1 ham is valid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
       { context:'How many 4-letter license plates with distinct letters (from A, B, C, D, E — 5 letters) can be formed if order matters?', hint:'4 of 5 letters are chosen and order matters: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
       { context:'How many distinct words can be formed using all the letters of the word LEVEL?', hint:'All letters are used, order matters, but some are repeated: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
-    ]
+    ],
+    fundamentosTitle: 'How the adaptive system works',
+    fundamentosSubtitle: 'Mathematical and pedagogical foundations of the intelligent practice engine.',
+    fundamentosDoc1Title: 'Bayesian functioning of the system',
+    fundamentosDoc1Desc: 'Conceptual explanation of how the system estimates student level, selects exercises and generates the diagnostic report.',
+    fundamentosDoc2Title: 'Mathematical appendix: Bayes, IRT and Shannon',
+    fundamentosDoc2Desc: 'Formal specification: probability distributions, IRT function, soft likelihood, information gain and implementation details.',
+    fundamentosNote: 'These documents are available in Spanish only.'
   },
   // ─────────────────────────────────────────────────────────────
   ca: {
     htmlLang: 'ca', locale: 'ca-ES',
     logo: 'Combinatòria',
-    nav: ['Inici', 'Lliçons', 'Quin tipus?', 'Pràctica', 'Laboratori'],
+    nav: ['Inici', 'Lliçons', 'Quin tipus?', 'Pràctica', 'Laboratori', 'Fonaments'],
     heroTitle: 'Laboratori de Combinatòria',
     heroSubtitle: 'Aprèn a comptar possibilitats prenent decisions, no memoritzant fórmules.',
     homeCards: [
@@ -1253,14 +1270,21 @@ const LANG = {
       { context:'Vols comprar 3 croissants en una pastisseria amb 4 tipus i pots repetir. Quantes compres distintes pots fer?', hint:'L\'ordre no importa i es pot repetir: 2 de xocolata + 1 de pernil és vàlid.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
       { context:'Quantes matrícules de 4 lletres distintes (A, B, C, D, E — 5 lletres) es poden formar si l\'ordre importa?', hint:'Es trien 4 de 5 lletres i l\'ordre importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
       { context:'Quantes paraules distintes es poden formar amb totes les lletres de la paraula LEVEL?', hint:'Es fan servir totes les lletres, l\'ordre importa, però n\'hi ha de repetides: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
-    ]
+    ],
+    fundamentosTitle: 'Com funciona el sistema adaptatiu',
+    fundamentosSubtitle: 'Fonaments matemàtics i pedagògics del motor de pràctica intel·ligent.',
+    fundamentosDoc1Title: 'Funcionament bayesià del sistema',
+    fundamentosDoc1Desc: 'Explicació conceptual de com el sistema estima el nivell de l\'alumne, tria exercicis i genera l\'informe de diagnòstic.',
+    fundamentosDoc2Title: 'Apèndix matemàtic: Bayes, IRT i Shannon',
+    fundamentosDoc2Desc: 'Especificació formal: distribucions de probabilitat, funció IRT, versemblança suau, guany d\'informació i detalls d\'implementació.',
+    fundamentosNote: 'Aquests documents estan disponibles només en espanyol.'
   },
 
   // ─────────────────────────────────────────────────────────────
   ga: {
     htmlLang: 'gl', locale: 'gl-ES',
     logo: 'Combinatoria',
-    nav: ['Inicio', 'Leccións', 'Que tipo?', 'Práctica', 'Laboratorio'],
+    nav: ['Inicio', 'Leccións', 'Que tipo?', 'Práctica', 'Laboratorio', 'Fundamentos'],
     heroTitle: 'Laboratorio de Combinatoria',
     heroSubtitle: 'Aprende a contar posibilidades tomando decisións, non memorizando fórmulas.',
     homeCards: [
@@ -1504,14 +1528,21 @@ const LANG = {
       { context:'Queres comprar 3 croissants nunha panadaría con 4 tipos e podes repetir. Cantas compras distintas podes facer?', hint:'A orde non importa e pódese repetir: 2 de chocolate + 1 de xamón é válido.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
       { context:'Cantas matrículas de 4 letras distintas (A, B, C, D, E — 5 letras) se poden formar se a orde importa?', hint:'Escolléronse 4 de 5 letras e a orde importa: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
       { context:'Cantas palabras distintas se poden formar con todas as letras da palabra LEVEL?', hint:'Úsanse todas as letras, a orde importa, pero hai letras repetidas: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
-    ]
+    ],
+    fundamentosTitle: 'Como funciona o sistema adaptativo',
+    fundamentosSubtitle: 'Fundamentos matemáticos e pedagóxicos do motor de práctica intelixente.',
+    fundamentosDoc1Title: 'Funcionamento bayesiano do sistema',
+    fundamentosDoc1Desc: 'Explicación conceptual de como o sistema estima o nivel do alumno, escolle exercicios e xera o informe de diagnóstico.',
+    fundamentosDoc2Title: 'Apéndice matemático: Bayes, IRT e Shannon',
+    fundamentosDoc2Desc: 'Especificación formal: distribucións de probabilidade, función IRT, verosimilitude suave, ganancia de información e detalles de implementación.',
+    fundamentosNote: 'Estes documentos están dispoñibles só en español.'
   },
 
   // ─────────────────────────────────────────────────────────────
   eu: {
     htmlLang: 'eu', locale: 'eu-ES',
     logo: 'Konbinatoria',
-    nav: ['Hasiera', 'Ikasgaiak', 'Zer mota?', 'Praktika', 'Laborategia'],
+    nav: ['Hasiera', 'Ikasgaiak', 'Zer mota?', 'Praktika', 'Laborategia', 'Oinarriak'],
     heroTitle: 'Konbinatoriaren Laborategia',
     heroSubtitle: 'Ikasi posibilitateak zenbatzen erabakiak hartuz, ez formulak buruz ikasiz.',
     homeCards: [
@@ -1755,7 +1786,14 @@ const LANG = {
       { context:'3 croissant erosi nahi dituzu 4 mota dituen gozotegi batean eta errepika dezakezu. Zenbat erosketa ezberdin egin ditzakezu?', hint:'Ordena ez da garrantzitsua eta errepikatu daiteke: 2 txokolate + 1 urdaiazpiko baliozkoa da.', answer:'combinationRep', calc:'$CR_{4,3} = \\dbinom{6}{3} = 20$', formula:'$CR_{n,k} = \\dbinom{n+k-1}{k}$', n:4, k:3 },
       { context:'Zenbat 4 letra ezberdineko matrikula (A, B, C, D, E — 5 letra) sor daitezke ordena garrantzitsua bada?', hint:'5etik 4 letra aukeratzen dira eta ordena garrantzitsua da: ABCD ≠ DCBA.', answer:'variation', calc:'$V_{5,4} = 5\\cdot4\\cdot3\\cdot2 = 120$', formula:'$V_{n,k} = \\dfrac{n!}{(n-k)!}$', n:5, k:4 },
       { context:'Zenbat hitz ezberdin sor daitezke LEVEL hitzaren letra guztiekin?', hint:'Letra guztiak erabiltzen dira, ordena garrantzitsua da, baina errepikapenak daude: L×2, E×2.', answer:'permutationRep', calc:'$\\dfrac{5!}{2!\\cdot2!} = 30$', formula:'$P = \\dfrac{n!}{a!\\cdot b!\\cdots}$', n:5, k:5 }
-    ]
+    ],
+    fundamentosTitle: 'Sistema adaptatiboak nola funtzionatzen duen',
+    fundamentosSubtitle: 'Motor adimentsuko praktikaren oinarri matematikoak eta pedagogikoak.',
+    fundamentosDoc1Title: 'Sistemaren funtzionamendu bayesiarra',
+    fundamentosDoc1Desc: 'Azalpen kontzeptuala: sistemak nola estimatzen duen ikaslearen maila, ariketak nola hautatzen dituen eta diagnostiko-txostena nola sortzen duen.',
+    fundamentosDoc2Title: 'Eranskin matematikoa: Bayes, IRT eta Shannon',
+    fundamentosDoc2Desc: 'Zehaztapen formala: probabilitate-banaketak, IRT funtzioa, antzekotasun biguna, informazio-irabazia eta inplementazio-xehetasunak.',
+    fundamentosNote: 'Dokumentu hauek gaztelaniaz soilik daude eskuragarri.'
   }
   // ── Para añadir un idioma: duplica el bloque 'en' y traduce los valores ──
 };
@@ -1856,7 +1894,7 @@ function saveProgress(obj){localStorage.setItem('comb_progress',JSON.stringify({
 // ══════════════════════════════════════════════════════════════
 // Cabecera dinámica
 // ══════════════════════════════════════════════════════════════
-const SECTIONS = ['inicio','leccion','arbol','practica','laboratorio'];
+const SECTIONS = ['inicio','leccion','arbol','practica','laboratorio','fundamentos'];
 
 function buildNav() {
   const nav = document.getElementById('main-nav');
@@ -1961,11 +1999,12 @@ function sample(arr, count) {
 }
 
 function renderSection(id) {
-  if(id==='inicio')    renderInicio();
-  if(id==='arbol')     initTree();
-  if(id==='laboratorio') updateLab();
-  if(id==='leccion')   initLesson();
-  if(id==='practica')  initPractice();
+  if(id==='inicio')       renderInicio();
+  if(id==='arbol')        initTree();
+  if(id==='laboratorio')  updateLab();
+  if(id==='leccion')      initLesson();
+  if(id==='practica')     initPractice();
+  if(id==='fundamentos')  renderFundamentos();
 }
 
 // Re-renderiza la sección activa preservando su estado (usado al cambiar de idioma).
@@ -2037,6 +2076,42 @@ function renderInicio() {
     </div>
     ${renderSummaryTable()}`;
   renderKatex();
+}
+
+// ══════════════════════════════════════════════════════════════
+// FUNDAMENTOS
+// ══════════════════════════════════════════════════════════════
+function renderFundamentos() {
+  const note = t('fundamentosNote') ? `<p style="font-size:.8rem;color:var(--text2);margin-top:4px">${t('fundamentosNote')}</p>` : '';
+  const langSuffix = ['en','ca','ga','eu'].includes(currentLang) ? `-${currentLang}` : '';
+  document.getElementById('fundamentos').innerHTML = `
+    <div class="hero">
+      <h1>${t('fundamentosTitle')}</h1>
+      <p>${t('fundamentosSubtitle')}</p>
+    </div>
+    ${note}
+    <div style="display:grid;gap:14px;margin-top:4px">
+      <a href="funcionamiento${langSuffix}.html" style="text-decoration:none;color:inherit">
+        <div class="home-card" style="display:block">
+          <div class="home-card-top">
+            <div class="home-icon">📖</div>
+            <span class="step-badge">1</span>
+          </div>
+          <h3 style="margin-bottom:5px">${t('fundamentosDoc1Title')}</h3>
+          <p style="font-size:.86rem;margin:0;color:var(--text2)">${t('fundamentosDoc1Desc')}</p>
+        </div>
+      </a>
+      <a href="apendice${langSuffix}.html" style="text-decoration:none;color:inherit">
+        <div class="home-card" style="display:block">
+          <div class="home-card-top">
+            <div class="home-icon">∑</div>
+            <span class="step-badge">2</span>
+          </div>
+          <h3 style="margin-bottom:5px">${t('fundamentosDoc2Title')}</h3>
+          <p style="font-size:.86rem;margin:0;color:var(--text2)">${t('fundamentosDoc2Desc')}</p>
+        </div>
+      </a>
+    </div>`;
 }
 
 // ══════════════════════════════════════════════════════════════

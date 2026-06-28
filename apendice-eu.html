@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Eranskin matematikoa — Konbinatorika Laborategia</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+  --purple:#6b3d9e;--purple-light:#f0e8f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+.badge-impl{background:var(--purple-light);color:var(--purple)}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Konbinatorika Laborategia</a>
+  <span class="logo">Sistema adaptatiboaren oinarriak</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Zehaztapen matematikoa</div>
+<h1>Eranskin matematikoa: mekanismo bayesiarra, IRT eta Shannonen entropia</h1>
+
+<p>Eranskin honek sistema adaptatiboaren mekanismo matematikoa xehetasun gehiagorekin deskribatzen du: nola irudikatzen duen ikaslearen maila, nola eguneratzen dituen bere sinesmenak Bayesekin, nola erabiltzen duen IRT motako funtzio bat maila eta zailtasuna erlazionatzeko, nola neurtzen duen ziurgabetasuna Shannonen entropiarekin eta nola aukeratzen duen hurrengo galdera.</p>
+
+<h2>1. Maila probabilitate-banaketa gisa irudikatzea</h2>
+
+<p>Problema mota bakoitzeko, sistemak ez du maila balio soil bat gordetzen, baizik eta hiru hipotesiren gaineko probabilitate-banaketa:</p>
+
+\[\Theta=\{-2,0,2\}\]
+
+<p>non \(\theta=-2\) «ikasi gabe» adierazten du, \(\theta=0\) «ikasten» eta \(\theta=2\) «menperatuta».</p>
+
+<p>Mota \(t\) bakoitzeko, ikaslearen egoera hau da:</p>
+
+\[P_t(\theta)=\bigl(P_t(-2),\ P_t(0),\ P_t(2)\bigr)\]
+
+<p>Hasieran, aurrezko informaziorik gabe:</p>
+
+\[P_t(-2)=P_t(0)=P_t(2)=\frac13\]
+
+<p>Hau mota bakoitzeko modu independentean egiten da. Motak hauek badira:</p>
+
+\[T=\{\text{perm},\ \text{permRep},\ \text{ald},\ \text{aldRep},\ \text{komb},\ \text{kombRep}\}\]
+
+<p>sistemak sei banaketa bereizi mantentzen ditu. Ikasleak ez du «maila global bakar» bat: estimazio independente bat du problema mota bakoitzeko.</p>
+
+<h2>2. Espero den maila</h2>
+
+<p>Mota bakoitzeko banaketaren arabera, sistemak batez besteko maila balio bat kalkula dezake:</p>
+
+\[E_t[\theta] = \sum_{\theta_i \in \{-2,0,2\}} P_t(\theta_i)\cdot \theta_i = P_t(-2)(-2)+P_t(0)(0)+P_t(2)(2)\]
+
+<p>Adibidea: \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\) bada:</p>
+
+\[E_t[\theta] = 0{,}20(-2)+0{,}30(0)+0{,}50(2) = 0{,}60\]
+
+<h2>3. Asmatzearen probabilitatea IRT motako funtzio bidez</h2>
+
+<p>Modeloa eguneratzeko, sistemak estimatu behar du \(\theta\) maila jakin bateko ikasleak \(b\) zailtasuneko ariketa asmatuko duen probabilitatea. Ausazko zorua duen funtzio logistiko bat erabiltzen du:</p>
+
+\[P(A\mid \theta,b) = c+\frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>non \(A\) erantzun zuzena esan nahi du, \(a\) diskriminazio parametroa da (\(a=1{,}5\)) eta \(c\) ausazko zorua da.</p>
+
+<p>Ariketa zailtasunek \(b=-1\) (erraza), \(b=0\) (ertaina) edo \(b=1\) (zaila) balioak hartzen dituzte.</p>
+
+<h2>4. IRT funtzioaren interpretazioa</h2>
+
+<p>Funtsezko kantitatea \(\theta-b\) da. \(\theta&gt;b\) bada, maila hipotetikoa zailtasunaren gainetik dago eta asmatzearen probabilitatea handia da. \(\theta&lt;b\) bada, probabilitatea jaisten da, baina ez \(c\) azpitik.</p>
+
+<table>
+  <thead><tr><th>Hipotesia</th><th style="text-align:right">\(\theta\)</th><th>\(b=0\)rekiko erlazioa</th><th>Interpretazioa</th></tr></thead>
+  <tbody>
+    <tr><td>Ikasi gabe</td><td style="text-align:right">−2</td><td>\(\theta&lt;b\)</td><td>Asmatzea nekez litekeena</td></tr>
+    <tr><td>Ikasten</td><td style="text-align:right">0</td><td>\(\theta=b\)</td><td>Tarteko probabilitatea</td></tr>
+    <tr><td>Menperatuta</td><td style="text-align:right">2</td><td>\(\theta&gt;b\)</td><td>Asmatzea oso litekeena</td></tr>
+  </tbody>
+</table>
+
+<h2>5. Ausazko zorua</h2>
+
+<p>Mota globalaren domeinurako ausazko zorua prozesu osoan ausaz espero den errendimendutik kalkulatzen da:</p>
+
+<table>
+  <thead><tr><th>Zatia</th><th style="text-align:right">Pisua</th><th style="text-align:right">Ausaz gutxi gora behera</th></tr></thead>
+  <tbody>
+    <tr><td>Irakurketa: ordena, irismena, errepikapena</td><td style="text-align:right">%30</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Problema mota</td><td style="text-align:right">%25</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>\(n\) eta \(k\) identifikazioa</td><td style="text-align:right">%30</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">%15</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[c_{\text{mota}} = 0{,}30\cdot\tfrac12 + 0{,}25\cdot\tfrac16 + 0{,}30\cdot\tfrac12 + 0{,}15\cdot\tfrac16 \approx \frac{11}{30} \approx 0{,}367\]
+
+<h2>6. Ariketa puntuazio partzial</h2>
+
+<p>Ariketa bakoitzak puntuazio partziala sortzen du \(s\in[0,1]\), zazpi seinale ponderatuz lortua:</p>
+
+<table>
+  <thead><tr><th>Seinalea</th><th style="text-align:right">Pisua</th></tr></thead>
+  <tbody>
+    <tr><td>Ordena zuzena \((x_{\text{ordena}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Irismena zuzena \((x_{\text{irismena}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Errepikapena zuzena \((x_{\text{errep}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Mota zuzena \((x_{\text{mota}})\)</td><td style="text-align:right">0,25</td></tr>
+    <tr><td>\(n\) zuzena \((x_n)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>\(k\) zuzena \((x_k)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>Formula zuzena \((x_{\text{formula}})\)</td><td style="text-align:right">0,15</td></tr>
+  </tbody>
+</table>
+
+\[s = 0{,}10x_{\text{ordena}} + 0{,}10x_{\text{irismena}} + 0{,}10x_{\text{errep}} + 0{,}25x_{\text{mota}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{formula}}\]
+
+<h2>7. Puntuaziotik abiatutako sinesgarritasun leuna</h2>
+
+<p>Ariketa baten emaitza ez da soilik zuzena ala okerra, baizik eta \(s\) puntuazio partzial bat. Sistemak interpolatutako sinesgarritasuna erabiltzen du:</p>
+
+\[L(\theta) = s\cdot P(A\mid \theta,b) + (1-s)\cdot P(F\mid \theta,b)\]
+
+<p>\(p_\theta=P(A\mid\theta,b)\) idatziz:</p>
+
+\[L(\theta) = s\,p_\theta + (1-s)(1-p_\theta)\]
+
+<p>Kasu bereziak:</p>
+
+<ul>
+  <li>\(s=1\) bada: \(L(\theta)=P(A\mid\theta,b)\) — asmate osoa.</li>
+  <li>\(s=0\) bada: \(L(\theta)=P(F\mid\theta,b)\) — huts osoa.</li>
+  <li>\(s=0{,}5\) bada: \(L(\theta)=0{,}5\) edozein \(\theta\)rentzat — eguneraketa bayesiarra ia nulua da.</li>
+</ul>
+
+<h2>8. Eguneratze bayesiarra</h2>
+
+<p>Ariketaren aurretik, \(t\) motaren egoera \(P_t^{\text{zaharra}}(\theta_i)\) da. Hipotesi bakoitzerako \(L(\theta_i)\) kalkulatzen da, ondoren normalizatu gabeko balioa \(q_i=P_t^{\text{zaharra}}(\theta_i)\cdot L(\theta_i)\), eta azkenik normalizatzen da:</p>
+
+\[P_t^{\text{berria}}(\theta_i) = \frac{P_t^{\text{zaharra}}(\theta_i)\cdot L(\theta_i)}{\sum_j P_t^{\text{zaharra}}(\theta_j)\cdot L(\theta_j)}\]
+
+<h2>9. Eguneratze adibide osoa</h2>
+
+<p>Zailtasun ertaineko ariketa (\(b=0\)), hasierako banaketa uniformea \(P^{\text{zaharra}}=(1/3,1/3,1/3)\). IRT asmate-probabilitate gutxi gorabeherakoak: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>
+
+<h3>1. kasua: asmate osoa (\(s=1\))</h3>
+
+\[P^{\text{berria}}(-2)\approx0{,}195\quad P^{\text{berria}}(0)\approx0{,}332\quad P^{\text{berria}}(2)\approx0{,}473\]
+
+<h3>2. kasua: huts osoa (\(s=0\))</h3>
+
+\[P^{\text{berria}}(-2)\approx0{,}632\quad P^{\text{berria}}(0)\approx0{,}337\quad P^{\text{berria}}(2)\approx0{,}032\]
+
+<h3>3. kasua: emaitza partzial (\(s=0{,}75\))</h3>
+
+\[L(-2)=0{,}75(0{,}40)+0{,}25(0{,}60)=0{,}45 \quad L(0)=0{,}59 \quad L(2)=0{,}735\]
+
+<h2>10. Ikusgai den arrakasta estimazioa</h2>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)\cdot P(A\mid \theta_i,b=0)\]
+
+<p>Adibidea \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\)rekin:</p>
+
+\[\widehat{P}_t(A) = 0{,}20(0{,}40)+0{,}30(0{,}68)+0{,}50(0{,}97) \approx 77\%\]
+
+<h2>11. Shannonen entropia</h2>
+
+\[H(P) = -\sum_i p_i\log_2(p_i)\]
+
+<p>Sistemak entropia normalizatua erabiltzen du:</p>
+
+\[H_{\text{norm}}(P) = \frac{H(P)}{\log_2(3)} \in [0,1]\]
+
+<h2>12. Espero den informazio irabaziea</h2>
+
+\[II = H(P) - \bigl[P(A)\,H(P_{\text{post},A}) + P(F)\,H(P_{\text{post},F})\bigr]\]
+
+<p>non:</p>
+
+\[P(A) = \sum_i P(\theta_i)P(A\mid\theta_i,b) \qquad P_{\text{post},A}(\theta_i) = \frac{P(\theta_i)P(A\mid\theta_i,b)}{P(A)}\]
+
+<h2>13. Informazio irabaziren intuizioa</h2>
+
+<p>Ariketa erraz batek informazio irabazte baxua izaten du: ikasleak asmaten badu, gutxi ikasten dugu asmatzea espero zelako. Ariketa zaila ere irabazte baxua izaten du: ikasleak huts egiten badu, gutxi ikasten dugu huts egitea espero zelako. Ariketa informatibenak ikaslearen mailaren ingurukoak izaten dira, non bi emaitzak posible diren.</p>
+
+<h2>14. Zailtasun egokitzapena</h2>
+
+\[Egok(b,\bar{\theta}) = e^{-0{,}5(b-\bar{\theta})^2}\]
+
+<h2>15. Hautagai ariketaren puntuazioa</h2>
+
+<p>Diagnostiko fasean:</p>
+
+\[Punt_{\text{diagnostiko}}(p)=II(p)\]
+
+<p>Indartzea fasean:</p>
+
+\[Punt_{\text{indartzea}}(p) = 0{,}65\cdot II_{\text{norm}}(p) + 0{,}35\cdot Egok(p)\]
+
+<h2>16. Problema motaren hautaketa</h2>
+
+<h3>Diagnostiko fasea</h3>
+
+\[D_t = falta_t + H_{\text{norm}}(P_t)\]
+
+<p>non \(falta_t = \max(0, 2-n_t)\) oraindik behar diren saiakera kopurua den.</p>
+
+<h3>Indartzea fasea</h3>
+
+\[A_t = 1-\widehat{P}_t(A)\]
+
+<p>Sistemak ahultasun handiena duten moten artean aukeratzen du, hautagaien artean ausazkotasun pixka bat sartuz.</p>
+
+<h2>17. Trebetasun transbertsalen diagnostikoa</h2>
+
+<p>Motaren araberako banaketak ez ezik, sistemak sei trebetasun transbertsalen banaketa bayesiarrak mantentzen ditu, bakoitzak bere ausazko zoruarekin:</p>
+
+<table>
+  <thead><tr><th>Trebetasuna</th><th style="text-align:right">Ausazko zorua</th></tr></thead>
+  <tbody>
+    <tr><td>Ordena</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Irismena</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Errepikapena</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Mota</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>\(n,k\)</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+<h2>18. Zergatik ez diren trebetasun ehunekoak zuzenean konparagarriak</h2>
+
+<p>«Ordena»ren ausazko zorua \(1/2\) da eta «motarena» \(1/6\). Honek esan nahi du \(\theta\) maila berak ehuneko ikusgai desberdinak sortzen dituela trebetasunaren arabera. \(\theta\) maila latentea da erreferentzia komuna.</p>
+
+<h2>19. Hasierako diagnostikoaren gordetzea</h2>
+
+\[Argazkia = \{P_t(\theta)\}_{t\in T}\]
+
+\[\Delta_t = \widehat{P}_t^{\text{unekoa}}(A) - \widehat{P}_t^{\text{diagnostikoa}}(A)\]
+
+<h2>20. Ziklo osoaren laburpen formala</h2>
+
+<p><strong>1. urratsa:</strong> aurreko egoera: \(P_t^{\text{zaharra}}(\theta)\) mota bakoitzeko; \(P_d^{\text{zaharra}}(\theta)\) trebetasun bakoitzeko.</p>
+
+<p><strong>2. urratsa:</strong> mota hautaketa. Diagnostikoan: \(t^*=\arg\max_t(falta_t + H_{\text{norm}}(P_t))\). Indartzean: \(t^*=\arg\max_t(1-\widehat{P}_t(A))\).</p>
+
+<p><strong>3. urratsa:</strong> ariketa hautaketa. Diagnostikoan: \(p^*=\arg\max_p II(p)\). Indartzean: \(p^*=\arg\max_p(0{,}65\,II_{\text{norm}}(p)+0{,}35\,Egok(p))\).</p>
+
+<p><strong>4. urratsa:</strong> ikasleak seinale hauek sortzen ditu: \(x_{\text{ordena}}, x_{\text{irismena}}, x_{\text{errep}}, x_{\text{mota}}, x_n, x_k, x_{\text{formula}}\).</p>
+
+<p><strong>5. urratsa:</strong> puntuazioaren kalkulua: \(s = 0{,}10x_{\text{ordena}} + 0{,}10x_{\text{irismena}} + 0{,}10x_{\text{errep}} + 0{,}25x_{\text{mota}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{formula}}\).</p>
+
+<p><strong>6. urratsa:</strong> motaren eguneratzea \(L(\theta_i)=s\,P(A\mid\theta_i,b)+(1-s)\,P(F\mid\theta_i,b)\) erabiliz.</p>
+
+<p><strong>7. urratsa:</strong> trebetasunen eguneratzea Bayesen erregela eta seinale binarioa erabiliz.</p>
+
+<p><strong>8. urratsa:</strong> ikusgai den estimazioa: \(\widehat{P}_t(A) = \sum_i P_t(\theta_i)P(A\mid\theta_i,0)\).</p>
+
+<h2>21. Ideia matematiko nagusia</h2>
+
+\[\boxed{\text{Bayes} + \text{IRT} + \text{Shannon} + \text{puntuazio partzial}}\]
+
+<p>Bayesek sinesmena eguneratzen du: \(P(\theta\mid R)\). IRTk maila eta zailtasuna emanda asmatzearen probabilitatea estimatzen du: \(P(A\mid\theta,b)\). Shannonek ziurgabetasuna neurtzen du: \(H(P)\). Informazio irabazieak erabakitzen du zein galderak murrizten duen gehien ziurgabetasun hori: \(II=H_{\text{aurretik}}-E[H_{\text{ondoren}}]\). Puntuazio partzialak erantzun konplexua seinale gradual bihurtzen du: \(s\in[0,1]\).</p>
+
+<hr>
+
+<div class="badge badge-impl">Inplementazio xehetasunak</div>
+<h2>22. Inplementazio xehetasunak</h2>
+
+<h3>22.1 Ikusgai den ehunekoa mugatzea saiakera kopuruaren arabera</h3>
+
+\[\text{LOW\_MAX} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=-0{,}3,\,b=0)\bigr) = 61\]
+\[\text{HIGH\_MIN} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=1{,}4,\,b=0)\bigr) = 93\]
+
+\[\widehat{P}_t^{\text{ikusgai}} = \begin{cases} \min\bigl(\widehat{P}_t(A),\ 60\bigr) & n_t &lt; 2 \text{ bada} \\ \min\bigl(\widehat{P}_t(A),\ 92\bigr) & 2 \le n_t &lt; 4 \text{ bada} \\ \widehat{P}_t(A) & n_t \ge 4 \text{ bada} \end{cases}\]
+
+<h3>22.2 Semaforoaren atariak</h3>
+
+<table>
+  <thead><tr><th>Baldintza</th><th>Kolorea</th></tr></thead>
+  <tbody>
+    <tr><td>\(n_t=0\)</td><td>Grisa (daturik gabe)</td></tr>
+    <tr><td>\(n_t &lt; 2\)</td><td>Gorria</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) eta \(\bar{\theta}_t\ge-0{,}3\)</td><td>Horia</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) eta \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Gorria</td></tr>
+    <tr><td>\(n_t\ge4\) eta \(\bar{\theta}_t\ge1{,}4\)</td><td>Berdea</td></tr>
+    <tr><td>\(n_t\ge4\) eta \(-0{,}3\le\bar{\theta}_t&lt;1{,}4\)</td><td>Horia</td></tr>
+    <tr><td>\(n_t\ge4\) eta \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Gorria</td></tr>
+  </tbody>
+</table>
+
+<h3>22.3 Hautaketan ausazkotasuna</h3>
+
+<table>
+  <thead><tr><th>Testuingurua</th><th style="text-align:right">Tolerantzia \(\tau\)</th></tr></thead>
+  <tbody>
+    <tr><td>Mota diagnostiko fasean</td><td style="text-align:right">0,05</td></tr>
+    <tr><td>Mota indartzea fasean</td><td style="text-align:right">0,03</td></tr>
+    <tr><td>Ariketa diagnostiko fasean</td><td style="text-align:right">\(\max(0{,}10\cdot Punt_{\max},\ \varepsilon)\)</td></tr>
+    <tr><td>Ariketa indartzea fasean</td><td style="text-align:right">0,04</td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 Ariketa sorkuntza eta zailtasun esleipen</h3>
+
+<p>Bankuko mota baterako ariketak agortzen direnean, sistemak prozeduraren bidez sortzen ditu berriak. \(b\in\{-1,0,1\}\) zailtasuna \(n\) eta \(k\) tamainaren araberako erregelak erabiliz esleitzen da. Arau hauek diseinuaren heuristika dira, ez kalibrazio psikometriko bat.</p>
+
+<h3>22.5 \(n\) eta \(k\) trebetasun bakar gisa diagnostikatzea</h3>
+
+<p>Puntuazioan, \(n\) eta \(k\) 0,15eko pisua duten seinale independenteak dira. Trebetasun transbertsalen diagnostikoan, ordea, biak \(nk\) trebetasun bakarrean taldekatzen dira, biak zuzenak badira soilik zuzena dela jotzen da:</p>
+
+\[r_{nk} = x_n\cdot x_k\]
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Ikus ere: <a href="funcionamiento-eu.html" style="color:var(--accent)">Praktika sistema adaptatiboaren funtzionamendu bayesiarra</a>
+</p>
+
+</div>
+</body>
+</html>

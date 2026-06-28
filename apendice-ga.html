@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Apéndice matemático — Laboratorio de Combinatoria</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+  --purple:#6b3d9e;--purple-light:#f0e8f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+.badge-impl{background:var(--purple-light);color:var(--purple)}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Laboratorio de Combinatoria</a>
+  <span class="logo">Fundamentos do sistema adaptativo</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Especificación matemática</div>
+<h1>Apéndice matemático: mecanismo bayesiano, IRT e entropía de Shannon</h1>
+
+<p>Este apéndice describe con máis detalle o mecanismo matemático do sistema adaptativo: como representa o nivel do alumno, como actualiza as súas crenzas con Bayes, como usa unha función tipo IRT para relacionar nivel e dificultade, como mide a incerteza coa entropía de Shannon e como elixe a próxima pregunta.</p>
+
+<h2>1. Representación do nivel como distribución de probabilidade</h2>
+
+<p>Para cada tipo de problema, o sistema non garda un único valor de nivel, senón unha distribución de probabilidade sobre tres hipóteses:</p>
+
+\[\Theta=\{-2,0,2\}\]
+
+<p>onde \(\theta=-2\) representa «non aprendido», \(\theta=0\) representa «aprendendo» e \(\theta=2\) representa «dominado».</p>
+
+<p>Para cada tipo \(t\), o estado do alumno é:</p>
+
+\[P_t(\theta)=\bigl(P_t(-2),\ P_t(0),\ P_t(2)\bigr)\]
+
+<p>Ao principio, sen información previa:</p>
+
+\[P_t(-2)=P_t(0)=P_t(2)=\frac13\]
+
+<p>Isto faise de forma independente para cada tipo de problema. Se os tipos son:</p>
+
+\[T=\{\text{perm},\ \text{permRep},\ \text{var},\ \text{varRep},\ \text{comb},\ \text{combRep}\}\]
+
+<p>o sistema mantén seis distribucións separadas. O alumno non ten «un único nivel global»: ten unha estimación independente para cada tipo de problema.</p>
+
+<h2>2. Nivel esperado</h2>
+
+<p>A partir da distribución para cada tipo, o sistema pode calcular un valor medio de nivel:</p>
+
+\[E_t[\theta] = \sum_{\theta_i \in \{-2,0,2\}} P_t(\theta_i)\cdot \theta_i = P_t(-2)(-2)+P_t(0)(0)+P_t(2)(2)\]
+
+<p>Exemplo: se \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\), entón:</p>
+
+\[E_t[\theta] = 0{,}20(-2)+0{,}30(0)+0{,}50(2) = -0{,}40+0+1 = 0{,}60\]
+
+<p>Este valor resume a distribución, pero non a substitúe completamente. A información máis rica segue sendo a distribución completa.</p>
+
+<h2>3. Probabilidade de acerto mediante unha función tipo IRT</h2>
+
+<p>Para actualizar o modelo, o sistema necesita estimar a probabilidade de que un alumno con certo nivel \(\theta\) acerte un exercicio de dificultade \(b\). Usa unha función loxística con chan de azar:</p>
+
+\[P(A\mid \theta,b) = c+\frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>onde \(A\) significa resposta correcta, \(a\) é o parámetro de discriminación (\(a=1{,}5\)) e \(c\) é o chan de azar.</p>
+
+<p>As dificultades dos exercicios toman valores \(b=-1\) (fácil), \(b=0\) (media) ou \(b=1\) (difícil).</p>
+
+<h2>4. Interpretación da función IRT</h2>
+
+<p>A cantidade decisiva é \(\theta-b\). Se \(\theta&gt;b\), o nivel hipotético está por riba da dificultade e a probabilidade de acerto é alta. Se \(\theta=b\), a loxística básica vale \(1/2\), de xeito que \(P(A\mid\theta=b)=c+\frac{1-c}{2}\). Se \(\theta&lt;b\), a probabilidade baixa, pero non por baixo de \(c\).</p>
+
+<table>
+  <thead><tr><th>Hipótese</th><th style="text-align:right">\(\theta\)</th><th>Relación con \(b=0\)</th><th>Interpretación</th></tr></thead>
+  <tbody>
+    <tr><td>Non aprendido</td><td style="text-align:right">−2</td><td>\(\theta&lt;b\)</td><td>Acerto pouco probable</td></tr>
+    <tr><td>Aprendendo</td><td style="text-align:right">0</td><td>\(\theta=b\)</td><td>Probabilidade intermedia</td></tr>
+    <tr><td>Dominado</td><td style="text-align:right">2</td><td>\(\theta&gt;b\)</td><td>Acerto moi probable</td></tr>
+  </tbody>
+</table>
+
+<p>Por iso, acertar unha pregunta difícil despraza a crenza cara a «dominado» máis que acertar unha fácil.</p>
+
+<h2>5. Chan de azar</h2>
+
+<p>O chan de azar para o dominio do tipo global calcúlase a partir do rendemento esperado por azar en todo o proceso:</p>
+
+<table>
+  <thead><tr><th>Parte</th><th style="text-align:right">Peso</th><th style="text-align:right">Azar aprox.</th></tr></thead>
+  <tbody>
+    <tr><td>Lectura: orde, alcance, repetición</td><td style="text-align:right">30 %</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Tipo de problema</td><td style="text-align:right">25 %</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>Identificación de \(n\) e \(k\)</td><td style="text-align:right">30 %</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">15 %</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[c_{\text{tipo}} = 0{,}30\cdot\tfrac12 + 0{,}25\cdot\tfrac16 + 0{,}30\cdot\tfrac12 + 0{,}15\cdot\tfrac16 = 0{,}15+0{,}042+0{,}15+0{,}025 = \frac{11}{30} \approx 0{,}367\]
+
+<h2>6. Puntuación parcial do exercicio</h2>
+
+<p>Cada exercicio produce unha puntuación parcial \(s\in[0,1]\), obtida ponderando sete sinais:</p>
+
+<table>
+  <thead><tr><th>Sinal</th><th style="text-align:right">Peso</th></tr></thead>
+  <tbody>
+    <tr><td>Orde correcta \((x_{\text{orde}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Alcance correcto \((x_{\text{alcance}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Repetición correcta \((x_{\text{rep}})\)</td><td style="text-align:right">0,10</td></tr>
+    <tr><td>Tipo correcto \((x_{\text{tipo}})\)</td><td style="text-align:right">0,25</td></tr>
+    <tr><td>\(n\) correcta \((x_n)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>\(k\) correcta \((x_k)\)</td><td style="text-align:right">0,15</td></tr>
+    <tr><td>Fórmula correcta \((x_{\text{fórmula}})\)</td><td style="text-align:right">0,15</td></tr>
+  </tbody>
+</table>
+
+\[s = 0{,}10x_{\text{orde}} + 0{,}10x_{\text{alcance}} + 0{,}10x_{\text{rep}} + 0{,}25x_{\text{tipo}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{fórmula}}\]
+
+<p>Cada variable vale 1 se a resposta é correcta e 0 se é incorrecta. Os pesos suman 1, polo tanto \(0\leq s\leq1\).</p>
+
+<h2>7. Verosimilitude suave a partir da puntuación</h2>
+
+<p>O resultado dun exercicio non é simplemente correcto ou incorrecto, senón unha puntuación parcial \(s\). O sistema usa por tanto unha verosimilitude interpolada:</p>
+
+\[L(\theta) = s\cdot P(A\mid \theta,b) + (1-s)\cdot P(F\mid \theta,b)\]
+
+<p>Como \(P(F\mid\theta,b)=1-P(A\mid\theta,b)\), escribindo \(p_\theta=P(A\mid\theta,b)\):</p>
+
+\[L(\theta) = s\,p_\theta + (1-s)(1-p_\theta)\]
+
+<p>Casos especiais:</p>
+
+<ul>
+  <li>Se \(s=1\): \(L(\theta)=P(A\mid\theta,b)\) — acerto completo.</li>
+  <li>Se \(s=0\): \(L(\theta)=P(F\mid\theta,b)\) — fallo completo.</li>
+  <li>Se \(s=0{,}5\): \(L(\theta)=0{,}5\) para calquera \(\theta\) — a actualización bayesiana é practicamente nula.</li>
+</ul>
+
+<h2>8. Actualización bayesiana</h2>
+
+<p>Antes do exercicio, o estado do tipo \(t\) é \(P_t^{\text{antigo}}(\theta_i)\). Para cada hipótese calcúlase a verosimilitude \(L(\theta_i)\), despois o valor non normalizado \(q_i=P_t^{\text{antigo}}(\theta_i)\cdot L(\theta_i)\), e finalmente normalízase:</p>
+
+\[P_t^{\text{novo}}(\theta_i) = \frac{P_t^{\text{antigo}}(\theta_i)\cdot L(\theta_i)}{\sum_j P_t^{\text{antigo}}(\theta_j)\cdot L(\theta_j)}\]
+
+<p>Isto é a regra de Bayes aplicada ás tres hipóteses discretas.</p>
+
+<h2>9. Exemplo completo de actualización</h2>
+
+<p>Exercicio de dificultade media (\(b=0\)) con distribución inicial uniforme \(P^{\text{antigo}}=(1/3,1/3,1/3)\). Probabilidades de acerto IRT aproximadas: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>
+
+<h3>Caso 1: acerto completo (\(s=1\))</h3>
+
+<p>Verosimilitudes: \(L(-2)=0{,}40\), \(L(0)=0{,}68\), \(L(2)=0{,}97\). Posterior:</p>
+
+\[P^{\text{novo}}(-2)\approx0{,}195\quad P^{\text{novo}}(0)\approx0{,}332\quad P^{\text{novo}}(2)\approx0{,}473\]
+
+<p>A hipótese «dominado» gaña peso.</p>
+
+<h3>Caso 2: fallo completo (\(s=0\))</h3>
+
+<p>Verosimilitudes de fallo: \(L(-2)=0{,}60\), \(L(0)=0{,}32\), \(L(2)=0{,}03\). Posterior:</p>
+
+\[P^{\text{novo}}(-2)\approx0{,}632\quad P^{\text{novo}}(0)\approx0{,}337\quad P^{\text{novo}}(2)\approx0{,}032\]
+
+<p>A hipótese «non aprendido» gaña peso.</p>
+
+<h3>Caso 3: resultado parcial (\(s=0{,}75\))</h3>
+
+\[L(-2)=0{,}75(0{,}40)+0{,}25(0{,}60)=0{,}45\]
+\[L(0)=0{,}75(0{,}68)+0{,}25(0{,}32)=0{,}59\]
+\[L(2)=0{,}75(0{,}97)+0{,}25(0{,}03)=0{,}735\]
+
+<p>O posterior inclínase cara a «dominado», pero menos que con \(s=1\).</p>
+
+<h2>10. Estimación visible de éxito</h2>
+
+<p>A porcentaxe mostrada ao alumno é a probabilidade esperada de acertar ben un exercicio medio:</p>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)\cdot P(A\mid \theta_i,b=0)\]
+
+<p>Exemplo con \(P_t(\theta)=(0{,}20,\ 0{,}30,\ 0{,}50)\):</p>
+
+\[\widehat{P}_t(A) = 0{,}20(0{,}40)+0{,}30(0{,}68)+0{,}50(0{,}97) = 0{,}08+0{,}204+0{,}485 = 0{,}769 \approx 77\%\]
+
+<h2>11. Entropía de Shannon</h2>
+
+<p>A incerteza dunha distribución mídese coa entropía de Shannon:</p>
+
+\[H(P) = -\sum_i p_i\log_2(p_i)\]
+
+<p>Para unha distribución uniforme \((1/3,1/3,1/3)\), a entropía é máxima: \(H=\log_2(3)\). O sistema usa a entropía normalizada:</p>
+
+\[H_{\text{norm}}(P) = \frac{H(P)}{\log_2(3)} \in [0,1]\]
+
+<p>Se \(H_{\text{norm}}=1\), a incerteza é máxima. Se \(H_{\text{norm}}\approx0\), o sistema ten moita confianza.</p>
+
+<h2>12. Ganancia de información esperada</h2>
+
+<p>Para elixir un exercicio, o sistema calcula canta incerteza espera reducir:</p>
+
+\[IG = H(P) - \bigl[P(A)\,H(P_{\text{post},A}) + P(F)\,H(P_{\text{post},F})\bigr]\]
+
+<p>onde:</p>
+
+\[P(A) = \sum_i P(\theta_i)P(A\mid\theta_i,b)\qquad P(F)=1-P(A)\]
+
+\[P_{\text{post},A}(\theta_i) = \frac{P(\theta_i)P(A\mid\theta_i,b)}{P(A)}\qquad P_{\text{post},F}(\theta_i) = \frac{P(\theta_i)P(F\mid\theta_i,b)}{P(F)}\]
+
+<h2>13. Intuición da ganancia de información</h2>
+
+<p>Un exercicio moi fácil tende a ter unha ganancia de información baixa: se o alumno o acierta, aprendemos pouco porque o acerto era esperable. Un exercicio moi difícil tamén pode ter unha ganancia baixa: se o alumno falla, aprendemos pouco porque o fallo era esperable. Os exercicios máis informativos son os de dificultade próxima ao nivel do alumno, onde ambos os resultados son posibles.</p>
+
+<h2>14. Axuste de dificultade</h2>
+
+<p>Na fase de reforzo, o sistema tamén valora se a dificultade do exercicio se axusta ao nivel estimado do alumno:</p>
+
+\[Axuste(b,\bar{\theta}) = e^{-0{,}5(b-\bar{\theta})^2}\]
+
+<p>Se \(b=\bar{\theta}\), o axuste é máximo (\(Axuste=1\)). A medida que \(b\) se afasta de \(\bar{\theta}\), o axuste decrece.</p>
+
+<h2>15. Puntuación dun exercicio candidato</h2>
+
+<p>Durante a fase diagnóstica, o sistema prioriza a ganancia de información:</p>
+
+\[Puntuación_{\text{diagnóstico}}(p)=IG(p)\]
+
+<p>Durante a fase de reforzo, combina ganancia de información e axuste de dificultade:</p>
+
+\[Puntuación_{\text{reforzo}}(p) = 0{,}65\cdot IG_{\text{norm}}(p) + 0{,}35\cdot Axuste(p)\]
+
+<h2>16. Selección do tipo de problema</h2>
+
+<h3>Fase diagnóstica</h3>
+
+\[D_t = pendentes_t + H_{\text{norm}}(P_t)\]
+
+<p>onde \(pendentes_t = \max(0, 2-n_t)\) é o número de intentos que aínda faltan para chegar ao mínimo de dous.</p>
+
+<h3>Fase de reforzo</h3>
+
+\[D_t = 1-\widehat{P}_t(A)\]
+
+<p>O sistema elixe entre os tipos con maior debilidade, introducindo algo de aleatoriedade entre candidatos próximos.</p>
+
+<h2>17. Diagnóstico por habilidades transversais</h2>
+
+<p>Ademais das distribucións por tipo, o sistema mantén distribucións bayesianas para seis habilidades transversais, con chan de azar propio para cada unha:</p>
+
+<table>
+  <thead><tr><th>Habilidade</th><th style="text-align:right">Chan de azar</th></tr></thead>
+  <tbody>
+    <tr><td>Orde</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Alcance</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Repetición</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Tipo</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>\(n,k\)</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+<h2>18. Por que as porcentaxes de habilidades non son directamente comparables</h2>
+
+<p>O chan de azar para «orde» é \(1/2\) e para «tipo» é \(1/6\). Isto significa que o mesmo nivel \(\theta\) produce porcentaxes visibles distintas segundo a habilidade. Un 75 % en orde non ten exactamente o mesmo significado que un 75 % en tipo. O nivel latente \(\theta\) é a referencia común.</p>
+
+<h2>19. Gardado do diagnóstico inicial</h2>
+
+<p>Cando todos os tipos completaron polo menos dous exercicios, o sistema garda unha copia do estado:</p>
+
+\[Foto = \{P_t(\theta)\}_{t\in T}\]
+
+<p>Isto permite comparar o nivel ao rematar o diagnóstico co nivel actual despois da fase de reforzo:</p>
+
+\[\Delta_t = \widehat{P}_t^{\text{actual}}(A) - \widehat{P}_t^{\text{diagnóstico}}(A)\]
+
+<h2>20. Resumo formal do ciclo completo</h2>
+
+<p><strong>Paso 1:</strong> estado previo: \(P_t^{\text{antigo}}(\theta)\) para cada tipo; \(P_d^{\text{antigo}}(\theta)\) para cada habilidade.</p>
+
+<p><strong>Paso 2:</strong> selección do tipo. En diagnóstico: \(t^*=\arg\max_t(pendentes_t + H_{\text{norm}}(P_t))\). En reforzo: \(t^*=\arg\max_t(1-\widehat{P}_t(A))\).</p>
+
+<p><strong>Paso 3:</strong> selección do exercicio. En diagnóstico: \(p^*=\arg\max_p IG(p)\). En reforzo: \(p^*=\arg\max_p(0{,}65\,IG_{\text{norm}}(p)+0{,}35\,Axuste(p))\).</p>
+
+<p><strong>Paso 4:</strong> o alumno produce sinais \(x_{\text{orde}}, x_{\text{alcance}}, x_{\text{rep}}, x_{\text{tipo}}, x_n, x_k, x_{\text{fórmula}}\).</p>
+
+<p><strong>Paso 5:</strong> cálculo da puntuación: \(s = 0{,}10x_{\text{orde}} + 0{,}10x_{\text{alcance}} + 0{,}10x_{\text{rep}} + 0{,}25x_{\text{tipo}} + 0{,}15x_n + 0{,}15x_k + 0{,}15x_{\text{fórmula}}\).</p>
+
+<p><strong>Paso 6:</strong> actualización do tipo con \(L(\theta_i)=s\,P(A\mid\theta_i,b)+(1-s)\,P(F\mid\theta_i,b)\).</p>
+
+<p><strong>Paso 7:</strong> actualización das habilidades coa regra de Bayes e o sinal binario de cada habilidade.</p>
+
+<p><strong>Paso 8:</strong> estimación visible: \(\widehat{P}_t(A) = \sum_i P_t(\theta_i)P(A\mid\theta_i,0)\).</p>
+
+<h2>21. Idea matemática central</h2>
+
+\[\boxed{\text{Bayes} + \text{IRT} + \text{Shannon} + \text{puntuación parcial}}\]
+
+<p>Bayes actualiza a crenza: \(P(\theta\mid R)\). IRT estima a probabilidade de acerto dado nivel e dificultade: \(P(A\mid\theta,b)\). Shannon mide a incerteza: \(H(P)\). A ganancia de información decide que pregunta reduce máis esa incerteza: \(IG=H_{\text{antes}}-E[H_{\text{despois}}]\). A puntuación parcial transforma unha resposta complexa nun sinal gradual: \(s\in[0,1]\).</p>
+
+<hr>
+
+<div class="badge badge-impl">Detalles de implementación</div>
+<h2>22. Detalles de implementación</h2>
+
+<h3>22.1 Límites da porcentaxe visible segundo o número de intentos</h3>
+
+\[\text{LOW\_MAX} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=-0{,}3,\,b=0)\bigr) = 61\]
+\[\text{HIGH\_MIN} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=1{,}4,\,b=0)\bigr) = 93\]
+
+\[\widehat{P}_t^{\text{visible}} = \begin{cases} \min\bigl(\widehat{P}_t(A),\ 60\bigr) & \text{se } n_t &lt; 2 \\ \min\bigl(\widehat{P}_t(A),\ 92\bigr) & \text{se } 2 \le n_t &lt; 4 \\ \widehat{P}_t(A) & \text{se } n_t \ge 4 \end{cases}\]
+
+<h3>22.2 Limiares do semáforo</h3>
+
+<table>
+  <thead><tr><th>Condición</th><th>Cor</th></tr></thead>
+  <tbody>
+    <tr><td>\(n_t=0\)</td><td>Gris (sen datos)</td></tr>
+    <tr><td>\(n_t &lt; 2\)</td><td>Vermello</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) e \(\bar{\theta}_t\ge-0{,}3\)</td><td>Amarelo</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) e \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Vermello</td></tr>
+    <tr><td>\(n_t\ge4\) e \(\bar{\theta}_t\ge1{,}4\)</td><td>Verde</td></tr>
+    <tr><td>\(n_t\ge4\) e \(-0{,}3\le\bar{\theta}_t&lt;1{,}4\)</td><td>Amarelo</td></tr>
+    <tr><td>\(n_t\ge4\) e \(\bar{\theta}_t&lt;-0{,}3\)</td><td>Vermello</td></tr>
+  </tbody>
+</table>
+
+<h3>22.3 Aleatoriedade na selección</h3>
+
+<table>
+  <thead><tr><th>Contexto</th><th style="text-align:right">Tolerancia \(\tau\)</th></tr></thead>
+  <tbody>
+    <tr><td>Tipo en fase diagnóstica</td><td style="text-align:right">0,05</td></tr>
+    <tr><td>Tipo en fase de reforzo</td><td style="text-align:right">0,03</td></tr>
+    <tr><td>Exercicio en fase diagnóstica</td><td style="text-align:right">\(\max(0{,}10\cdot Puntuación_{\max},\ \varepsilon)\)</td></tr>
+    <tr><td>Exercicio en fase de reforzo</td><td style="text-align:right">0,04</td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 Xeración de exercicios e asignación de dificultade</h3>
+
+<p>Cando se esgotan os exercicios dispoñibles para un tipo no banco, o sistema xéraos de forma procedimental. A dificultade \(b\in\{-1,0,1\}\) asígnase mediante regras baseadas no tamaño de \(n\) e \(k\). Estas regras son unha heurística de deseño, non unha calibración psicométrica.</p>
+
+<h3>22.5 Diagnóstico de \(n\) e \(k\) como habilidade única</h3>
+
+<p>Na puntuación, \(n\) e \(k\) son dous sinais independentes con peso 0,15 cada un. No diagnóstico por habilidades, agrúpanse na habilidade única \(nk\), correcta só se ambos son correctos:</p>
+
+\[r_{nk} = x_n\cdot x_k\]
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Ver tamén: <a href="funcionamiento-ga.html" style="color:var(--accent)">Funcionamento bayesiano do sistema adaptativo de práctica</a>
+</p>
+
+</div>
+</body>
+</html>

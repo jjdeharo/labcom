@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mathematical appendix — Combinatorics Lab</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+  --purple:#6b3d9e;--purple-light:#f0e8f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+  --purple:#a07ad4;--purple-light:#1a0f28;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+.badge-impl{background:var(--purple-light);color:var(--purple)}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Combinatorics Lab</a>
+  <span class="logo">How the adaptive system works</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Mathematical specification</div>
+<h1>Mathematical appendix: Bayesian mechanism, IRT and Shannon entropy</h1>
+
+<p>This appendix describes in more detail the mathematical mechanism of the adaptive system: how it represents the student's level, how it updates its beliefs with Bayes, how it uses an IRT-type function to relate level and difficulty, how it measures uncertainty with Shannon entropy and how it chooses the next question.</p>
+
+<h2>1. Representing level as a probability distribution</h2>
+
+<p>For each problem type, the system does not store a single level value, but a probability distribution over three hypotheses:</p>
+
+\[\Theta=\{-2,0,2\}\]
+
+<p>where \(\theta=-2\) represents "not learned", \(\theta=0\) represents "learning" and \(\theta=2\) represents "mastered".</p>
+
+<p>For each type \(t\), the student's state is:</p>
+
+\[P_t(\theta)=\bigl(P_t(-2),\ P_t(0),\ P_t(2)\bigr)\]
+
+<p>At the start, with no prior information:</p>
+
+\[P_t(-2)=P_t(0)=P_t(2)=\frac13\]
+
+<p>This is done independently for each problem type. If the types are:</p>
+
+\[T=\{\text{perm},\ \text{permRep},\ \text{var},\ \text{varRep},\ \text{comb},\ \text{combRep}\}\]
+
+<p>the system maintains six separate distributions. The student does not have "a single global level": they have an independent estimate for each problem type.</p>
+
+<h2>2. Expected level</h2>
+
+<p>From the distribution for each type, the system can calculate a mean level value:</p>
+
+\[E_t[\theta] = \sum_{\theta_i \in \{-2,0,2\}} P_t(\theta_i)\cdot \theta_i = P_t(-2)(-2)+P_t(0)(0)+P_t(2)(2)\]
+
+<p>Example: if \(P_t(\theta)=(0.20,\ 0.30,\ 0.50)\), then:</p>
+
+\[E_t[\theta] = 0.20(-2)+0.30(0)+0.50(2) = -0.40+0+1 = 0.60\]
+
+<p>This value summarises the distribution, but does not completely replace it. The richer information remains in the full distribution.</p>
+
+<h2>3. Probability of a correct answer using an IRT-type function</h2>
+
+<p>To update the model, the system needs to estimate the probability that a student with a certain level \(\theta\) would answer an exercise of difficulty \(b\) correctly. It uses a logistic function with a guessing floor:</p>
+
+\[P(A\mid \theta,b) = c+\frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>where \(A\) means correct answer, \(a\) is the discrimination parameter (\(a=1.5\)) and \(c\) is the guessing floor.</p>
+
+<p>Exercise difficulties take values \(b=-1\) (easy), \(b=0\) (medium) or \(b=1\) (hard).</p>
+
+<h2>4. Interpretation of the IRT function</h2>
+
+<p>The decisive quantity is \(\theta-b\). If \(\theta&gt;b\), the hypothetical level is above the difficulty and the probability of a correct answer is high. If \(\theta=b\), the basic logistic equals \(1/2\), so \(P(A\mid\theta=b)=c+\frac{1-c}{2}\). If \(\theta&lt;b\), the probability falls, but not below \(c\).</p>
+
+<table>
+  <thead><tr><th>Hypothesis</th><th style="text-align:right">\(\theta\)</th><th>Relation to \(b=0\)</th><th>Interpretation</th></tr></thead>
+  <tbody>
+    <tr><td>Not learned</td><td style="text-align:right">−2</td><td>\(\theta&lt;b\)</td><td>Correct answer unlikely</td></tr>
+    <tr><td>Learning</td><td style="text-align:right">0</td><td>\(\theta=b\)</td><td>Intermediate probability</td></tr>
+    <tr><td>Mastered</td><td style="text-align:right">2</td><td>\(\theta&gt;b\)</td><td>Correct answer very likely</td></tr>
+  </tbody>
+</table>
+
+<p>That is why a correct answer on a hard question shifts the belief towards "mastered" more than a correct answer on an easy one.</p>
+
+<h2>5. Guessing floor</h2>
+
+<p>The guessing floor for the global type domain is calculated from the expected chance performance across the whole process:</p>
+
+<table>
+  <thead><tr><th>Part</th><th style="text-align:right">Weight</th><th style="text-align:right">Approx. chance</th></tr></thead>
+  <tbody>
+    <tr><td>Reading the problem: order, scope, repetition</td><td style="text-align:right">30%</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Problem type</td><td style="text-align:right">25%</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>Identification of \(n\) and \(k\)</td><td style="text-align:right">30%</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">15%</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[c_{\text{type}} = 0.30\cdot\tfrac12 + 0.25\cdot\tfrac16 + 0.30\cdot\tfrac12 + 0.15\cdot\tfrac16 = 0.15+0.042+0.15+0.025 = \frac{11}{30} \approx 0.367\]
+
+<h2>6. Partial exercise score</h2>
+
+<p>Each exercise produces a partial score \(s\in[0,1]\), obtained by weighting seven signals:</p>
+
+<table>
+  <thead><tr><th>Signal</th><th style="text-align:right">Weight</th></tr></thead>
+  <tbody>
+    <tr><td>Correct order \((x_{\text{order}})\)</td><td style="text-align:right">0.10</td></tr>
+    <tr><td>Correct scope \((x_{\text{scope}})\)</td><td style="text-align:right">0.10</td></tr>
+    <tr><td>Correct repetition \((x_{\text{rep}})\)</td><td style="text-align:right">0.10</td></tr>
+    <tr><td>Correct type \((x_{\text{type}})\)</td><td style="text-align:right">0.25</td></tr>
+    <tr><td>Correct \(n\) \((x_n)\)</td><td style="text-align:right">0.15</td></tr>
+    <tr><td>Correct \(k\) \((x_k)\)</td><td style="text-align:right">0.15</td></tr>
+    <tr><td>Correct formula \((x_{\text{formula}})\)</td><td style="text-align:right">0.15</td></tr>
+  </tbody>
+</table>
+
+\[s = 0.10x_{\text{order}} + 0.10x_{\text{scope}} + 0.10x_{\text{rep}} + 0.25x_{\text{type}} + 0.15x_n + 0.15x_k + 0.15x_{\text{formula}}\]
+
+<p>Each variable equals 1 if the answer is correct and 0 if incorrect. The weights sum to 1, so \(0\leq s\leq1\).</p>
+
+<h2>7. Soft likelihood from the score</h2>
+
+<p>The exercise result is not just correct or incorrect, but a partial score \(s\). The system therefore uses an interpolated likelihood:</p>
+
+\[L(\theta) = s\cdot P(A\mid \theta,b) + (1-s)\cdot P(F\mid \theta,b)\]
+
+<p>Since \(P(F\mid\theta,b)=1-P(A\mid\theta,b)\), writing \(p_\theta=P(A\mid\theta,b)\):</p>
+
+\[L(\theta) = s\,p_\theta + (1-s)(1-p_\theta)\]
+
+<p>Special cases:</p>
+
+<ul>
+  <li>If \(s=1\): \(L(\theta)=P(A\mid\theta,b)\) — complete correct answer.</li>
+  <li>If \(s=0\): \(L(\theta)=P(F\mid\theta,b)\) — complete failure.</li>
+  <li>If \(s=0.5\): \(L(\theta)=0.5\) for any \(\theta\) — the Bayesian update is practically zero.</li>
+</ul>
+
+<h2>8. Bayesian update</h2>
+
+<p>Before the exercise, the state of type \(t\) is \(P_t^{\text{old}}(\theta_i)\). For each hypothesis the likelihood \(L(\theta_i)\) is calculated, then the unnormalised value \(q_i=P_t^{\text{old}}(\theta_i)\cdot L(\theta_i)\), and finally it is normalised:</p>
+
+\[P_t^{\text{new}}(\theta_i) = \frac{P_t^{\text{old}}(\theta_i)\cdot L(\theta_i)}{\sum_j P_t^{\text{old}}(\theta_j)\cdot L(\theta_j)}\]
+
+<p>This is Bayes' rule applied to the three discrete hypotheses.</p>
+
+<h2>9. Complete update example</h2>
+
+<p>Medium-difficulty exercise (\(b=0\)) with uniform initial distribution \(P^{\text{old}}=(1/3,1/3,1/3)\). Approximate IRT correct-answer probabilities: \(P(A\mid -2,0)\approx0.40\), \(P(A\mid 0,0)\approx0.68\), \(P(A\mid 2,0)\approx0.97\).</p>
+
+<h3>Case 1: complete correct answer (\(s=1\))</h3>
+
+<p>Likelihoods: \(L(-2)=0.40\), \(L(0)=0.68\), \(L(2)=0.97\). Posterior:</p>
+
+\[P^{\text{new}}(-2)\approx0.195\quad P^{\text{new}}(0)\approx0.332\quad P^{\text{new}}(2)\approx0.473\]
+
+<p>The "mastered" hypothesis gains weight.</p>
+
+<h3>Case 2: complete failure (\(s=0\))</h3>
+
+<p>Failure likelihoods: \(L(-2)=0.60\), \(L(0)=0.32\), \(L(2)=0.03\). Posterior:</p>
+
+\[P^{\text{new}}(-2)\approx0.632\quad P^{\text{new}}(0)\approx0.337\quad P^{\text{new}}(2)\approx0.032\]
+
+<p>The "not learned" hypothesis gains weight.</p>
+
+<h3>Case 3: partial result (\(s=0.75\))</h3>
+
+\[L(-2)=0.75(0.40)+0.25(0.60)=0.45\]
+\[L(0)=0.75(0.68)+0.25(0.32)=0.59\]
+\[L(2)=0.75(0.97)+0.25(0.03)=0.735\]
+
+<p>The posterior shifts towards "mastered", but less than with \(s=1\).</p>
+
+<h2>10. Visible success estimate</h2>
+
+<p>The percentage shown to the student is the expected probability of correctly solving a medium exercise:</p>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)\cdot P(A\mid \theta_i,b=0)\]
+
+<p>Example with \(P_t(\theta)=(0.20,\ 0.30,\ 0.50)\):</p>
+
+\[\widehat{P}_t(A) = 0.20(0.40)+0.30(0.68)+0.50(0.97) = 0.08+0.204+0.485 = 0.769 \approx 77\%\]
+
+<h2>11. Shannon entropy</h2>
+
+<p>The uncertainty of a distribution is measured with Shannon entropy:</p>
+
+\[H(P) = -\sum_i p_i\log_2(p_i)\]
+
+<p>For a uniform distribution \((1/3,1/3,1/3)\), entropy is maximum: \(H=\log_2(3)\). The system uses normalised entropy:</p>
+
+\[H_{\text{norm}}(P) = \frac{H(P)}{\log_2(3)} \in [0,1]\]
+
+<p>If \(H_{\text{norm}}=1\), uncertainty is maximum. If \(H_{\text{norm}}\approx0\), the system is very confident.</p>
+
+<h2>12. Expected information gain</h2>
+
+<p>To choose an exercise, the system calculates how much uncertainty it expects to reduce:</p>
+
+\[IG = H(P) - \bigl[P(A)\,H(P_{\text{post},A}) + P(F)\,H(P_{\text{post},F})\bigr]\]
+
+<p>where:</p>
+
+\[P(A) = \sum_i P(\theta_i)P(A\mid\theta_i,b)\qquad P(F)=1-P(A)\]
+
+\[P_{\text{post},A}(\theta_i) = \frac{P(\theta_i)P(A\mid\theta_i,b)}{P(A)}\qquad P_{\text{post},F}(\theta_i) = \frac{P(\theta_i)P(F\mid\theta_i,b)}{P(F)}\]
+
+<p>An exercise has high information gain if, when answered, it greatly reduces the uncertainty about the student's distribution.</p>
+
+<h2>13. Intuition behind information gain</h2>
+
+<p>A very easy exercise tends to have low information gain: if the student gets it right, we learn little because the correct answer was expected. A very hard exercise can also have low gain: if the student fails, we learn little because the failure was expected.</p>
+
+<p>The most informative exercises tend to be those whose difficulty is close to the student's estimated level, because there both correct and incorrect answers are possible and both scenarios help differentiate hypotheses.</p>
+
+<h2>14. Difficulty fit</h2>
+
+<p>In the reinforcement phase, the system also values whether the exercise difficulty matches the student's estimated level. It first calculates the expected level \(\bar{\theta}=E[\theta]\), then the fit:</p>
+
+\[Fit(b,\bar{\theta}) = e^{-0.5(b-\bar{\theta})^2}\]
+
+<p>If \(b=\bar{\theta}\), the fit is maximum (\(Fit=1\)). As \(b\) moves away from \(\bar{\theta}\), the fit decreases:</p>
+
+<table>
+  <thead><tr><th>\(|b-\bar{\theta}|\)</th><th>\(Fit\)</th></tr></thead>
+  <tbody>
+    <tr><td>0</td><td>1.000</td></tr>
+    <tr><td>1</td><td>\(e^{-0.5}\approx0.607\)</td></tr>
+    <tr><td>2</td><td>\(e^{-2}\approx0.135\)</td></tr>
+  </tbody>
+</table>
+
+<h2>15. Score of a candidate exercise</h2>
+
+<p>During the diagnostic phase, the system prioritises information gain:</p>
+
+\[Score_{\text{diagnostic}}(p)=IG(p)\]
+
+<p>During the reinforcement phase, it combines information gain and difficulty fit:</p>
+
+\[Score_{\text{reinforcement}}(p) = 0.65\cdot IG_{\text{norm}}(p) + 0.35\cdot Fit(p)\]
+
+<p>where \(IG_{\text{norm}}(p)=IG(p)/IG_{\max}\) normalises the gain relative to the best available candidate.</p>
+
+<h2>16. Problem type selection</h2>
+
+<h3>Diagnostic phase</h3>
+
+<p>The system prioritises types with the highest diagnostic value:</p>
+
+\[D_t = missing_t + H_{\text{norm}}(P_t)\]
+
+<p>where \(missing_t = \max(0, 2-n_t)\) is the number of attempts still needed to reach the minimum of two. This combines lack of sample and uncertainty about the level.</p>
+
+<h3>Reinforcement phase</h3>
+
+<p>When all types have enough attempts, the system prioritises the weakest types:</p>
+
+\[W_t = 1-\widehat{P}_t(A)\]
+
+<p>The system chooses among types with the highest weakness, introducing some randomness among close candidates to avoid excessive repetition.</p>
+
+<h2>17. Transversal skills diagnosis</h2>
+
+<p>In addition to the distributions by type, the system maintains Bayesian distributions for six cross-cutting skills:</p>
+
+\[D = \{\text{order},\ \text{scope},\ \text{repetition},\ \text{type},\ \text{nk},\ \text{formula}\}\]
+
+<p>For each skill \(d\), there is a distribution \(P_d(\theta)\) updated with a binary signal \(r_d\in\{0,1\}\). Each skill has its own guessing floor:</p>
+
+<table>
+  <thead><tr><th>Skill</th><th style="text-align:right">Guessing floor</th></tr></thead>
+  <tbody>
+    <tr><td>Order</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Scope</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Repetition</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Type</td><td style="text-align:right">\(1/6\)</td></tr>
+    <tr><td>\(n,k\)</td><td style="text-align:right">\(1/2\)</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">\(1/6\)</td></tr>
+  </tbody>
+</table>
+
+\[P(A_d\mid\theta,b) = c_d + \frac{1-c_d}{1+e^{-a(\theta-b)}}\]
+
+<h2>18. Why skill percentages are not directly comparable</h2>
+
+<p>The guessing floor for "order" is \(1/2\) and for "type" is \(1/6\). This means that the same level \(\theta\) produces different visible percentages depending on the skill: for a yes/no question the floor is already 50%, while choosing among six types has a floor of ~16.7%.</p>
+
+<p>Therefore a 75% in order does not have exactly the same meaning as a 75% in type. The percentage depends on the guessing floor. The latent level \(\theta\) is the common reference.</p>
+
+<h2>19. Saving the initial diagnosis</h2>
+
+<p>When all types have at least two exercises completed, the system saves a copy of the state:</p>
+
+\[Snapshot = \{P_t(\theta)\}_{t\in T}\]
+
+<p>This snapshot allows comparing the level at the end of diagnosis with the current level after the reinforcement phase:</p>
+
+\[\Delta_t = \widehat{P}_t^{\text{current}}(A) - \widehat{P}_t^{\text{diagnosis}}(A)\]
+
+<p>If \(\Delta_t&gt;0\) there is estimated improvement; if \(\Delta_t&lt;0\) there is decline; if \(\Delta_t\approx0\) the level is stable.</p>
+
+<h2>20. Formal summary of the complete cycle</h2>
+
+<h3>Step 1: prior state</h3>
+
+<p>For each type: \(P_t^{\text{old}}(\theta)\). For each skill: \(P_d^{\text{old}}(\theta)\).</p>
+
+<h3>Step 2: type selection</h3>
+
+<p>In diagnostic: \(t^*=\arg\max_t\bigl(missing_t + H_{\text{norm}}(P_t)\bigr)\). In reinforcement: \(t^*=\arg\max_t\bigl(1-\widehat{P}_t(A)\bigr)\), with random selection among candidates close to the maximum.</p>
+
+<h3>Step 3: exercise selection</h3>
+
+<p>In diagnostic: \(p^*=\arg\max_p IG(p)\). In reinforcement: \(p^*=\arg\max_p\bigl(0.65\,IG_{\text{norm}}(p)+0.35\,Fit(p)\bigr)\).</p>
+
+<h3>Step 4: student's response</h3>
+
+<p>The student produces signals: \(x_{\text{order}}, x_{\text{scope}}, x_{\text{rep}}, x_{\text{type}}, x_n, x_k, x_{\text{formula}}\).</p>
+
+<h3>Step 5: score calculation</h3>
+
+\[s = 0.10x_{\text{order}} + 0.10x_{\text{scope}} + 0.10x_{\text{rep}} + 0.25x_{\text{type}} + 0.15x_n + 0.15x_k + 0.15x_{\text{formula}}\]
+
+<h3>Step 6: type update</h3>
+
+\[P_{t^*}^{\text{new}}(\theta_i) = \frac{P_{t^*}^{\text{old}}(\theta_i)\,L(\theta_i)}{\sum_j P_{t^*}^{\text{old}}(\theta_j)\,L(\theta_j)} \qquad L(\theta_i)=s\,P(A\mid\theta_i,b)+(1-s)\,P(F\mid\theta_i,b)\]
+
+<h3>Step 7: skills update</h3>
+
+<p>For each skill \(d\): same Bayesian rule with \(L_d\) using the binary result for that skill and its guessing floor \(c_d\).</p>
+
+<h3>Step 8: visible estimate</h3>
+
+\[\widehat{P}_t(A) = \sum_i P_t(\theta_i)P(A\mid\theta_i,0) \qquad E_t[\theta] = \sum_i P_t(\theta_i)\,\theta_i\]
+
+<p>These values generate bars, traffic light and report.</p>
+
+<h2>21. Central mathematical idea</h2>
+
+\[\boxed{\text{Bayes} + \text{IRT} + \text{Shannon} + \text{partial score}}\]
+
+<p>Bayes updates the belief: \(P(\theta\mid R)\). IRT estimates the probability of a correct answer given level and difficulty: \(P(A\mid\theta,b)\). Shannon measures uncertainty: \(H(P)\). Information gain decides which question reduces that uncertainty the most: \(IG=H_{\text{before}}-E[H_{\text{after}}]\). The partial score transforms a complex response into a gradual signal: \(s\in[0,1]\).</p>
+
+<p>The result is a system in which each response modifies the student's internal state, and that new state modifies the next question.</p>
+
+<hr>
+
+<div class="badge badge-impl">Implementation details</div>
+<h2>22. Implementation details</h2>
+
+<p>The preceding sections describe the mathematical mechanism. This section records the concrete implementation decisions that affect what the student sees, but are not part of the Bayesian core.</p>
+
+<h3>22.1 Caps on the visible percentage based on number of attempts</h3>
+
+<p>The raw estimate \(\widehat{P}_t(A)\) is not always shown directly. To avoid overoptimistic conclusions with little evidence, the system caps the visible percentage based on the number of attempts \(n_t\). The thresholds are derived from the IRT function at medium difficulty:</p>
+
+\[\text{LOW\_MAX} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=-0.3,\,b=0)\bigr) = 61\]
+\[\text{HIGH\_MIN} = \operatorname{round}\bigl(100\cdot P(A\mid\theta=1.4,\,b=0)\bigr) = 93\]
+
+<p>The displayed percentage is:</p>
+
+\[\widehat{P}_t^{\text{visible}} = \begin{cases} \min\bigl(\widehat{P}_t(A),\ 60\bigr) & \text{if } n_t &lt; 2 \\ \min\bigl(\widehat{P}_t(A),\ 92\bigr) & \text{if } 2 \le n_t &lt; 4 \\ \widehat{P}_t(A) & \text{if } n_t \ge 4 \end{cases}\]
+
+<h3>22.2 Traffic-light thresholds</h3>
+
+<p>The traffic-light colour depends on the expected level \(\bar{\theta}_t\) and the number of attempts \(n_t\):</p>
+
+<table>
+  <thead><tr><th>Condition</th><th>Colour</th></tr></thead>
+  <tbody>
+    <tr><td>\(n_t=0\)</td><td>Grey (no data)</td></tr>
+    <tr><td>\(n_t &lt; 2\)</td><td>Red</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) and \(\bar{\theta}_t\ge-0.3\)</td><td>Yellow</td></tr>
+    <tr><td>\(2\le n_t &lt; 4\) and \(\bar{\theta}_t&lt;-0.3\)</td><td>Red</td></tr>
+    <tr><td>\(n_t\ge4\) and \(\bar{\theta}_t\ge1.4\)</td><td>Green</td></tr>
+    <tr><td>\(n_t\ge4\) and \(-0.3\le\bar{\theta}_t&lt;1.4\)</td><td>Yellow</td></tr>
+    <tr><td>\(n_t\ge4\) and \(\bar{\theta}_t&lt;-0.3\)</td><td>Red</td></tr>
+  </tbody>
+</table>
+
+<p>The cut-offs \(\bar{\theta}=-0.3\) and \(\bar{\theta}=1.4\) are the same ones that generate the LOW_MAX and HIGH_MIN bands in section 22.1, so colour and percentage are consistent with each other.</p>
+
+<h3>22.3 Randomness in selection</h3>
+
+<p>A candidate \(p\) enters the eligible set if \(Score(p)\ge Score_{\max}-\tau\), with different tolerances per context:</p>
+
+<table>
+  <thead><tr><th>Context</th><th style="text-align:right">Tolerance \(\tau\)</th></tr></thead>
+  <tbody>
+    <tr><td>Type in diagnostic phase</td><td style="text-align:right">0.05</td></tr>
+    <tr><td>Type in reinforcement phase</td><td style="text-align:right">0.03</td></tr>
+    <tr><td>Exercise in diagnostic phase</td><td style="text-align:right">\(\max(0.10\cdot Score_{\max},\ \varepsilon)\)</td></tr>
+    <tr><td>Exercise in reinforcement phase</td><td style="text-align:right">0.04</td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 Exercise generation and difficulty assignment</h3>
+
+<p>When the available exercises for a type in the bank are exhausted, the system generates new exercises procedurally. The difficulty \(b\in\{-1,0,1\}\) is assigned using rules based on the size of \(n\) and \(k\) (or the numerical result, depending on the type). These rules are a design heuristic, not a psychometric calibration.</p>
+
+<h3>22.5 Diagnosis of \(n\) and \(k\) as a single skill</h3>
+
+<p>In the score calculation, \(n\) and \(k\) are two independent signals with weight 0.15 each. In the cross-cutting skills diagnosis, however, both are grouped into the single skill \(nk\), which is considered correct only if \(n\) <strong>and</strong> \(k\) are both correct:</p>
+
+\[r_{nk} = x_n\cdot x_k\]
+
+<p>The score can grant partial credit for getting only one right, but the cross-cutting skill \(nk\) requires both to be correct.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  See also: <a href="funcionamiento-en.html" style="color:var(--accent)">Bayesian functioning of the adaptive practice system</a>
+</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Funcionamento bayesiano — Laboratorio de Combinatoria</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Laboratorio de Combinatoria</a>
+  <span class="logo">Fundamentos do sistema adaptativo</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Explicación conceptual</div>
+<h1>Funcionamento bayesiano do sistema adaptativo de práctica</h1>
+
+<p>Este programa non se limita a contar acertos e erros. O seu funcionamento baséase nun modelo adaptativo formativo que estima, de xeito probabilístico, que tipos de problemas domina o alumno, cales está aprendendo e cales necesita reforzar. Para iso combina tres ideas principais: inferencia bayesiana, unha función tipo IRT para relacionar nivel e dificultade, e entropía de Shannon para elixir preguntas informativas.</p>
+
+<p>Non pretende emitir unha cualificación psicométrica exacta, senón orientar a práctica: decidir que convén preguntar, interpretar os erros e ofrecer un diagnóstico útil.</p>
+
+<h2>1. O programa non garda unha nota: garda unha crenza bayesiana</h2>
+
+<p>O primeiro que hai que entender é que o sistema non calcula o nivel do alumno como un simple porcentaxe de acertos. Non funciona dicindo: «acertou 7 de 10, polo tanto sabe un 70 %». Fai algo diferente: mantén unha crenza probabilística sobre o estado do alumno.</p>
+
+<p>Para cada tipo de problema, o programa considera tres hipóteses posibles:</p>
+
+<table>
+  <thead><tr><th>Hipótese</th><th style="text-align:right">Valor θ</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td>Non aprendido</td><td style="text-align:right">−2</td><td>O alumno aínda non domina ese tipo</td></tr>
+    <tr><td>Aprendendo</td><td style="text-align:right">0</td><td>O alumno está en proceso</td></tr>
+    <tr><td>Dominado</td><td style="text-align:right">+2</td><td>O alumno resólveo con soltura</td></tr>
+  </tbody>
+</table>
+
+<p>Ao principio, como o programa non sabe nada do alumno, reparte a probabilidade por igual:</p>
+
+\[P(\text{non aprendido})=\frac13\]
+\[P(\text{aprendendo})=\frac13\]
+\[P(\text{dominado})=\frac13\]
+
+<p>É dicir, para cada tipo comeza así:</p>
+
+\[[1/3,\ 1/3,\ 1/3]\]
+
+<p>Iso non significa que o alumno teña unha nota do 33 %. Significa que, coa información inicial dispoñible, as tres hipóteses son igual de posibles.</p>
+
+<p>Ademais, esta crenza gárdase por separado para cada tipo de problema. O alumno pode estar moi avanzado en variacións con repetición e, ao mesmo tempo, ter dificultades en combinacións. O programa non describe ao alumno «en bloque», senón competencia por competencia.</p>
+
+<p>Despois, esa distribución resúmese mediante un nivel medio:</p>
+
+\[\theta_{\text{estimada}} = P(\text{non aprendido})\cdot(-2) + P(\text{aprendendo})\cdot0 + P(\text{dominado})\cdot2\]
+
+<p>Por exemplo, se despois de varios exercicios a crenza sobre combinacións fose:</p>
+
+\[[0{,}20,\ 0{,}30,\ 0{,}50]\]
+
+<p>o nivel estimado sería:</p>
+
+\[\theta = 0{,}20\cdot(-2)+0{,}30\cdot0+0{,}50\cdot2=0{,}6\]
+
+<p>Ese 0,6 non é unha nota. É unha posición aproximada nunha escala interna de dominio.</p>
+
+<p>A idea fundamental é que o «nivel» non é un contador de acertos, senón unha distribución de probabilidade sobre tres estados: non aprendido, aprendendo e dominado.</p>
+
+<h2>2. Bayes entra cando o alumno responde</h2>
+
+<p>Cada vez que o alumno resolve un exercicio, o programa actualiza a súa crenza mediante a regra de Bayes.</p>
+
+<p>A estrutura é esta:</p>
+
+\[P(H_i \mid R) = \frac{P(H_i)\cdot P(R \mid H_i)}{\sum_j P(H_j)\cdot P(R \mid H_j)}\]
+
+<p>Onde:</p>
+
+<ul>
+  <li>\(H_i\) é unha hipótese: non aprendido, aprendendo ou dominado.</li>
+  <li>\(R\) é o resultado observado.</li>
+  <li>\(P(H_i)\) é a crenza antes do exercicio.</li>
+  <li>\(P(R \mid H_i)\) é a probabilidade de obter ese resultado se esa hipótese fose certa.</li>
+</ul>
+
+<p>Dito de forma sinxela, o programa pregúntase:</p>
+
+<blockquote>Se o alumno estivese realmente no nivel «non aprendido», que probabilidade habería de que respondese así?</blockquote>
+<blockquote>Se estivese en «aprendendo», que probabilidade habería?</blockquote>
+<blockquote>Se estivese en «dominado», que probabilidade habería?</blockquote>
+
+<p>Despois compara esas probabilidades e despraza a crenza cara á hipótese que mellor explica a resposta.</p>
+
+<p>Se o alumno acerta ben un exercicio, a hipótese «dominado» gaña peso. Se falla, gaña peso «non aprendido». Se a resposta é intermedia, a actualización é máis suave.</p>
+
+<p>Este punto é esencial: Bayes non converte automaticamente acertos en porcentaxes. O que fai é mover probabilidade entre hipóteses segundo o compatible que foi a resposta do alumno con cada unha delas.</p>
+
+<h2>3. A parte IRT: nivel do alumno fronte a dificultade do exercicio</h2>
+
+<p>Para aplicar Bayes, o programa necesita estimar que probabilidade tería un alumno de certo nivel de acertar un exercicio de certa dificultade. Aí entra a parte tipo IRT.</p>
+
+<p>O programa usa unha función loxística:</p>
+
+\[P(\text{acerto}) = c + \frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>Onde:</p>
+
+<ul>
+  <li>\(\theta\) é o nivel hipotético do alumno.</li>
+  <li>\(b\) é a dificultade do exercicio.</li>
+  <li>\(a\) controla a discriminación da pregunta.</li>
+  <li>\(c\) é o chan de azar.</li>
+</ul>
+
+<p>A idea é simple: se \(\theta &gt; b\), o nivel do alumno está por riba da dificultade do exercicio e o acerto é bastante probable. Se \(\theta &lt; b\), a dificultade supera o nivel estimado e o acerto é menos probable.</p>
+
+<p>Os exercicios teñen unha dificultade aproximada:</p>
+
+<table>
+  <thead><tr><th style="text-align:right">Dificultade</th><th>Interpretación</th></tr></thead>
+  <tbody>
+    <tr><td style="text-align:right">−1</td><td>Fácil</td></tr>
+    <tr><td style="text-align:right">0</td><td>Media</td></tr>
+    <tr><td style="text-align:right">+1</td><td>Difícil</td></tr>
+  </tbody>
+</table>
+
+<p>Así, acertar unha pregunta difícil achega máis información positiva que acertar unha fácil, porque o acerto era menos esperable. Do mesmo modo, fallar unha pregunta fácil é máis significativo que fallar unha difícil.</p>
+
+<p>Se un alumno acerta un exercicio de dificultade media, o programa compara ese acerto coas tres hipóteses \(\theta=-2\), \(\theta=0\) e \(\theta=2\). Se o acerto é moito máis compatible con \(\theta=2\) que con \(\theta=-2\), a probabilidade de «dominado» aumenta.</p>
+
+<blockquote>Dado este nivel hipotético e esta dificultade, que probabilidade había de acertar? — Bayes usa esa resposta para actualizar a crenza.</blockquote>
+
+<h2>4. Antes de aplicar Bayes, o programa calcula unha puntuación parcial</h2>
+
+<p>O programa non avalía un exercicio só como «ben» ou «mal». Divídeo en varias partes, porque resolver un problema de combinatoria implica varios pasos.</p>
+
+<p>O alumno debe: (1) decidir se importa a orde; (2) decidir se se usan todos os elementos ou só algúns; (3) decidir se hai repetición; (4) nomear o tipo de problema; (5) identificar \(n\); (6) identificar \(k\); (7) elixir a fórmula.</p>
+
+<p>Cada parte ten un peso:</p>
+
+<table>
+  <thead><tr><th>Parte avaliada</th><th style="text-align:right">Peso</th></tr></thead>
+  <tbody>
+    <tr><td>Orde</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Alcance: todos ou algúns</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Repetición</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Tipo de problema</td><td style="text-align:right">25 %</td></tr>
+    <tr><td>Identificación de \(n\)</td><td style="text-align:right">15 %</td></tr>
+    <tr><td>Identificación de \(k\)</td><td style="text-align:right">15 %</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">15 %</td></tr>
+  </tbody>
+</table>
+
+\[\text{puntuación} = 0{,}10\cdot\text{orde} + 0{,}10\cdot\text{alcance} + 0{,}10\cdot\text{rep} + 0{,}25\cdot\text{tipo} + 0{,}15\cdot n + 0{,}15\cdot k + 0{,}15\cdot\text{fórmula}\]
+
+<p>Cada parte vale 1 se está ben e 0 se está mal. Por exemplo, se o alumno acerta a orde, a repetición, o tipo, \(n\) e a fórmula, pero falla o alcance e \(k\):</p>
+
+\[0{,}10 + 0{,}10 + 0{,}25 + 0{,}15 + 0{,}15 = 0{,}75\]
+
+<p>Isto é importante porque o sistema non premia unicamente o resultado final. O que conta é o proceso: ler o enunciado, clasificar, identificar \(n\) e \(k\), e elixir a fórmula.</p>
+
+<h2>5. Que fai unha puntuación de 1, 0,75, 0,5, 0,25 ou 0</h2>
+
+<p>A puntuación controla a dirección e a intensidade da actualización bayesiana. Se a puntuación é 1, o exercicio interprétase como acerto completo; se é 0, como fallo completo. Os valores intermedios producen actualizacións máis suaves.</p>
+
+<p>Para conectar a puntuación con Bayes, o programa necesita saber canto reforza o resultado obtido cada hipótese. Esa medida chámase <strong>verosimilitude</strong>, \(L(\theta)\): indica, para cada valor hipotético de θ, canto é compatible o resultado obtido con el. É o termo \(P(R\mid H_i)\) da regra de Bayes, pero expresado a partir da puntuación en lugar de usar simplemente «acerto» ou «fallo».</p>
+
+<p>O programa calcula esta verosimilitude suave do seguinte xeito:</p>
+
+\[L(\theta)=\text{puntuación}\cdot P(A\mid\theta)+(1-\text{puntuación})\cdot P(F\mid\theta)\]
+
+<p>onde \(P(F\mid\theta)=1-P(A\mid\theta)\). Isto permite tratar os exercicios parcialmente correctos de forma gradual.</p>
+
+<p>Se a puntuación é 0,5, a verosimilitude queda practicamente igual para todas as hipóteses: o sistema non ten motivos para cambiar a distribución.</p>
+
+<blockquote>
+  Por riba de 0,5, o resultado empuxa cara a «dominado».<br>
+  Por baixo de 0,5, empuxa cara a «non aprendido».<br>
+  En torno a 0,5, case non informa.
+</blockquote>
+
+<h2>6. Como converte a crenza en porcentaxe e semáforo</h2>
+
+<p>Despois de actualizar Bayes, o programa ten para cada tipo unha distribución. O alumno non ve esa distribución directamente: o programa convértea nun porcentaxe estimado, unha barra e un semáforo.</p>
+
+<p>A probabilidade estimada de éxito nun exercicio de dificultade media é:</p>
+
+\[P(\text{acerto}) = \sum_i P(H_i)\cdot P(\text{acerto}\mid \theta_i,\ b=0)\]
+
+<blockquote>Coa crenza actual, que probabilidade tería este alumno de resolver ben un exercicio medio deste tipo?</blockquote>
+
+<p>O semáforo traduce o nivel en categorías: vermello (dominio baixo), amarelo (en proceso) e verde (dominado). Ademais, o programa evita declarar «dominado» demasiado pronto: necesita un mínimo de intentos antes de poder mostrar un dominio alto. Así o panel visible é unha tradución pedagóxica da crenza bayesiana interna.</p>
+
+<h2>7. Como elixe que tipo de problema preguntar</h2>
+
+<p>O sistema adaptativo funciona en dúas fases: diagnóstico e reforzo.</p>
+
+<h3>Fase diagnóstica</h3>
+
+<p>Ao principio, o programa intenta obter unha mostra mínima de todos os tipos. Como hai seis tipos de problemas e esixe dous exercicios por tipo, o diagnóstico inicial consta de \(6 \times 2 = 12\) exercicios.</p>
+
+<p>A incerteza mídese coa entropía de Shannon:</p>
+
+\[H(p)=-\sum p_i\log_2(p_i)\]
+
+<p>Unha distribución uniforme \([1/3,\ 1/3,\ 1/3]\) ten incerteza máxima; unha distribución concentrada \([0{,}05,\ 0{,}10,\ 0{,}85]\) ten incerteza baixa. Durante o diagnóstico, o sistema prioriza tipos pouco practicados e con máis incerteza.</p>
+
+<h3>Fase de reforzo</h3>
+
+<p>Cando todos os tipos teñen polo menos dous exercicios, termina a fase diagnóstica. Entón o programa cambia de criterio:</p>
+
+<blockquote>En que tipo ten o alumno menor probabilidade estimada de éxito?</blockquote>
+
+<p>A debilidade é \(1-P(\text{éxito})\). Se en combinacións o alumno ten un 45 % de éxito estimado: \(1-0{,}45=0{,}55\). Se en permutacións ten un 85 %: \(1-0{,}85=0{,}15\). Combinacións ten máis prioridade. O programa non elixe sempre o tipo con peor puntuación: selecciona aleatoriamente entre os mellores candidatos para evitar unha práctica ríxida.</p>
+
+<h2>8. Como escolle o exercicio concreto dentro do tipo elixido</h2>
+
+<p>Unha vez elixido o tipo, o sistema calcula para cada exercicio candidato a súa <strong>ganancia de información esperada</strong>:</p>
+
+<blockquote>Se poño este exercicio, canto espero reducir a miña incerteza sobre o nivel do alumno?</blockquote>
+
+\[IG = H(\text{antes}) - \bigl[P(A)\cdot H(\text{despois de acerto}) + P(F)\cdot H(\text{despois de fallo})\bigr]\]
+
+<p>Un bo exercicio é aquel que, saia como saia, axuda a aclarar o nivel do alumno. Por iso non sempre convén as preguntas máis fáciles nin as máis difíciles: as máis informativas son as que están preto do nivel do alumno, onde o resultado aínda é incerto.</p>
+
+<p>Durante o diagnóstico, o programa prioriza case exclusivamente a ganancia de información. Durante o reforzo, combina dous criterios: un 65 % de ganancia de información e un 35 % de axuste de dificultade. O axuste de dificultade mide se a dificultade do exercicio está preto do nivel estimado do alumno.</p>
+
+<h2>9. O diagnóstico por habilidades: saber en que falla</h2>
+
+<p>Ademais do nivel por tipo de problema, o programa mantén un diagnóstico por habilidades transversais:</p>
+
+<table>
+  <thead><tr><th>Habilidade</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td>Orde</td><td>Saber se importa a orde</td></tr>
+    <tr><td>Alcance</td><td>Saber se se usan todos ou só algúns elementos</td></tr>
+    <tr><td>Repetición</td><td>Saber se hai repetición</td></tr>
+    <tr><td>Tipo</td><td>Nomear o tipo de problema</td></tr>
+    <tr><td>\(n,k\)</td><td>Identificar correctamente \(n\) e \(k\)</td></tr>
+    <tr><td>Fórmula</td><td>Elixir a fórmula correcta</td></tr>
+  </tbody>
+</table>
+
+<p>Cada habilidade ten a súa propia crenza bayesiana. Isto permite distinguir entre <em>que tipo necesita practicar</em> (nivel por tipo) e <em>que parte do proceso lle falla</em> (nivel por habilidade).</p>
+
+<p>Por exemplo, dous alumnos poden fallar combinacións por razóns distintas: un pode identificar ben \(n\) e \(k\) pero elixir mal a fórmula; outro pode fallar desde a lectura do enunciado porque non distingue se importa a orde. Ambos teñen dificultades con combinacións, pero non necesitan a mesma axuda.</p>
+
+<p>Este diagnóstico non guía directamente a selección de exercicios, pero é moi útil para interpretar os erros e orientar a intervención docente.</p>
+
+<h2>10. Como se xera o informe</h2>
+
+<p>O informe aparece cando se completa a fase diagnóstica. O programa garda unha «foto» do estado ao rematar os 12 exercicios iniciais e compáraa co nivel actual despois da fase de reforzo:</p>
+
+<table>
+  <thead><tr><th>Tipo</th><th style="text-align:right">Diagnóstico inicial</th><th style="text-align:right">Nivel actual</th></tr></thead>
+  <tbody>
+    <tr><td>Combinacións</td><td style="text-align:right">48 %</td><td style="text-align:right">67 %</td></tr>
+    <tr><td>Variacións</td><td style="text-align:right">72 %</td><td style="text-align:right">78 %</td></tr>
+    <tr><td>Permutacións</td><td style="text-align:right">90 %</td><td style="text-align:right">91 %</td></tr>
+  </tbody>
+</table>
+
+<p>O informe mostra: nivel ao terminar o diagnóstico, nivel actual, progreso por tipo, puntos fortes, tipos que necesitan práctica, recomendación personalizada e diagnóstico por habilidades.</p>
+
+<h2>11. O ciclo completo</h2>
+
+\[\boxed{\text{estado actual} \rightarrow \text{elección adaptativa} \rightarrow \text{resposta parcial} \rightarrow \text{puntuación} \rightarrow \text{Bayes} \rightarrow \text{novo estado} \rightarrow \text{seguinte elección}}\]
+
+<p>O programa é adaptativo: non segue unha lista fixa de exercicios, senón que cada resposta modifica a seguinte decisión. Se o alumno fallou combinacións, combinacións gañará prioridade; se acertou moi ben variacións, variacións perderá urxencia.</p>
+
+<h2>12. Que partes son sólidas e que partes son heurísticas</h2>
+
+<h3>Aspectos sólidos</h3>
+
+<p>O sistema non usa unha nota simple: mantén unha crenza probabilística por tipo de problema, o que permite expresar incerteza. Avalía o proceso, non só o resultado final. Usa a entropía de Shannon para elixir preguntas informativas, non simplemente as máis difíciles. E realiza unha fase diagnóstica antes de reforzar, evitando adaptacións demasiado rápidas baseadas en poucos datos.</p>
+
+<h3>Aspectos heurísticos</h3>
+
+<p>A función IRT —a curva loxística \(P(A\mid\theta,b)\) que estima a probabilidade de acerto dado o nivel do alumno \(\theta\) e a dificultade do exercicio \(b\)— é heurística: os seus parámetros non proceden dunha calibración empírica con alumnos reais. A dificultade das preguntas é aproximada. Os pesos da puntuación son razoables pero discutibles. O chan de azar simplifica: na práctica, os erros dos alumnos non son completamente aleatorios. O modelo trata os tipos como competencias bastante independentes, cando en realidade hai conexións. E a escala de tres niveis é clara pero grosa.</p>
+
+<hr>
+
+<h2>Conclusión</h2>
+
+<p>O programa combina:</p>
+
+\[\text{Bayes} + \text{IRT heurística} + \text{entropía de Shannon} + \text{puntuación parcial do proceso}\]
+
+<p>Bayes actualiza a crenza sobre o alumno. A IRT estima que probabilidade de acerto corresponde a cada nivel e dificultade. Shannon mide a incerteza e axuda a elixir preguntas informativas. A puntuación parcial permite valorar o proceso de resolución, non só o resultado.</p>
+
+<p>Por iso o sistema non di simplemente «acertaches tantos exercicios», senón algo máis útil: segundo as túas respostas, estes tipos parecen dominados, estes están en proceso, estes necesitan reforzo e estes pasos concretos do razoamento convén revisalos. O seu valor principal está en orientar a práctica e facer visible o proceso de aprendizaxe.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Ver tamén: <a href="apendice-ga.html" style="color:var(--accent)">Apéndice matemático: Bayes, IRT e entropía de Shannon</a>
+</p>
+
+</div>
+</body>
+</html>

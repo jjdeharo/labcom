@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bayesian functioning — Combinatorics Lab</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Combinatorics Lab</a>
+  <span class="logo">How the adaptive system works</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Conceptual explanation</div>
+<h1>Bayesian functioning of the adaptive practice system</h1>
+
+<p>This program does not merely count correct and incorrect answers. Its functioning is based on a formative adaptive model that estimates, probabilistically, which types of problems a student has mastered, which they are learning, and which need reinforcement. To do this it combines three main ideas: Bayesian inference, an IRT-type function to relate level and difficulty, and Shannon entropy to select informative questions.</p>
+
+<p>It does not aim to produce an exact psychometric score, but rather to guide practice: deciding what to ask next, interpreting errors and offering a useful diagnosis.</p>
+
+<h2>1. The program does not store a grade: it stores a Bayesian belief</h2>
+
+<p>The first thing to understand is that the system does not calculate the student's level as a simple percentage of correct answers. It does not work by saying: "they got 7 out of 10, so they know 70%". It does something different: it maintains a probabilistic belief about the student's state.</p>
+
+<p>For each problem type, the program considers three possible hypotheses:</p>
+
+<table>
+  <thead><tr><th>Hypothesis</th><th style="text-align:right">θ value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>Not learned</td><td style="text-align:right">−2</td><td>The student has not yet mastered this type</td></tr>
+    <tr><td>Learning</td><td style="text-align:right">0</td><td>The student is in progress</td></tr>
+    <tr><td>Mastered</td><td style="text-align:right">+2</td><td>The student solves it with ease</td></tr>
+  </tbody>
+</table>
+
+<p>At the start, since the program knows nothing about the student, it distributes probability equally:</p>
+
+\[P(\text{not learned})=\frac13\]
+\[P(\text{learning})=\frac13\]
+\[P(\text{mastered})=\frac13\]
+
+<p>That is, for each type it starts as:</p>
+
+\[[1/3,\ 1/3,\ 1/3]\]
+
+<p>That does not mean the student has a 33% grade. It means that, with the available initial information, all three hypotheses are equally possible.</p>
+
+<p>Additionally, this belief is stored separately for each problem type. A student may be very advanced in variations with repetition while having difficulties with combinations. The program does not describe the student "as a whole", but competency by competency.</p>
+
+<p>This distribution is then summarised by a mean level:</p>
+
+\[\theta_{\text{estimated}} = P(\text{not learned})\cdot(-2) + P(\text{learning})\cdot0 + P(\text{mastered})\cdot2\]
+
+<p>For example, if after several exercises the belief about combinations were:</p>
+
+\[[0.20,\ 0.30,\ 0.50]\]
+
+<p>the estimated level would be:</p>
+
+\[\theta = 0.20\cdot(-2)+0.30\cdot0+0.50\cdot2=0.6\]
+
+<p>That 0.6 is not a grade. It is an approximate position on an internal mastery scale.</p>
+
+<p>The fundamental idea is that "level" is not a counter of correct answers, but a probability distribution over three states: not learned, learning and mastered.</p>
+
+<h2>2. Bayes comes in when the student answers</h2>
+
+<p>Each time the student solves an exercise, the program updates its belief using Bayes' rule.</p>
+
+<p>The structure is:</p>
+
+\[P(H_i \mid R) = \frac{P(H_i)\cdot P(R \mid H_i)}{\sum_j P(H_j)\cdot P(R \mid H_j)}\]
+
+<p>Where:</p>
+
+<ul>
+  <li>\(H_i\) is a hypothesis: not learned, learning or mastered.</li>
+  <li>\(R\) is the observed result.</li>
+  <li>\(P(H_i)\) is the belief before the exercise.</li>
+  <li>\(P(R \mid H_i)\) is the probability of obtaining that result if that hypothesis were true.</li>
+</ul>
+
+<p>In simple terms, the program asks itself:</p>
+
+<blockquote>If the student were really at the "not learned" level, what probability would there be that they answered this way?</blockquote>
+<blockquote>If they were at "learning", what probability would there be?</blockquote>
+<blockquote>If they were at "mastered", what probability would there be?</blockquote>
+
+<p>It then compares those probabilities and shifts the belief towards the hypothesis that best explains the response.</p>
+
+<p>If the student answers an exercise well, the "mastered" hypothesis gains weight. If they fail, "not learned" gains weight. If the answer is intermediate, the update is softer.</p>
+
+<p>This point is essential: Bayes does not automatically convert correct answers into percentages. What it does is move probability between hypotheses according to how compatible the student's response was with each one.</p>
+
+<h2>3. The IRT part: student level vs exercise difficulty</h2>
+
+<p>To apply Bayes, the program needs to estimate the probability that a student of a certain level would answer an exercise of a certain difficulty correctly. This is where the IRT-type part comes in.</p>
+
+<p>The program uses a logistic function:</p>
+
+\[P(\text{correct}) = c + \frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>Where:</p>
+
+<ul>
+  <li>\(\theta\) is the hypothetical student level.</li>
+  <li>\(b\) is the exercise difficulty.</li>
+  <li>\(a\) controls the discrimination of the question.</li>
+  <li>\(c\) is the guessing floor.</li>
+</ul>
+
+<p>The idea is simple: if \(\theta &gt; b\), the student's level is above the exercise difficulty and a correct answer is quite likely. If \(\theta &lt; b\), the difficulty exceeds the estimated level and a correct answer is less likely.</p>
+
+<p>Exercises have an approximate difficulty:</p>
+
+<table>
+  <thead><tr><th style="text-align:right">Difficulty</th><th>Interpretation</th></tr></thead>
+  <tbody>
+    <tr><td style="text-align:right">−1</td><td>Easy</td></tr>
+    <tr><td style="text-align:right">0</td><td>Medium</td></tr>
+    <tr><td style="text-align:right">+1</td><td>Hard</td></tr>
+  </tbody>
+</table>
+
+<p>So, getting a hard question right provides more positive information than getting an easy one right, because the correct answer was less expected. Similarly, getting an easy question wrong is more significant than getting a hard one wrong.</p>
+
+<p>If a student gets a medium-difficulty exercise right, the program compares that result with the three hypotheses \(\theta=-2\), \(\theta=0\) and \(\theta=2\). If the correct answer is much more compatible with \(\theta=2\) than with \(\theta=-2\), the probability of "mastered" increases.</p>
+
+<blockquote>Given this hypothetical level and this difficulty, what was the probability of getting it right? — Bayes uses this answer to update the belief.</blockquote>
+
+<h2>4. Before applying Bayes, the program calculates a partial score</h2>
+
+<p>The program does not evaluate an exercise simply as "right" or "wrong". It divides it into several parts, because solving a combinatorics problem involves several steps.</p>
+
+<p>The student must: (1) decide whether order matters; (2) decide whether all elements are used or only some; (3) decide whether repetition is allowed; (4) name the problem type; (5) identify \(n\); (6) identify \(k\); (7) choose the formula.</p>
+
+<p>Each part has a weight:</p>
+
+<table>
+  <thead><tr><th>Part evaluated</th><th style="text-align:right">Weight</th></tr></thead>
+  <tbody>
+    <tr><td>Order</td><td style="text-align:right">10%</td></tr>
+    <tr><td>Scope: all or some</td><td style="text-align:right">10%</td></tr>
+    <tr><td>Repetition</td><td style="text-align:right">10%</td></tr>
+    <tr><td>Problem type</td><td style="text-align:right">25%</td></tr>
+    <tr><td>Identification of \(n\)</td><td style="text-align:right">15%</td></tr>
+    <tr><td>Identification of \(k\)</td><td style="text-align:right">15%</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">15%</td></tr>
+  </tbody>
+</table>
+
+\[\text{score} = 0.10\cdot\text{order} + 0.10\cdot\text{scope} + 0.10\cdot\text{rep} + 0.25\cdot\text{type} + 0.15\cdot n + 0.15\cdot k + 0.15\cdot\text{formula}\]
+
+<p>Each part equals 1 if correct and 0 if incorrect. For example, if the student gets order, repetition, type, \(n\) and formula right, but fails scope and \(k\):</p>
+
+\[0.10 + 0.10 + 0.25 + 0.15 + 0.15 = 0.75\]
+
+<p>This is important because the system does not only reward the final result. What matters is the process: reading the problem, classifying, identifying \(n\) and \(k\), and choosing the formula.</p>
+
+<h2>5. What a score of 1, 0.75, 0.5, 0.25 or 0 does</h2>
+
+<p>The score controls the direction and intensity of the Bayesian update. If the score is 1, the exercise is interpreted as a complete correct answer; if 0, as a complete failure. Intermediate values produce softer updates.</p>
+
+<p>To connect the score with Bayes, the program needs to know how well each hypothesis is supported by the result. That measure is called the <strong>likelihood</strong>, \(L(\theta)\): it indicates, for each hypothetical value of θ, how compatible the observed result is with it. It is the \(P(R\mid H_i)\) term in Bayes' rule, but expressed from the score rather than a binary correct/incorrect signal.</p>
+
+<p>The program calculates this soft likelihood as follows:</p>
+
+\[L(\theta)=\text{score}\cdot P(A\mid\theta)+(1-\text{score})\cdot P(F\mid\theta)\]
+
+<p>where \(P(F\mid\theta)=1-P(A\mid\theta)\). This allows partially correct exercises to be treated gradually.</p>
+
+<p>If the score is 0.5, the likelihood is practically the same for all hypotheses: the system has no reason to change the distribution.</p>
+
+<blockquote>
+  Above 0.5, the result pushes towards "mastered".<br>
+  Below 0.5, it pushes towards "not learned".<br>
+  Around 0.5, it barely informs.
+</blockquote>
+
+<h2>6. How it converts belief into percentage and traffic light</h2>
+
+<p>After updating Bayes, the program has a distribution for each type. The student does not see this distribution directly: the program converts it into an estimated percentage, a bar and a traffic light.</p>
+
+<p>The estimated probability of success on a medium-difficulty exercise is:</p>
+
+\[P(\text{correct}) = \sum_i P(H_i)\cdot P(\text{correct}\mid \theta_i,\ b=0)\]
+
+<blockquote>With the current belief, what probability would this student have of solving a medium exercise of this type correctly?</blockquote>
+
+<p>The traffic light translates the level into categories: red (low mastery), yellow (in progress) and green (mastered). Additionally, the program avoids declaring "mastered" too soon: it needs a minimum number of attempts before it can show high mastery. Thus the visible panel is a pedagogical translation of the internal Bayesian belief.</p>
+
+<h2>7. How it chooses which problem type to ask</h2>
+
+<p>The adaptive system works in two phases: diagnosis and reinforcement.</p>
+
+<h3>Diagnostic phase</h3>
+
+<p>At the start, the program tries to obtain a minimum sample of all types. Since there are six problem types and it requires two exercises per type, the initial diagnosis consists of \(6 \times 2 = 12\) exercises.</p>
+
+<p>Uncertainty is measured with Shannon entropy:</p>
+
+\[H(p)=-\sum p_i\log_2(p_i)\]
+
+<p>A uniform distribution \([1/3,\ 1/3,\ 1/3]\) has maximum uncertainty; a concentrated distribution \([0.05,\ 0.10,\ 0.85]\) has low uncertainty. During diagnosis, the system prioritises under-practised types and those with the most uncertainty.</p>
+
+<h3>Reinforcement phase</h3>
+
+<p>When all types have at least two exercises, the diagnostic phase ends. The program then changes its criterion:</p>
+
+<blockquote>Which type does the student have the lowest estimated probability of success in?</blockquote>
+
+<p>The weakness is \(1-P(\text{success})\). If the system estimates that the student has a 45% probability of success in combinations: \(1-0.45=0.55\). If in permutations 85%: \(1-0.85=0.15\). Combinations have higher priority. The program does not always choose the type with the worst score: it selects randomly from the best candidates to avoid rigid, repetitive practice.</p>
+
+<h2>8. How it selects the specific exercise within the chosen type</h2>
+
+<p>Once the type is chosen, the system calculates the <strong>expected information gain</strong> for each candidate exercise:</p>
+
+<blockquote>If I give this exercise, how much do I expect to reduce my uncertainty about the student's level?</blockquote>
+
+\[IG = H(\text{before}) - \bigl[P(A)\cdot H(\text{after correct}) + P(F)\cdot H(\text{after wrong})\bigr]\]
+
+<p>A good exercise is one that, whatever the outcome, helps clarify the student's level. This is why neither the easiest nor the hardest questions are always best: the most informative are those close to the student's level, where the outcome is still uncertain.</p>
+
+<p>During diagnosis, the program prioritises almost exclusively information gain. During reinforcement, it combines two criteria: 65% information gain and 35% difficulty fit. Difficulty fit measures whether the exercise difficulty is close to the student's estimated level.</p>
+
+<h2>9. The skills diagnosis: knowing where the student fails</h2>
+
+<p>In addition to the level by problem type, the program maintains a diagnosis by cross-cutting skills:</p>
+
+<table>
+  <thead><tr><th>Skill</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>Order</td><td>Knowing whether order matters</td></tr>
+    <tr><td>Scope</td><td>Knowing whether all or only some elements are used</td></tr>
+    <tr><td>Repetition</td><td>Knowing whether repetition is allowed</td></tr>
+    <tr><td>Type</td><td>Naming the problem type</td></tr>
+    <tr><td>\(n,k\)</td><td>Correctly identifying \(n\) and \(k\)</td></tr>
+    <tr><td>Formula</td><td>Choosing the correct formula</td></tr>
+  </tbody>
+</table>
+
+<p>Each skill has its own Bayesian belief. This allows distinguishing between <em>which type needs practice</em> (level by type) and <em>which part of the process fails</em> (level by skill).</p>
+
+<p>For example, two students may fail combinations for different reasons: one may correctly identify \(n\) and \(k\) but choose the wrong formula; another may fail from reading the problem because they cannot distinguish whether order matters. Both have difficulties with combinations, but they do not need the same help.</p>
+
+<p>This diagnosis does not directly guide exercise selection, but is very useful for interpreting errors and directing teaching intervention.</p>
+
+<h2>10. How the report is generated</h2>
+
+<p>The report appears when the diagnostic phase is complete. The program saves a "snapshot" of the state at the end of the initial 12 exercises and compares it with the current level after the reinforcement phase:</p>
+
+<table>
+  <thead><tr><th>Type</th><th style="text-align:right">Initial diagnosis</th><th style="text-align:right">Current level</th></tr></thead>
+  <tbody>
+    <tr><td>Combinations</td><td style="text-align:right">48%</td><td style="text-align:right">67%</td></tr>
+    <tr><td>Variations</td><td style="text-align:right">72%</td><td style="text-align:right">78%</td></tr>
+    <tr><td>Permutations</td><td style="text-align:right">90%</td><td style="text-align:right">91%</td></tr>
+  </tbody>
+</table>
+
+<p>The report shows: level at the end of diagnosis, current level, progress by type, strengths, types that need practice, personalised recommendation and skills diagnosis (separating problem reading and resolution steps).</p>
+
+<h2>11. The full cycle</h2>
+
+\[\boxed{\text{current state} \rightarrow \text{adaptive selection} \rightarrow \text{partial answer} \rightarrow \text{score} \rightarrow \text{Bayes} \rightarrow \text{new state} \rightarrow \text{next selection}}\]
+
+<p>The program is adaptive: it does not follow a fixed list of exercises, but each response modifies the next decision. If the student has failed combinations, combinations will gain priority; if they have done very well on variations, variations will lose urgency.</p>
+
+<h2>12. What parts are solid and what parts are heuristic</h2>
+
+<h3>Solid aspects</h3>
+
+<p>The system does not use a simple grade: it maintains a probabilistic belief per problem type, which allows expressing uncertainty. It evaluates the process, not just the final result. It uses Shannon entropy to choose informative questions, not simply the most difficult ones. And it performs a diagnostic phase before reinforcing, avoiding too-rapid adaptations based on little data.</p>
+
+<h3>Heuristic aspects</h3>
+
+<p>The IRT function —the logistic curve \(P(A\mid\theta,b)\) that estimates the probability of a correct answer given the student's level \(\theta\) and exercise difficulty \(b\)— is heuristic: its parameters do not come from empirical calibration with real students. The question difficulty is approximate. The score weights are reasonable but debatable. The guessing floor simplifies: in practice, student errors are not completely random. The model treats types as fairly independent competencies, when in reality there are connections. And the three-level scale is clear but coarse.</p>
+
+<hr>
+
+<h2>Conclusion</h2>
+
+<p>The program combines:</p>
+
+\[\text{Bayes} + \text{heuristic IRT} + \text{Shannon entropy} + \text{partial process score}\]
+
+<p>Bayes updates the belief about the student. IRT estimates what probability of a correct answer corresponds to each level and difficulty. Shannon measures uncertainty and helps choose informative questions. The partial score allows evaluating the resolution process, not just the result.</p>
+
+<p>The system does not simply say "you got this many exercises right", but something more useful: according to your responses, these types seem mastered, these are in progress, these need reinforcement, and these specific reasoning steps should be reviewed. Its main value lies in guiding practice and making the learning process visible.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  See also: <a href="apendice-en.html" style="color:var(--accent)">Mathematical appendix: Bayes, IRT and Shannon entropy</a>
+</p>
+
+</div>
+</body>
+</html>

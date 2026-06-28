@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Funtzionamendu bayesiarra — Konbinatorika Laborategia</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Konbinatorika Laborategia</a>
+  <span class="logo">Sistema adaptatiboaren oinarriak</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Azalpen kontzeptuala</div>
+<h1>Praktika sistema adaptatiboaren funtzionamendu bayesiarra</h1>
+
+<p>Programa honek ez du soilik asmatzeak eta hutsak zenbatzen. Bere funtzionamendua eredu adaptibo formatibo batean oinarritzen da, probabilistikoki estimatzen duena zer problema mota menperatuta dauden, zeintzuk ikasteko prozesuan dauden eta zeintzuk indartzea behar duten. Horretarako hiru ideia nagusi konbinatzen ditu: inferentzia bayesiarra, maila eta zailtasuna erlazionatzeko IRT motako funtzio bat, eta galdera informatiboak hautatzeko Shannonen entropia.</p>
+
+<p>Ez du puntuazio psikometriko zehatz bat eman nahi, baizik eta praktika gidatu: zer galdetzea komeni den erabaki, akatsak interpretatu eta diagnostiko erabilgarria eskaini.</p>
+
+<h2>1. Programak ez du nota gordetzen: sinesmen bayesiarra gordetzen du</h2>
+
+<p>Lehenik ulertu behar dena da sistemak ez duela ikaslearen maila asmatzeen ehuneko soil gisa kalkulatzen. Ez du honela funtzionatzen: «10etik 7 asmatu ditu, beraz %70 daki». Zerbait desberdina egiten du: ikaslearen egoerari buruzko sinesmen probabilistikoa mantentzen du.</p>
+
+<p>Problema mota bakoitzeko, programak hiru hipotesi posible kontuan hartzen ditu:</p>
+
+<table>
+  <thead><tr><th>Hipotesia</th><th style="text-align:right">θ balioa</th><th>Esanahia</th></tr></thead>
+  <tbody>
+    <tr><td>Ikasi gabe</td><td style="text-align:right">−2</td><td>Ikasleak oraindik ez du mota hori menperatzen</td></tr>
+    <tr><td>Ikasten</td><td style="text-align:right">0</td><td>Ikaslea prozesuan dago</td></tr>
+    <tr><td>Menperatuta</td><td style="text-align:right">+2</td><td>Ikasleak erraz ebazten du</td></tr>
+  </tbody>
+</table>
+
+<p>Hasieran, programak ikasleari buruz ezer ez dakienez, probabilitatea berdin banatzen du:</p>
+
+\[P(\text{ikasi gabe})=\frac13\]
+\[P(\text{ikasten})=\frac13\]
+\[P(\text{menperatuta})=\frac13\]
+
+<p>Hau da, mota bakoitzeko honela hasten da:</p>
+
+\[[1/3,\ 1/3,\ 1/3]\]
+
+<p>Horrek ez du esan nahi ikasleak %33ko nota duela. Esan nahi du hasierako informazioa kontuan hartuta, hiru hipotesiak berdin posible direla.</p>
+
+<p>Gainera, sinesmen hori problema mota bakoitzeko bereizita gordetzen da. Ikaslea oso aurreratuta egon daiteke errepikapen bidezko aldakuntzetan eta, aldi berean, konbinazioekin zailtasunak izan ditzake. Programak ikaslea ez du «bloke batean» deskribatzen, konpetentzia bakoitzean baizik.</p>
+
+<p>Ondoren, banaketa hori batez besteko maila baten bidez laburbiltzen da:</p>
+
+\[\theta_{\text{estimatua}} = P(\text{ikasi gabe})\cdot(-2) + P(\text{ikasten})\cdot0 + P(\text{menperatuta})\cdot2\]
+
+<p>Adibidez, hainbat ariketaren ondoren konbinazioen sinesmena hau balitz:</p>
+
+\[[0{,}20,\ 0{,}30,\ 0{,}50]\]
+
+<p>estimatutako maila hau litzateke:</p>
+
+\[\theta = 0{,}20\cdot(-2)+0{,}30\cdot0+0{,}50\cdot2=0{,}6\]
+
+<p>0,6 hori ez da nota bat. Menderatzearen barne-eskala batean gutxi gorabeherako posizio bat da.</p>
+
+<p>Ideia funtsezkoa da «maila» ez dela asmatzeen kontatzaile bat, baizik eta hiru egoeraren gaineko probabilitate-banaketa bat: ikasi gabe, ikasten eta menperatuta.</p>
+
+<h2>2. Bayes sartzen da ikasleak erantzuten duenean</h2>
+
+<p>Ikasleak ariketa bat konpontzen duen bakoitzean, programak Bayesen erregela erabiliz eguneratzen du bere sinesmena.</p>
+
+<p>Egitura hau da:</p>
+
+\[P(H_i \mid R) = \frac{P(H_i)\cdot P(R \mid H_i)}{\sum_j P(H_j)\cdot P(R \mid H_j)}\]
+
+<p>Non:</p>
+
+<ul>
+  <li>\(H_i\) hipotesi bat da: ikasi gabe, ikasten edo menperatuta.</li>
+  <li>\(R\) behatutako emaitza da.</li>
+  <li>\(P(H_i)\) ariketa baino lehen dagoen sinesmena da.</li>
+  <li>\(P(R \mid H_i)\) hipotesi hori egia balitz emaitza hori lortzearen probabilitatea da.</li>
+</ul>
+
+<p>Modu sinplean esanda, programak galdetzen dio bere buruari:</p>
+
+<blockquote>Ikaslea «ikasi gabe» mailan benetan egongo balitz, horrela erantzuteko zer probabilitate egongo litzateke?</blockquote>
+<blockquote>«Ikasten» egongo balitz, zer probabilitate?</blockquote>
+<blockquote>«Menperatuta» egongo balitz, zer probabilitate?</blockquote>
+
+<p>Ondoren probabilitate horiek konparatzen ditu eta sinesmena erantzuna hobeto azaltzen duen hipotesira desplazatzen du.</p>
+
+<p>Ikasleak ariketa bat ongi asmaten badu, «menperatuta» hipotesiak pisu gehiago hartzen du. Hutsegiten badu, «ikasi gabe»k pisu gehiago hartzen du. Erantzuna ertaina bada, eguneratzea leunagoa da.</p>
+
+<p>Puntu hau ezinbestekoa da: Bayesek ez ditu asmatzeak automatikoki ehuneko bihurtzen. Egiten duena da probabilitatea hipotesien artean mugitzea, ikaslearen erantzuna bakoitzarekin zenbat bateragarria izan den arabera.</p>
+
+<h2>3. IRT zatia: ikaslearen maila ariketa zailtasunaren aurrean</h2>
+
+<p>Bayes aplikatzeko, programak estimatu behar du zein probabilitate izango lukeen maila jakin bateko ikasleak zailtasun jakin bateko ariketa asmatuko. Hortxe sartzen da IRT motako zatia.</p>
+
+<p>Programak funtzio logistiko bat erabiltzen du:</p>
+
+\[P(\text{asmatzea}) = c + \frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>Non:</p>
+
+<ul>
+  <li>\(\theta\) ikaslearen maila hipotetikoa da.</li>
+  <li>\(b\) ariketa zailtasuna da.</li>
+  <li>\(a\) galderaren diskriminazioa kontrolatzen du.</li>
+  <li>\(c\) ausazko zorua da.</li>
+</ul>
+
+<p>Ideia sinplea da: \(\theta &gt; b\) bada, ikaslearen maila ariketa zailtasunaren gainetik dago eta asmatzea nahiko litekeena da. \(\theta &lt; b\) bada, zailtasunak estimatutako maila gainditzen du eta asmatzea gutxiago litekeena da.</p>
+
+<p>Ariketak gutxi gorabeherako zailtasuna dute:</p>
+
+<table>
+  <thead><tr><th style="text-align:right">Zailtasuna</th><th>Interpretazioa</th></tr></thead>
+  <tbody>
+    <tr><td style="text-align:right">−1</td><td>Erraza</td></tr>
+    <tr><td style="text-align:right">0</td><td>Ertaina</td></tr>
+    <tr><td style="text-align:right">+1</td><td>Zaila</td></tr>
+  </tbody>
+</table>
+
+<p>Beraz, galdera zaila asmatzeak informazio positibo gehiago ematen du galdera erraza asmatzeak baino, asmatzea gutxiago espero zelako. Era berean, galdera erraza huts egitea galdera zaila huts egitea baino esanguratsuagoa da.</p>
+
+<p>Ikasleak zailtasun ertaineko ariketa bat asmaten badu, programak asmate hori hiru hipotesiekin alderatzen du: \(\theta=-2\), \(\theta=0\) eta \(\theta=2\). Asmatzea \(\theta=2\)rekin \(\theta=-2\)rekin baino askoz bateragarriagoa bada, «menperatuta» probabilitatea handitu egiten da.</p>
+
+<blockquote>Maila hipotetiko hori eta zailtasun hori emanda, zein probabilitate zegoen asmatzeko? — Bayesek erantzun hori erabiltzen du sinesmena eguneratzeko.</blockquote>
+
+<h2>4. Bayes aplikatu baino lehen, programak puntuazio partziala kalkulatzen du</h2>
+
+<p>Programak ez du ariketa bat soilik «ondo» edo «gaizki» gisa ebaluatzen. Hainbat zatitan banatzen du, konbinatorika problema bat ebazteak hainbat urrats inplikatzen baititu.</p>
+
+<p>Ikasleak egin behar du: (1) ordena garrantzitsua den erabaki; (2) elementu guztiak erabiltzen diren edo batzuk bakarrik erabakitu; (3) errepikatzea dagoen erabakitu; (4) problema motaren izena eman; (5) \(n\) identifikatu; (6) \(k\) identifikatu; (7) formula aukeratu.</p>
+
+<p>Zati bakoitzak pisu bat du:</p>
+
+<table>
+  <thead><tr><th>Ebaluatutako zatia</th><th style="text-align:right">Pisua</th></tr></thead>
+  <tbody>
+    <tr><td>Ordena</td><td style="text-align:right">%10</td></tr>
+    <tr><td>Irismena: guztiak edo batzuk</td><td style="text-align:right">%10</td></tr>
+    <tr><td>Errepikapena</td><td style="text-align:right">%10</td></tr>
+    <tr><td>Problema mota</td><td style="text-align:right">%25</td></tr>
+    <tr><td>\(n\) identifikazioa</td><td style="text-align:right">%15</td></tr>
+    <tr><td>\(k\) identifikazioa</td><td style="text-align:right">%15</td></tr>
+    <tr><td>Formula</td><td style="text-align:right">%15</td></tr>
+  </tbody>
+</table>
+
+\[\text{puntuazioa} = 0{,}10\cdot\text{ordena} + 0{,}10\cdot\text{irismena} + 0{,}10\cdot\text{errepikapena} + 0{,}25\cdot\text{mota} + 0{,}15\cdot n + 0{,}15\cdot k + 0{,}15\cdot\text{formula}\]
+
+<p>Zati bakoitzak 1 balio du zuzen badago eta 0 oker badago. Adibidez, ikasleak ordena, errepikapena, mota, \(n\) eta formula ongi asmaten baditu, baina irismena eta \(k\) huts egiten baditu:</p>
+
+\[0{,}10 + 0{,}10 + 0{,}25 + 0{,}15 + 0{,}15 = 0{,}75\]
+
+<p>Hau garrantzitsua da sistemak ez duelako azken emaitza soilik saritzen. Prozesua da kontua: enuntziatua irakurri, sailkatu, \(n\) eta \(k\) identifikatu eta formula aukeratu.</p>
+
+<h2>5. 1, 0,75, 0,5, 0,25 edo 0 puntuazioak zer egiten duen</h2>
+
+<p>Puntuazioak eguneratze bayesiarraren norabidea eta intentsitatea kontrolatzen ditu. Puntuazioa 1 bada, ariketa asmate oso gisa interpretatzen da; 0 bada, huts osoa bezala. Tarteko balioek eguneratze leunagoak sortzen dituzte.</p>
+
+<p>Puntuazioa Bayesekin lotzeko, programak jakin behar du lortutako emaitzak hipotesi bakoitza zenbat sostengatzen duen. Neurri hori <strong>sinesgarritasuna</strong> deitzen da, \(L(\theta)\): θ-ren balio hipotetiko bakoitzeko, lortutako emaitza zenbat bateragarria den adierazten du. Bayesen erregelako \(P(R\mid H_i)\) terminoa da, baina puntuaziotik adierazita, «asmatze» edo «huts» soil baten ordez.</p>
+
+<p>Programak sinesgarritasun leun hau honela kalkulatzen du:</p>
+
+\[L(\theta)=\text{puntuazioa}\cdot P(A\mid\theta)+(1-\text{puntuazioa})\cdot P(F\mid\theta)\]
+
+<p>non \(P(F\mid\theta)=1-P(A\mid\theta)\). Honek partzialki zuzenak diren ariketak modu gradualean tratatzea ahalbidetzen du.</p>
+
+<p>Puntuazioa 0,5 bada, sinesgarritasuna ia berdina da hipotesi guztientzat: sistemak ez du banaketa aldatzeko arrazoirik.</p>
+
+<blockquote>
+  0,5etik gora, emaitzak «menperatuta»rantz bultzatzen du.<br>
+  0,5etik behera, «ikasi gabe»rantz bultzatzen du.<br>
+  0,5en inguruan, ia ez du informatzen.
+</blockquote>
+
+<h2>6. Nola bihurtzen du sinesmena ehuneko eta semaforoa</h2>
+
+<p>Bayes eguneratu ondoren, programak mota bakoitzerako banaketa bat du. Ikasleak ez du banaketa hori zuzenean ikusten: programak ehuneko estimatu bat, barra bat eta semaforoa bihurtzen du.</p>
+
+<p>Zailtasun ertaineko ariketa batean arrakastaaren probabilitate estimatua hau da:</p>
+
+\[P(\text{asmatzea}) = \sum_i P(H_i)\cdot P(\text{asmatzea}\mid \theta_i,\ b=0)\]
+
+<blockquote>Uneko sinesmena kontuan hartuta, zein probabilitate izango luke ikasle honek mota honetako ariketa ertain bat ongi ebazteko?</blockquote>
+
+<p>Semaforoak maila kategoriotan itzultzen du: gorria (menderatze baxua), horia (prozesuan) eta berdea (menperatuta). Gainera, programak «menperatuta» aldarrikatzea saihesten du denbora gutxian: saiakera gutxieneko kopuru bat behar du menderatze altua erakutsi ahal izateko. Horrela panel ikusgaia barne-sinesmen bayesiarraren itzulpen pedagogikoa da.</p>
+
+<h2>7. Nola aukeratzen du zer problema mota galdetu</h2>
+
+<p>Sistema adaptatiboa bi fasetan funtzionatzen du: diagnostikoa eta indartzea.</p>
+
+<h3>Diagnostiko fasea</h3>
+
+<p>Hasieran, programak mota guztietatik lagin minimoa lortzen saiatzen da. Sei problema mota daudenez eta mota bakoitzeko bi ariketa eskatzen direnez, hasierako diagnostikoa \(6 \times 2 = 12\) ariketaz osatuta dago.</p>
+
+<p>Ziurgabetasuna Shannonen entropiarekin neurtzen da:</p>
+
+\[H(p)=-\sum p_i\log_2(p_i)\]
+
+<p>Banaketa uniforme batek \([1/3,\ 1/3,\ 1/3]\) ziurgabetasun maximoa du; banaketa kontzentratu batek \([0{,}05,\ 0{,}10,\ 0{,}85]\) ziurgabetasun baxua du. Diagnostikoan, sistemak gutxi praktikatutako motak eta ziurgabetasun handiena dutenak lehenetsi egiten ditu.</p>
+
+<h3>Indartzea fasea</h3>
+
+<p>Mota guztiek gutxienez bi ariketa dituztean, diagnostiko fasea amaitzen da. Orduan programak irizpidea aldatzen du:</p>
+
+<blockquote>Zer motatan du ikasleak arrakastaren probabilitate estimatu txikiena?</blockquote>
+
+<p>Ahultasuna \(1-P(\text{arrakasta})\) da. Konbinazioetan ikasleak %45eko arrakasta estimatua badu: \(1-0{,}45=0{,}55\). Permutazioetan %85 badu: \(1-0{,}85=0{,}15\). Konbinazioak lehentasun handiagoa du. Programak ez du beti puntuazio txarrena duen mota aukeratzen: zorizko aukeraketa egiten du hautagai onenen artean, praktika zurrun bat saihesteko.</p>
+
+<h2>8. Nola aukeratzen du ariketa zehatza aukeratutako motaren barruan</h2>
+
+<p>Mota aukeratu ondoren, sistemak hautagai ariketa bakoitzeko <strong>informazio irabazi espero</strong>a kalkulatzen du:</p>
+
+<blockquote>Ariketa hau proposatzen badut, zenbat espero dut ikaslearen mailari buruzko ziurgabetasuna murriztea?</blockquote>
+
+\[II = H(\text{aurretik}) - \bigl[P(A)\cdot H(\text{asmatze ondoren}) + P(F)\cdot H(\text{huts ondoren})\bigr]\]
+
+<p>Ariketa on bat emaitzak edozein izanda ere ikaslearen maila argitzen laguntzen duena da. Hori dela eta, ez dira beti komeni galdera errazenak edo zailenenak: informatibenak ikaslearen mailaren ingurukoak izaten dira, non emaitza oraindik ziurgabea den.</p>
+
+<p>Diagnostikoan, programak ia bakarrik informazio irabazia lehenetsi egiten du. Indartzean, bi irizpide konbinatzen ditu: informazio irabaziaren %65 eta zailtasun egokitzapen %35. Zailtasun egokitzapenak ariketa zailtasuna ikaslearen maila estimatuaren hurbil dagoen neurtzen du.</p>
+
+<h2>9. Trebetasunen diagnostikoa: non hutsegiten duen jakitea</h2>
+
+<p>Problema motaren araberako mailatik gain, programak trebetasun transbertsalen araberako diagnostikoa mantentzen du:</p>
+
+<table>
+  <thead><tr><th>Trebetasuna</th><th>Esanahia</th></tr></thead>
+  <tbody>
+    <tr><td>Ordena</td><td>Ordena garrantzitsua den jakitea</td></tr>
+    <tr><td>Irismena</td><td>Elementu guztiak edo batzuk bakarrik erabiltzen diren jakitea</td></tr>
+    <tr><td>Errepikapena</td><td>Errepikapena dagoen jakitea</td></tr>
+    <tr><td>Mota</td><td>Problema motaren izena ematea</td></tr>
+    <tr><td>\(n,k\)</td><td>\(n\) eta \(k\) zuzen identifikatzea</td></tr>
+    <tr><td>Formula</td><td>Formula zuzena aukeratzea</td></tr>
+  </tbody>
+</table>
+
+<p>Trebetasun bakoitzak bere sinesmen bayesiarra du. Honek bereizten uzten du <em>zer motak praktika behar duen</em> (motaren araberako maila) eta <em>prozesuaren zein zati hutsegiten duen</em> (trebetasunaren araberako maila).</p>
+
+<p>Adibidez, bi ikaslek konbinazioak huts egin ditzakete arrazoi desberdinen gatik: batek \(n\) eta \(k\) ongi identifikatu ditzake baina formula gaizki aukeratu; besteak enuntziatua irakurtzean huts egin dezake ordena garrantzitsua den bereizten ez duelako. Biek konbinazioekin zailtasunak dituzte, baina ez dute laguntza bera behar.</p>
+
+<p>Diagnostiko honek ez du zuzenean ariketa hautaketa gidatzen, baina oso erabilgarria da akatsak interpretatzeko eta irakaskuntza-esku-hartzea bideratzeko.</p>
+
+<h2>10. Nola sortzen da txostena</h2>
+
+<p>Txostena diagnostiko fasea osatu ondoren agertzen da. Programak hasierako 12 ariketak amaitzean egoeraren «argazki» bat gordetzen du eta fase indartu ondoko uneko mailarekin alderatzen du:</p>
+
+<table>
+  <thead><tr><th>Mota</th><th style="text-align:right">Hasierako diagnostikoa</th><th style="text-align:right">Uneko maila</th></tr></thead>
+  <tbody>
+    <tr><td>Konbinazioak</td><td style="text-align:right">%48</td><td style="text-align:right">%67</td></tr>
+    <tr><td>Aldaketak</td><td style="text-align:right">%72</td><td style="text-align:right">%78</td></tr>
+    <tr><td>Permutatuak</td><td style="text-align:right">%90</td><td style="text-align:right">%91</td></tr>
+  </tbody>
+</table>
+
+<p>Txostenak erakusten du: diagnostikoa amaitzean mailak, uneko maila, motaren araberako aurrerapenak, indar puntuak, praktika behar duten motak, gomendio pertsonalizatua eta trebetasunen diagnostikoa.</p>
+
+<h2>11. Ziklo osoa</h2>
+
+\[\boxed{\text{uneko egoera} \rightarrow \text{hautaketa adaptatiboa} \rightarrow \text{erantzun partzial} \rightarrow \text{puntuazioa} \rightarrow \text{Bayes} \rightarrow \text{egoera berria} \rightarrow \text{hurrengo hautaketa}}\]
+
+<p>Programa adaptatiboa da: ez du ariketa zerrenda finko bat jarraitzen, erantzun bakoitzak hurrengo erabakia aldatzen du. Ikasleak konbinazioak huts egin baditu, konbinazioak lehentasuna hartuko du; aldaketak oso ongi asmatu baditu, aldaketek urgentzia galduko dute.</p>
+
+<h2>12. Zein zati sendo dira eta zein heuristikoak</h2>
+
+<h3>Alderdi sendoak</h3>
+
+<p>Sistemak ez du nota sinple bat erabiltzen: probabilitate-sinesmen bat mantentzen du problema mota bakoitzeko, ziurgabetasuna adierazteko aukera emanez. Prozesua ebaluatzen du, ez soilik azken emaitza. Shannonen entropia erabiltzen du galdera informatiboak hautatzeko, ez soilik zailenenak. Eta indartu aurretik diagnostiko fasea egiten du, datu gutxitan oinarritutako egokitzapen azkarregi saihestuz.</p>
+
+<h3>Alderdi heuristikoak</h3>
+
+<p>IRT funtzioa —ikaslearen \(\theta\) maila eta \(b\) ariketa zailtasuna emanda asmatzearen probabilitatea estimatzen duen \(P(A\mid\theta,b)\) kurba logistikoa— heuristikoa da: bere parametroak ez datoz ikasle errealekin egindako kalibrazio enpirikoatik. Galderen zailtasuna hurbiltzekoa da. Puntuazioaren pisuekin arrazoizkoak baina eztabaidagarriak dira. Ausazko zoruak sinplifikatzen du: praktikan, ikasleen akatsak ez dira erabat ausazkoak. Ereduak motak konpetentzia nahiko independentetzat tratatzen ditu, errealean konexioak daudenean. Eta hiru mailako eskala argia baina lodia da.</p>
+
+<hr>
+
+<h2>Ondorioa</h2>
+
+<p>Programak konbinatzen du:</p>
+
+\[\text{Bayes} + \text{IRT heuristikoa} + \text{Shannonen entropia} + \text{prozesuko puntuazio partzial}\]
+
+<p>Bayesek ikasleari buruzko sinesmena eguneratzen du. IRTk maila eta zailtasun bakoitzari dagokion asmate-probabilitatea estimatzen du. Shannonek ziurgabetasuna neurtzen du eta galdera informatiboak hautatzen laguntzen du. Puntuazio partzialak ebazpen prozesua ebaluatzeko aukera ematen du, ez soilik emaitza.</p>
+
+<p>Hori dela eta, sistemak ez du soilik esan «horrenbeste ariketa asmatu dituzu», baizik eta zerbait erabilgarriagoa: zure erantzunen arabera, mota hauek menperatuak dirudite, hauek prozesuan daude, hauek indartzea behar dute eta arrazonamenduaren urrats zehatz hauek berrikustea komeni da. Bere balio nagusia praktika gidatzea eta ikasketa prozesua ikusgai egitea da.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Ikus ere: <a href="apendice-eu.html" style="color:var(--accent)">Eranskin matematikoa: Bayes, IRT eta Shannonen entropia</a>
+</p>
+
+</div>
+</body>
+</html>

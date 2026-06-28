@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Funcionament bayesià — Laboratori de Combinatòria</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f0ede8;--border:#e2ddd6;
+  --text:#1a1814;--text2:#6b6560;
+  --accent:#3d6b9e;--accent-light:#e8f0f9;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141210;--surface:#1e1c19;--surface2:#252320;--border:#333028;
+  --text:#f0ede8;--text2:#9e9890;
+  --accent:#6a9fd4;--accent-light:#1a2535;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.doc-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.doc-nav .logo{font-weight:700;color:var(--accent);font-size:.95rem;margin-right:auto}
+.back{padding:5px 13px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--text2);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.doc-wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--accent-light);color:var(--accent);margin-bottom:8px}
+h1{font-size:1.55rem;font-weight:700;line-height:1.25;margin-bottom:18px}
+h2{font-size:1.1rem;font-weight:700;margin:36px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+h3{font-size:.96rem;font-weight:600;margin:20px 0 7px;color:var(--accent)}
+p{margin-bottom:13px}
+ul,ol{padding-left:22px;margin-bottom:13px}
+li{margin-bottom:4px}
+blockquote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--accent-light);border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.89rem}
+th{background:var(--surface2);font-weight:600;text-align:left;padding:8px 12px;border:1px solid var(--border)}
+td{padding:7px 12px;border:1px solid var(--border);vertical-align:top}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+</style>
+</head>
+<body>
+<nav class="doc-nav">
+  <a class="back" href="index.html#fundamentos">← Laboratori de Combinatòria</a>
+  <span class="logo">Fonaments del sistema adaptatiu</span>
+</nav>
+<div class="doc-wrap">
+
+<div class="badge">Explicació conceptual</div>
+<h1>Funcionament bayesià del sistema adaptatiu de pràctica</h1>
+
+<p>Aquest programa no es limita a comptar encerts i errors. El seu funcionament es basa en un model adaptatiu formatiu que estima, de manera probabilística, quins tipus de problemes domina l'alumne, quins està aprenent i quins necessiten reforç. Per fer-ho combina tres idees principals: inferència bayesiana, una funció de tipus IRT per relacionar nivell i dificultat, i entropia de Shannon per triar preguntes informatives.</p>
+
+<p>No pretén emetre una qualificació psicomètrica exacta, sinó orientar la pràctica: decidir què convé preguntar, interpretar els errors i oferir un diagnòstic útil.</p>
+
+<h2>1. El programa no guarda una nota: guarda una creença bayesiana</h2>
+
+<p>El primer que cal entendre és que el sistema no calcula el nivell de l'alumne com un simple percentatge d'encerts. No funciona dient: «ha encertat 7 de 10, per tant sap un 70 %». Fa alguna cosa diferent: manté una creença probabilística sobre l'estat de l'alumne.</p>
+
+<p>Per a cada tipus de problema, el programa considera tres hipòtesis possibles:</p>
+
+<table>
+  <thead><tr><th>Hipòtesi</th><th style="text-align:right">Valor θ</th><th>Significat</th></tr></thead>
+  <tbody>
+    <tr><td>No après</td><td style="text-align:right">−2</td><td>L'alumne encara no domina aquest tipus</td></tr>
+    <tr><td>Aprenent</td><td style="text-align:right">0</td><td>L'alumne està en procés</td></tr>
+    <tr><td>Dominat</td><td style="text-align:right">+2</td><td>L'alumne el resol amb facilitat</td></tr>
+  </tbody>
+</table>
+
+<p>Al principi, com que el programa no sap res de l'alumne, reparteix la probabilitat per igual:</p>
+
+\[P(\text{no après})=\frac13\]
+\[P(\text{aprenent})=\frac13\]
+\[P(\text{dominat})=\frac13\]
+
+<p>És a dir, per a cada tipus comença així:</p>
+
+\[[1/3,\ 1/3,\ 1/3]\]
+
+<p>Això no significa que l'alumne tingui una nota del 33 %. Significa que, amb la informació inicial disponible, les tres hipòtesis són igualment possibles.</p>
+
+<p>A més, aquesta creença es guarda per separat per a cada tipus de problema. L'alumne pot estar molt avançat en variacions amb repetició i, al mateix temps, tenir dificultats en combinacions. El programa no descriu l'alumne «en bloc», sinó competència per competència.</p>
+
+<p>Aquesta distribució es resumeix mitjançant un nivell mitjà:</p>
+
+\[\theta_{\text{estimada}} = P(\text{no après})\cdot(-2) + P(\text{aprenent})\cdot0 + P(\text{dominat})\cdot2\]
+
+<p>Per exemple, si després de diversos exercicis la creença sobre combinacions fos:</p>
+
+\[[0{,}20,\ 0{,}30,\ 0{,}50]\]
+
+<p>el nivell estimat seria:</p>
+
+\[\theta = 0{,}20\cdot(-2)+0{,}30\cdot0+0{,}50\cdot2=0{,}6\]
+
+<p>Aquest 0,6 no és una nota. És una posició aproximada en una escala interna de domini.</p>
+
+<p>La idea fonamental és que el «nivell» no és un comptador d'encerts, sinó una distribució de probabilitat sobre tres estats: no après, aprenent i dominat.</p>
+
+<h2>2. Bayes entra quan l'alumne respon</h2>
+
+<p>Cada cop que l'alumne resol un exercici, el programa actualitza la seva creença mitjançant la regla de Bayes.</p>
+
+<p>L'estructura és aquesta:</p>
+
+\[P(H_i \mid R) = \frac{P(H_i)\cdot P(R \mid H_i)}{\sum_j P(H_j)\cdot P(R \mid H_j)}\]
+
+<p>On:</p>
+
+<ul>
+  <li>\(H_i\) és una hipòtesi: no après, aprenent o dominat.</li>
+  <li>\(R\) és el resultat observat.</li>
+  <li>\(P(H_i)\) és la creença abans de l'exercici.</li>
+  <li>\(P(R \mid H_i)\) és la probabilitat d'obtenir aquest resultat si aquesta hipòtesi fos certa.</li>
+</ul>
+
+<p>Dit de forma senzilla, el programa es pregunta:</p>
+
+<blockquote>Si l'alumne estigués realment al nivell «no après», quina probabilitat hi hauria que hagués respost així?</blockquote>
+<blockquote>Si estigués a «aprenent», quina probabilitat hi hauria?</blockquote>
+<blockquote>Si estigués a «dominat», quina probabilitat hi hauria?</blockquote>
+
+<p>Després compara aquestes probabilitats i desplaça la creença cap a la hipòtesi que millor explica la resposta.</p>
+
+<p>Si l'alumne encerta bé un exercici, la hipòtesi «dominat» guanya pes. Si falla, guanya pes «no après». Si la resposta és intermèdia, l'actualització és més suau.</p>
+
+<p>Aquest punt és essencial: Bayes no converteix automàticament encerts en percentatges. El que fa és moure probabilitat entre hipòtesis segons com de compatible ha estat la resposta de l'alumne amb cadascuna d'elles.</p>
+
+<h2>3. La part IRT: nivell de l'alumne enfront de dificultat de l'exercici</h2>
+
+<p>Per aplicar Bayes, el programa necessita estimar quina probabilitat tindria un alumne d'un cert nivell d'encertar un exercici d'una certa dificultat. Aquí entra la part de tipus IRT.</p>
+
+<p>El programa fa servir una funció logística:</p>
+
+\[P(\text{encert}) = c + \frac{1-c}{1+e^{-a(\theta-b)}}\]
+
+<p>On:</p>
+
+<ul>
+  <li>\(\theta\) és el nivell hipotètic de l'alumne.</li>
+  <li>\(b\) és la dificultat de l'exercici.</li>
+  <li>\(a\) controla la discriminació de la pregunta.</li>
+  <li>\(c\) és el terra d'atzar.</li>
+</ul>
+
+<p>La idea és senzilla: si \(\theta &gt; b\), el nivell de l'alumne és per sobre de la dificultat de l'exercici i l'encert és bastant probable. Si \(\theta &lt; b\), la dificultat supera el nivell estimat i l'encert és menys probable.</p>
+
+<p>Els exercicis tenen una dificultat aproximada:</p>
+
+<table>
+  <thead><tr><th style="text-align:right">Dificultat</th><th>Interpretació</th></tr></thead>
+  <tbody>
+    <tr><td style="text-align:right">−1</td><td>Fàcil</td></tr>
+    <tr><td style="text-align:right">0</td><td>Mitjana</td></tr>
+    <tr><td style="text-align:right">+1</td><td>Difícil</td></tr>
+  </tbody>
+</table>
+
+<p>Així, encertar una pregunta difícil aporta més informació positiva que encertar-ne una de fàcil, perquè l'encert era menys esperable. De la mateixa manera, fallar una pregunta fàcil és més significatiu que fallar-ne una de difícil.</p>
+
+<p>Si un alumne encerta un exercici de dificultat mitjana, el programa compara aquest encert amb les tres hipòtesis \(\theta=-2\), \(\theta=0\) i \(\theta=2\). Si l'encert és molt més compatible amb \(\theta=2\) que amb \(\theta=-2\), la probabilitat de «dominat» augmenta.</p>
+
+<blockquote>Donat aquest nivell hipotètic i aquesta dificultat, quina probabilitat hi havia d'encertar? — Bayes utilitza aquesta resposta per actualitzar la creença.</blockquote>
+
+<h2>4. Abans d'aplicar Bayes, el programa calcula una puntuació parcial</h2>
+
+<p>El programa no avalua un exercici simplement com a «bé» o «malament». El divideix en diverses parts, perquè resoldre un problema de combinatòria implica diversos passos.</p>
+
+<p>L'alumne ha de: (1) decidir si importa l'ordre; (2) decidir si s'utilitzen tots els elements o només alguns; (3) decidir si hi ha repetició; (4) anomenar el tipus de problema; (5) identificar \(n\); (6) identificar \(k\); (7) triar la fórmula.</p>
+
+<p>Cada part té un pes:</p>
+
+<table>
+  <thead><tr><th>Part avaluada</th><th style="text-align:right">Pes</th></tr></thead>
+  <tbody>
+    <tr><td>Ordre</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Abast: tots o alguns</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Repetició</td><td style="text-align:right">10 %</td></tr>
+    <tr><td>Tipus de problema</td><td style="text-align:right">25 %</td></tr>
+    <tr><td>Identificació de \(n\)</td><td style="text-align:right">15 %</td></tr>
+    <tr><td>Identificació de \(k\)</td><td style="text-align:right">15 %</td></tr>
+    <tr><td>Fórmula</td><td style="text-align:right">15 %</td></tr>
+  </tbody>
+</table>
+
+\[\text{puntuació} = 0{,}10\cdot\text{ordre} + 0{,}10\cdot\text{abast} + 0{,}10\cdot\text{rep} + 0{,}25\cdot\text{tipus} + 0{,}15\cdot n + 0{,}15\cdot k + 0{,}15\cdot\text{fórmula}\]
+
+<p>Cada part val 1 si és correcta i 0 si és incorrecta. Per exemple, si l'alumne encerta l'ordre, la repetició, el tipus, \(n\) i la fórmula, però falla l'abast i \(k\):</p>
+
+\[0{,}10 + 0{,}10 + 0{,}25 + 0{,}15 + 0{,}15 = 0{,}75\]
+
+<p>Això és important perquè el sistema no premia únicament el resultat final. El que compta és el procés: llegir l'enunciat, classificar, identificar \(n\) i \(k\), i triar la fórmula.</p>
+
+<h2>5. Què fa una puntuació d'1, 0,75, 0,5, 0,25 o 0</h2>
+
+<p>La puntuació controla la direcció i la intensitat de l'actualització bayesiana. Si la puntuació és 1, l'exercici s'interpreta com un encert complet; si és 0, com un error complet. Els valors intermedis produeixen actualitzacions més suaus.</p>
+
+<p>Per connectar la puntuació amb Bayes, el programa necessita saber quant recolza el resultat obtingut cadascuna de les hipòtesis. Aquesta mesura s'anomena <strong>versemblança</strong>, \(L(\theta)\): indica, per a cada valor hipotètic de θ, fins a quin punt el resultat obtingut és compatible amb ell. És el terme \(P(R\mid H_i)\) de la regla de Bayes, però expressat a partir de la puntuació en lloc d'usar simplement «encert» o «error».</p>
+
+<p>El programa calcula aquesta versemblança suau de la manera següent:</p>
+
+\[L(\theta)=\text{puntuació}\cdot P(A\mid\theta)+(1-\text{puntuació})\cdot P(F\mid\theta)\]
+
+<p>on \(P(F\mid\theta)=1-P(A\mid\theta)\). Això permet tractar els exercicis parcialment correctes de forma gradual.</p>
+
+<p>Si la puntuació és 0,5, la versemblança és pràcticament igual per a totes les hipòtesis: el sistema no té motius per canviar la distribució.</p>
+
+<blockquote>
+  Per sobre de 0,5, el resultat empeny cap a «dominat».<br>
+  Per sota de 0,5, empeny cap a «no après».<br>
+  Al voltant de 0,5, gairebé no informa.
+</blockquote>
+
+<h2>6. Com converteix la creença en percentatge i semàfor</h2>
+
+<p>Després d'actualitzar Bayes, el programa té per a cada tipus una distribució. L'alumne no veu aquesta distribució directament: el programa la converteix en un percentatge estimat, una barra i un semàfor.</p>
+
+<p>La probabilitat estimada d'èxit en un exercici de dificultat mitjana és:</p>
+
+\[P(\text{encert}) = \sum_i P(H_i)\cdot P(\text{encert}\mid \theta_i,\ b=0)\]
+
+<blockquote>Amb la creença actual, quina probabilitat tindria aquest alumne de resoldre bé un exercici mitjà d'aquest tipus?</blockquote>
+
+<p>El semàfor tradueix el nivell en categories: vermell (domini baix), groc (en procés) i verd (dominat). A més, el programa evita declarar «dominat» massa aviat: necessita un mínim d'intents abans de poder mostrar un domini alt. Així, el panell visible és una traducció pedagògica de la creença bayesiana interna.</p>
+
+<h2>7. Com tria quin tipus de problema preguntar</h2>
+
+<p>El sistema adaptatiu funciona en dues fases: diagnòstic i reforç.</p>
+
+<h3>Fase de diagnòstic</h3>
+
+<p>Al principi, el programa intenta obtenir una mostra mínima de tots els tipus. Com que hi ha sis tipus de problemes i exigeix dos exercicis per tipus, el diagnòstic inicial consta de \(6 \times 2 = 12\) exercicis.</p>
+
+<p>La incertesa es mesura amb l'entropia de Shannon:</p>
+
+\[H(p)=-\sum p_i\log_2(p_i)\]
+
+<p>Una distribució uniforme \([1/3,\ 1/3,\ 1/3]\) té incertesa màxima; una distribució concentrada \([0{,}05,\ 0{,}10,\ 0{,}85]\) té incertesa baixa. Durant el diagnòstic, el sistema prioritza els tipus poc practicats i els que tenen més incertesa.</p>
+
+<h3>Fase de reforç</h3>
+
+<p>Quan tots els tipus tenen almenys dos exercicis, acaba la fase de diagnòstic. Aleshores el programa canvia de criteri:</p>
+
+<blockquote>En quin tipus té l'alumne una probabilitat estimada d'èxit més baixa?</blockquote>
+
+<p>La feblesa és \(1-P(\text{èxit})\). Si el sistema estima que en combinacions l'alumne té un 45 % de probabilitat d'èxit: \(1-0{,}45=0{,}55\). Si en permutacions té un 85 %: \(1-0{,}85=0{,}15\). Combinacions té més prioritat. El programa no tria sempre el tipus amb la pitjor puntuació: selecciona aleatòriament entre els millors candidats per evitar una pràctica rígida.</p>
+
+<h2>8. Com tria l'exercici concret dins del tipus escollit</h2>
+
+<p>Un cop triat el tipus, el sistema calcula per a cada exercici candidat el seu <strong>guany d'informació esperat</strong>:</p>
+
+<blockquote>Si proposo aquest exercici, quant espero reduir la meva incertesa sobre el nivell de l'alumne?</blockquote>
+
+\[GI = H(\text{abans}) - \bigl[P(A)\cdot H(\text{després d'encert}) + P(F)\cdot H(\text{després d'error})\bigr]\]
+
+<p>Un bon exercici és aquell que, surti com surti, ajuda a aclarir el nivell de l'alumne. Per això no sempre convenen les preguntes més fàcils ni les més difícils: les més informatives solen ser les que estan a prop del nivell de l'alumne, on el resultat encara és incert.</p>
+
+<p>Durant el diagnòstic, el programa prioritza gairebé exclusivament el guany d'informació. Durant el reforç, combina dos criteris: un 65 % de guany d'informació i un 35 % d'ajust de dificultat. L'ajust de dificultat mesura si la dificultat de l'exercici és a prop del nivell estimat de l'alumne.</p>
+
+<h2>9. El diagnòstic per habilitats: saber en què falla</h2>
+
+<p>A més del nivell per tipus de problema, el programa manté un diagnòstic per habilitats transversals:</p>
+
+<table>
+  <thead><tr><th>Habilitat</th><th>Significat</th></tr></thead>
+  <tbody>
+    <tr><td>Ordre</td><td>Saber si importa l'ordre</td></tr>
+    <tr><td>Abast</td><td>Saber si s'utilitzen tots o només alguns elements</td></tr>
+    <tr><td>Repetició</td><td>Saber si hi ha repetició</td></tr>
+    <tr><td>Tipus</td><td>Anomenar el tipus de problema</td></tr>
+    <tr><td>\(n,k\)</td><td>Identificar correctament \(n\) i \(k\)</td></tr>
+    <tr><td>Fórmula</td><td>Triar la fórmula correcta</td></tr>
+  </tbody>
+</table>
+
+<p>Cada habilitat té la seva pròpia creença bayesiana. Això permet distingir entre <em>quin tipus necessita practicar</em> (nivell per tipus) i <em>quina part del procés falla</em> (nivell per habilitat).</p>
+
+<p>Per exemple, dos alumnes poden fallar combinacions per raons diferents: un pot identificar bé \(n\) i \(k\) però triar malament la fórmula; l'altre pot fallar des de la lectura de l'enunciat perquè no distingeix si importa l'ordre. Tots dos tenen dificultats amb combinacions, però no necessiten la mateixa ajuda.</p>
+
+<p>Aquest diagnòstic no guia directament la selecció d'exercicis, però és molt útil per interpretar els errors i orientar la intervenció docent.</p>
+
+<h2>10. Com es genera l'informe</h2>
+
+<p>L'informe apareix quan es completa la fase de diagnòstic. El programa guarda una «foto» de l'estat en acabar els 12 exercicis inicials i la compara amb el nivell actual després de la fase de reforç:</p>
+
+<table>
+  <thead><tr><th>Tipus</th><th style="text-align:right">Diagnòstic inicial</th><th style="text-align:right">Nivell actual</th></tr></thead>
+  <tbody>
+    <tr><td>Combinacions</td><td style="text-align:right">48 %</td><td style="text-align:right">67 %</td></tr>
+    <tr><td>Variacions</td><td style="text-align:right">72 %</td><td style="text-align:right">78 %</td></tr>
+    <tr><td>Permutacions</td><td style="text-align:right">90 %</td><td style="text-align:right">91 %</td></tr>
+  </tbody>
+</table>
+
+<p>L'informe mostra: nivell en acabar el diagnòstic, nivell actual, progrés per tipus, punts forts, tipus que necessiten pràctica, recomanació personalitzada i diagnòstic per habilitats.</p>
+
+<h2>11. El cicle complet</h2>
+
+\[\boxed{\text{estat actual} \rightarrow \text{selecció adaptativa} \rightarrow \text{resposta parcial} \rightarrow \text{puntuació} \rightarrow \text{Bayes} \rightarrow \text{nou estat} \rightarrow \text{selecció següent}}\]
+
+<p>El programa és adaptatiu: no segueix una llista fixa d'exercicis, sinó que cada resposta modifica la decisió següent. Si l'alumne ha fallat combinacions, combinacions guanyarà prioritat; si ha encertat molt bé variacions, variacions perdrà urgència.</p>
+
+<h2>12. Quines parts són sòlides i quines parts són heurístiques</h2>
+
+<h3>Aspectes sòlids</h3>
+
+<p>El sistema no fa servir una nota simple: manté una creença probabilística per tipus de problema, la qual cosa permet expressar incertesa. Avalua el procés, no només el resultat final. Utilitza l'entropia de Shannon per triar preguntes informatives, no simplement les més difícils. I realitza una fase de diagnòstic abans de reforçar, evitant adaptacions massa ràpides basades en pocs dades.</p>
+
+<h3>Aspectes heurístics</h3>
+
+<p>La funció IRT —la corba logística \(P(A\mid\theta,b)\) que estima la probabilitat d'encert donats el nivell de l'alumne \(\theta\) i la dificultat de l'exercici \(b\)— és heurística: els seus paràmetres no provenen d'una calibració empírica amb alumnes reals. La dificultat de les preguntes és aproximada. Els pesos de la puntuació són raonables però discutibles. El terra d'atzar simplifica: en la pràctica, els errors dels alumnes no són completament aleatoris. El model tracta els tipus com a competències bastant independents, quan en realitat hi ha connexions. I l'escala de tres nivells és clara però grollera.</p>
+
+<hr>
+
+<h2>Conclusió</h2>
+
+<p>El programa combina:</p>
+
+\[\text{Bayes} + \text{IRT heurística} + \text{entropia de Shannon} + \text{puntuació parcial del procés}\]
+
+<p>Bayes actualitza la creença sobre l'alumne. La IRT estima quina probabilitat d'encert correspon a cada nivell i dificultat. Shannon mesura la incertesa i ajuda a triar preguntes informatives. La puntuació parcial permet valorar el procés de resolució, no només el resultat.</p>
+
+<p>Per això el sistema no diu simplement «has encertat tants exercicis», sinó alguna cosa més útil: segons les teves respostes, aquests tipus semblen dominats, aquests estan en procés, aquests necessiten reforç i aquests passos concrets del raonament convé revisar-los. El seu valor principal rau en orientar la pràctica i fer visible el procés d'aprenentatge.</p>
+
+<p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
+  Vegeu també: <a href="apendice-ca.html" style="color:var(--accent)">Apèndix matemàtic: Bayes, IRT i entropia de Shannon</a>
+</p>
+
+</div>
+</body>
+</html>
