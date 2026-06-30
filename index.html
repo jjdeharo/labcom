@@ -637,6 +637,7 @@ const LANG = {
     skillNK: 'Identificar n y k',
     skillFormula: 'Elegir la fórmula',
     practiceReportNoSnapshot: 'Completa la fase diagnóstica (2 ejercicios de cada tipo) para ver el informe.',
+    practiceReportFitWarning: 'Tus respuestas en el diagnóstico fueron poco coherentes con la dificultad (aciertos en lo difícil y fallos en lo fácil, o al revés). Toma este diagnóstico como provisional y sigue practicando para afinarlo.',
     practiceReportBack: '← Volver',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
     practiceReportNoChange: 'Sin cambio',
@@ -977,6 +978,7 @@ const LANG = {
     skillNK: 'Identifying n and k',
     skillFormula: 'Choosing the formula',
     practiceReportNoSnapshot: 'Complete the diagnostic phase (2 exercises per type) to see the report.',
+    practiceReportFitWarning: 'Your diagnostic answers were not very consistent with difficulty (correct on hard items, wrong on easy ones, or vice versa). Treat this diagnosis as provisional and keep practising to refine it.',
     practiceReportBack: '← Back',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
     practiceReportNoChange: 'No change',
@@ -1254,6 +1256,7 @@ const LANG = {
     skillNK: 'Identificar n i k',
     skillFormula: 'Triar la fórmula',
     practiceReportNoSnapshot: 'Completa la fase diagnòstica (2 exercicis de cada tipus) per veure l\'informe.',
+    practiceReportFitWarning: 'Les teves respostes al diagnòstic van ser poc coherents amb la dificultat (encerts en allò difícil i errades en allò fàcil, o a l\'inrevés). Pren aquest diagnòstic com a provisional i segueix practicant per afinar-lo.',
     practiceReportBack: '← Tornar',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
     practiceReportNoChange: 'Sense canvi',
@@ -1514,6 +1517,7 @@ const LANG = {
     skillNK: 'Identificar n e k',
     skillFormula: 'Escoller a fórmula',
     practiceReportNoSnapshot: 'Completa a fase diagnóstica (2 exercicios de cada tipo) para ver o informe.',
+    practiceReportFitWarning: 'As túas respostas no diagnóstico foron pouco coherentes coa dificultade (acertos no difícil e fallos no fácil, ou ao revés). Toma este diagnóstico como provisional e segue practicando para afinalo.',
     practiceReportBack: '← Volver',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
     practiceReportNoChange: 'Sen cambio',
@@ -1774,6 +1778,7 @@ const LANG = {
     skillNK: 'n eta k identifikatu',
     skillFormula: 'Formula aukeratu',
     practiceReportNoSnapshot: 'Osatu diagnostiko fasea (mota bakoitzeko 2 ariketa) txostena ikusteko.',
+    practiceReportFitWarning: 'Diagnostikoko zure erantzunak ez ziren oso koherenteak zailtasunarekin (zailetan asmatu eta errazetan huts egin, edo alderantziz). Hartu diagnostiko hau behin-behinekotzat eta jarraitu praktikatzen doitzeko.',
     practiceReportBack: '← Itzuli',
     practiceReportProgress: (before, now) => `${before}% → ${now}%`,
     practiceReportNoChange: 'Aldaketarik ez',
@@ -3361,17 +3366,57 @@ function updateDim(dimKey,ok,difficulty){
 function loadDiagnosticSnapshot(){
   try{ return JSON.parse(localStorage.getItem('comb_diag_snapshot')||'null'); }catch{ return null; }
 }
-function saveDiagnosticSnapshot(bayesState){
+function saveDiagnosticSnapshot(bayesState,fit){
   const snap={
     date: new Date().toLocaleDateString(currentLang==='en'?'en-GB':currentLang==='eu'?'eu-ES':currentLang==='ca'?'ca-ES':currentLang==='ga'?'gl-ES':'es-ES',{day:'numeric',month:'long',year:'numeric'}),
-    bayes: JSON.parse(JSON.stringify(bayesState))
+    bayes: JSON.parse(JSON.stringify(bayesState)),
+    fit: fit||null
   };
   try{ localStorage.setItem('comb_diag_snapshot', JSON.stringify(snap)); }catch{}
+}
+// Registro de respuestas mientras dura el diagnóstico inicial (antes del primer snapshot).
+// Sirve para calcular el person-fit l_z al cerrarlo. Se congela en el snapshot y se vacía.
+function recordDiagnosticResponse(type,difficulty,score){
+  if(loadDiagnosticSnapshot()) return;        // diagnóstico ya cerrado
+  const p=loadProgress();
+  const log=Array.isArray(p.diagLog)?p.diagLog:[];
+  log.push({type,b:difficulty,s:score});
+  saveProgress({diagLog:log});
+}
+// Person-fit l_z (Drasgow): mide si el patrón de respuestas observado es coherente
+// con el nivel estimado. θ̂ por tipo = hipótesis más probable (MAP) de su posterior.
+// Versión suave: usa la puntuación parcial s∈[0,1] como respuesta observada, en línea
+// con la verosimilitud suave que usa el modelo. l_z≈0 indica buen ajuste; muy negativo
+// (< -2) señala respuestas incoherentes con la dificultad (azar, descuidos). Ver
+// matematicas.html §11.7. Es orientativo, no prueba formal, y con pocas preguntas más aún.
+function bayesPersonFitLz(diagLog,bayesState){
+  if(!Array.isArray(diagLog)) return null;
+  let l0=0,eL=0,varL=0,n=0;
+  for(const r of diagLog){
+    const ts=bayesState[r.type];
+    if(!ts||!Array.isArray(ts.prior)) continue;
+    let mi=0; for(let i=1;i<ts.prior.length;i++) if(ts.prior[i]>ts.prior[mi]) mi=i;
+    const thetaHat=BAYES_THETA[mi];
+    const P=Math.min(1-1e-6,Math.max(1e-6,bayesIRT(thetaHat,r.b)));
+    const s=Math.min(1,Math.max(0,r.s));
+    const logit=Math.log(P/(1-P));
+    l0  += s*Math.log(P)+(1-s)*Math.log(1-P);
+    eL  += P*Math.log(P)+(1-P)*Math.log(1-P);
+    varL+= P*(1-P)*logit*logit;
+    n++;
+  }
+  if(n<3||varL<1e-9) return null;             // muestra insuficiente para ser informativo
+  return {lz:(l0-eL)/Math.sqrt(varL),n};
 }
 function maybeSnapshotDiagnosis(state){
   if(loadDiagnosticSnapshot()) return;
   const allDone=ALL_TYPE_KEYS.every(type=>(state[type]?.count||0)>=BAYES_DIAGNOSIS_MIN_TRIES);
-  if(allDone){ saveDiagnosticSnapshot(state); pracJustFinishedDiagnosis=true; }
+  if(allDone){
+    const fit=bayesPersonFitLz(loadProgress().diagLog,state);
+    saveDiagnosticSnapshot(state,fit);
+    saveProgress({diagLog:[]});               // congelado en el snapshot
+    pracJustFinishedDiagnosis=true;
+  }
 }
 function updateBayesType(type,score,difficulty){
   // score ∈ [0,1]: 1=todo correcto, 0=todo incorrecto, parciales intermedios
@@ -3676,12 +3721,21 @@ function renderPracticeReport(){
     </div>
   </div>`;
 
+  // Aviso de person-fit: el patrón de respuestas del diagnóstico fue incoherente con la dificultad.
+  const fitWarning=(snap&&snap.fit&&snap.fit.lz<-2)
+    ?`<div style="margin:0 0 12px;background:rgba(220,150,30,.12);border:1px solid rgba(220,150,30,.4);border-radius:10px;padding:10px 14px;display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:1.1rem;line-height:1.2">⚠️</span>
+        <p style="font-size:.84rem;margin:0;color:var(--text)">${t('practiceReportFitWarning')}</p>
+      </div>`
+    :'';
+
   document.getElementById('prac-content').innerHTML=`
     <div class="card">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
         <span style="font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">${t('practiceReportTitle')}</span>${backBtn}
       </div>
       ${snap?`<p style="font-size:.82rem;color:var(--text2);margin-bottom:12px">${t('practiceReportDiagDate')(snap.date)}</p>`:''}
+      ${fitWarning}
       ${mainChartSection}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
@@ -3820,7 +3874,7 @@ function startPracticeType(filter){
 function resetBayesData(){
   if(!confirm(t('practiceResetConfirm'))) return;
   const p=loadProgress();
-  delete p.bayes; delete p.doneProblems;
+  delete p.bayes; delete p.doneProblems; delete p.dims; delete p.diagLog;
   // Escribe directamente para evitar el merge de saveProgress
   localStorage.setItem('comb_progress',JSON.stringify(p));
   localStorage.removeItem('comb_diag_snapshot');
@@ -3913,6 +3967,7 @@ function pracCheckNK(){
   const fullyCorrect=ordOk&&allOk&&repOk&&pracClassifyCorrect&&nOk&&kOk&&formulaOk;
   pracSessionTotal++;
   if(fullyCorrect) pracSessionCorrect++;
+  recordDiagnosticResponse(prob.type,prob.difficulty,score);
   updateBayesType(prob.type,score,prob.difficulty);
   // Diagnóstico por dimensión (solo lectura): registra el acierto de cada pregunta de parámetros
   updateDim('order',ordOk,prob.difficulty);
