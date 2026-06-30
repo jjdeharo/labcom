@@ -443,6 +443,30 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>El score puede otorgar crédito parcial por acertar solo uno de los dos, pero la habilidad transversal \(nk\) exige acertar ambos.</p>
 
+<h2>23. Validación y fiabilidad del diagnóstico (opcional)</h2>
+
+<p>Las comprobaciones de esta sección no forman parte del flujo obligatorio: son una capa opcional que aumenta la honestidad del diagnóstico sin necesidad de datos empíricos.</p>
+
+<h3>23.1 Ajuste del patrón individual (person-fit \(l_z\))</h3>
+
+<p>Al cerrar el diagnóstico inicial, el sistema evalúa si el patrón de respuestas es coherente con el nivel estimado. Para cada pregunta respondida durante el diagnóstico, con dificultad \(b_i\) y puntuación observada \(s_i\in[0,1]\), se toma \(\widehat{\theta}\) como la hipótesis más probable (MAP) del tipo correspondiente y \(P_i = P(A\mid\widehat{\theta},\,b_i)\). El índice estandarizado de Drasgow es:</p>
+
+\[l_z = \frac{l_0 - E[l_0]}{\sqrt{\operatorname{Var}[l_0]}}\]
+
+<p>con:</p>
+
+\[l_0 = \sum_i \bigl[s_i\ln P_i + (1-s_i)\ln(1-P_i)\bigr]\]
+\[E[l_0] = \sum_i \bigl[P_i\ln P_i + (1-P_i)\ln(1-P_i)\bigr]\]
+\[\operatorname{Var}[l_0] = \sum_i P_i(1-P_i)\left[\ln\frac{P_i}{1-P_i}\right]^2\]
+
+<p>Un valor \(l_z\approx0\) indica buen ajuste. Un valor muy negativo (orientativamente \(l_z&lt;-2\)) señala respuestas incoherentes con la dificultad —aciertos en lo difícil y fallos en lo fácil, o azar—, y el sistema marca el diagnóstico como provisional en el informe. Es una señal de cautela, no una prueba formal; con pocas preguntas es solo orientativo, por lo que se calcula únicamente a partir de tres respuestas.</p>
+
+<h3>23.2 Separabilidad del diseño (Monte Carlo)</h3>
+
+<p>Como propiedad del test (no del alumno), se puede estimar con qué fiabilidad el banco distingue los niveles. Se generan respondentes sintéticos situados en el \(\theta\) de cada hipótesis, se les pasa el test reutilizando la misma selección adaptativa y se construye la matriz de confusión (nivel real frente a nivel diagnosticado). La diagonal recoge los aciertos del diseño y su media es la exactitud.</p>
+
+<p>Hay que presentarla como fiabilidad <strong>bajo el modelo</strong>, nunca como validez empírica: los respondentes salen del propio modelo, así que mide si el diseño discrimina los niveles, no si los parámetros reflejan la realidad. Es una herramienta del creador del recurso, no del alumnado, y no se muestra en la interfaz del alumno: vive en una utilidad aparte (<code>validacion-banco.html</code>) que el autor puede ejecutar al diseñar o revisar el banco.</p>
+
 <p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
   Ver también: <a href="funcionamiento.html" style="color:var(--accent)">Funcionamiento bayesiano del sistema adaptativo</a>
 </p>

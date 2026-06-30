@@ -442,6 +442,30 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>La puntuació pot atorgar crèdit parcial per encertar-ne un de sol, però l'habilitat transversal \(nk\) exigeix que tots dos siguin correctes.</p>
 
+<h2>23. Validació i fiabilitat del diagnòstic (opcional)</h2>
+
+<p>Les comprovacions d'aquesta secció no formen part del flux obligatori: són una capa opcional que augmenta l'honestedat del diagnòstic sense necessitat de dades empíriques.</p>
+
+<h3>23.1 Ajust del patró individual (person-fit \(l_z\))</h3>
+
+<p>En tancar el diagnòstic inicial, el sistema avalua si el patró de respostes és coherent amb el nivell estimat. Per a cada pregunta resposta durant el diagnòstic, amb dificultat \(b_i\) i puntuació observada \(s_i\in[0,1]\), es pren \(\widehat{\theta}\) com la hipòtesi més probable (MAP) del tipus corresponent i \(P_i = P(A\mid\widehat{\theta},\,b_i)\). L'índex estandarditzat de Drasgow és:</p>
+
+\[l_z = \frac{l_0 - E[l_0]}{\sqrt{\operatorname{Var}[l_0]}}\]
+
+<p>amb:</p>
+
+\[l_0 = \sum_i \bigl[s_i\ln P_i + (1-s_i)\ln(1-P_i)\bigr]\]
+\[E[l_0] = \sum_i \bigl[P_i\ln P_i + (1-P_i)\ln(1-P_i)\bigr]\]
+\[\operatorname{Var}[l_0] = \sum_i P_i(1-P_i)\left[\ln\frac{P_i}{1-P_i}\right]^2\]
+
+<p>Un valor \(l_z\approx0\) indica bon ajust. Un valor molt negatiu (orientativament \(l_z&lt;-2\)) assenyala respostes incoherents amb la dificultat —encerts en allò difícil i errades en allò fàcil, o atzar—, i el sistema marca el diagnòstic com a provisional a l'informe. És un senyal de cautela, no una prova formal; amb poques preguntes només és orientatiu, per la qual cosa es calcula únicament a partir de tres respostes.</p>
+
+<h3>23.2 Separabilitat del disseny (Monte Carlo)</h3>
+
+<p>Com a propietat del test (no de l'alumne), es pot estimar amb quina fiabilitat el banc distingeix els nivells. Es generen responents sintètics situats en el \(\theta\) de cada hipòtesi, se'ls passa el test reutilitzant la mateixa selecció adaptativa i es construeix la matriu de confusió (nivell real enfront de nivell diagnosticat). La diagonal recull els encerts del disseny i la seva mitjana és l'exactitud.</p>
+
+<p>Cal presentar-la com a fiabilitat <strong>sota el model</strong>, mai com a validesa empírica: els responents surten del mateix model, de manera que mesura si el disseny discrimina els nivells, no si els paràmetres reflecteixen la realitat. És una eina del creador del recurs, no de l'alumnat, i no es mostra a la interfície de l'alumne: viu en una utilitat a part (<code>validacion-banco.html</code>) que l'autor pot executar en dissenyar o revisar el banc.</p>
+
 <p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
   Vegeu també: <a href="funcionamiento-ca.html" style="color:var(--accent)">Funcionament bayesià del sistema adaptatiu de pràctica</a>
 </p>

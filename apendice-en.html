@@ -442,6 +442,30 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>The score can grant partial credit for getting only one right, but the cross-cutting skill \(nk\) requires both to be correct.</p>
 
+<h2>23. Diagnosis validation and reliability (optional)</h2>
+
+<p>The checks in this section are not part of the mandatory flow: they are an optional layer that increases the honesty of the diagnosis without requiring empirical data.</p>
+
+<h3>23.1 Individual response fit (person-fit \(l_z\))</h3>
+
+<p>When the initial diagnosis closes, the system evaluates whether the response pattern is consistent with the estimated level. For each question answered during the diagnosis, with difficulty \(b_i\) and observed score \(s_i\in[0,1]\), \(\widehat{\theta}\) is taken as the most probable hypothesis (MAP) of the corresponding type and \(P_i = P(A\mid\widehat{\theta},\,b_i)\). Drasgow's standardised index is:</p>
+
+\[l_z = \frac{l_0 - E[l_0]}{\sqrt{\operatorname{Var}[l_0]}}\]
+
+<p>with:</p>
+
+\[l_0 = \sum_i \bigl[s_i\ln P_i + (1-s_i)\ln(1-P_i)\bigr]\]
+\[E[l_0] = \sum_i \bigl[P_i\ln P_i + (1-P_i)\ln(1-P_i)\bigr]\]
+\[\operatorname{Var}[l_0] = \sum_i P_i(1-P_i)\left[\ln\frac{P_i}{1-P_i}\right]^2\]
+
+<p>A value \(l_z\approx0\) indicates good fit. A strongly negative value (roughly \(l_z&lt;-2\)) signals responses inconsistent with difficulty —correct on hard items and wrong on easy ones, or random answering— and the system flags the diagnosis as provisional in the report. It is a caution signal, not a formal test; with few questions it is only indicative, so it is computed only from three responses onward.</p>
+
+<h3>23.2 Design separability (Monte Carlo)</h3>
+
+<p>As a property of the test (not of the student), one can estimate how reliably the bank distinguishes the levels. Synthetic respondents are placed at the \(\theta\) of each hypothesis, given the test reusing the same adaptive selection, and a confusion matrix is built (true level versus diagnosed level). The diagonal holds the design's correct recoveries and its mean is the accuracy.</p>
+
+<p>It must be presented as reliability <strong>under the model</strong>, never as empirical validity: the respondents come from the model itself, so it measures whether the design discriminates the levels, not whether the parameters reflect reality. It is a tool for the resource's author, not for students, and is not shown in the student interface: it lives in a separate utility (<code>validacion-banco.html</code>) that the author can run when designing or reviewing the bank.</p>
+
 <p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
   See also: <a href="funcionamiento-en.html" style="color:var(--accent)">Bayesian functioning of the adaptive practice system</a>
 </p>

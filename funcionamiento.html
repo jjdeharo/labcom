@@ -297,6 +297,8 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>El informe muestra: nivel al terminar el diagnóstico, nivel actual, progreso por tipo, puntos fuertes, tipos que necesitan práctica, recomendación personalizada y diagnóstico por habilidades (separando lectura del enunciado y pasos de resolución).</p>
 
+<p>Además, al cerrar el diagnóstico el programa comprueba si las respuestas fueron coherentes con la dificultad. Si detecta un patrón extraño —acertar lo difícil y fallar lo fácil, o responder al azar—, avisa de que el diagnóstico es poco fiable y conviene tomarlo como provisional. Esta comprobación de coherencia (el índice <em>person-fit</em>) se detalla en el apéndice matemático.</p>
+
 <h2>11. El ciclo completo</h2>
 
 \[\boxed{\text{estado actual} \rightarrow \text{elección adaptativa} \rightarrow \text{respuesta parcial} \rightarrow \text{score} \rightarrow \text{Bayes} \rightarrow \text{nuevo estado} \rightarrow \text{siguiente elección}}\]

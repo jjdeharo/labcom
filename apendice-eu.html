@@ -341,6 +341,30 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 \[r_{nk} = x_n\cdot x_k\]
 
+<h2>23. Diagnostikoaren balidazioa eta fidagarritasuna (aukerakoa)</h2>
+
+<p>Atal honetako egiaztapenak ez dira nahitaezko fluxuaren parte: aukerako geruza bat dira, datu enpirikorik gabe diagnostikoaren zintzotasuna handitzen dutenak.</p>
+
+<h3>23.1 Banakako erantzun-ereduaren doitzea (person-fit \(l_z\))</h3>
+
+<p>Hasierako diagnostikoa ixtean, sistemak ebaluatzen du erantzun-eredua maila estimatuarekin koherentea den. Diagnostikoan zehar erantzundako galdera bakoitzeko, \(b_i\) zailtasunarekin eta \(s_i\in[0,1]\) puntuazio behatuarekin, \(\widehat{\theta}\) dagokion motaren hipotesi probableena (MAP) bezala hartzen da eta \(P_i = P(A\mid\widehat{\theta},\,b_i)\). Drasgow-en indize estandarizatua hau da:</p>
+
+\[l_z = \frac{l_0 - E[l_0]}{\sqrt{\operatorname{Var}[l_0]}}\]
+
+<p>honako hauekin:</p>
+
+\[l_0 = \sum_i \bigl[s_i\ln P_i + (1-s_i)\ln(1-P_i)\bigr]\]
+\[E[l_0] = \sum_i \bigl[P_i\ln P_i + (1-P_i)\ln(1-P_i)\bigr]\]
+\[\operatorname{Var}[l_0] = \sum_i P_i(1-P_i)\left[\ln\frac{P_i}{1-P_i}\right]^2\]
+
+<p>\(l_z\approx0\) balioak doitze ona adierazten du. Balio oso negatibo batek (gutxi gorabehera \(l_z&lt;-2\)) zailtasunarekin koherenteak ez diren erantzunak adierazten ditu —zailetan asmatu eta errazetan huts egin, edo ausazko erantzunak—, eta sistemak diagnostikoa behin-behinekotzat markatzen du txostenean. Zuhurtzia-seinale bat da, ez froga formala; galdera gutxirekin orientagarria baino ez da, eta, beraz, hiru erantzunetatik aurrera soilik kalkulatzen da.</p>
+
+<h3>23.2 Diseinuaren bereizgarritasuna (Monte Carlo)</h3>
+
+<p>Testaren propietate gisa (ez ikaslearena), bankuak mailak zer fidagarritasunekin bereizten dituen estima daiteke. Hipotesi bakoitzaren \(\theta\)-an kokatutako erantzule sintetikoak sortzen dira, testa egiten zaie hautapen adaptatibo bera berrerabiliz, eta nahasmen-matrizea eraikitzen da (benetako maila vs. diagnostikatutako maila). Diagonalak diseinuaren asmatzeak biltzen ditu eta haren batez bestekoa zehaztasuna da.</p>
+
+<p>Fidagarritasun gisa aurkeztu behar da <strong>ereduaren pean</strong>, inoiz ez baliotasun enpiriko gisa: erantzuleak eredu beretik datoz, beraz, diseinuak mailak bereizten dituen neurtzen du, ez parametroek errealitatea islatzen duten. Baliabidearen sortzailearen tresna bat da, ez ikasleena, eta ez da ikaslearen interfazean erakusten: aparteko utilitate batean dago (<code>validacion-banco.html</code>), egileak bankua diseinatzean edo berrikustean exekuta dezakeena.</p>
+
 <p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
   Ikus ere: <a href="funcionamiento-eu.html" style="color:var(--accent)">Praktika sistema adaptatiboaren funtzionamendu bayesiarra</a>
 </p>

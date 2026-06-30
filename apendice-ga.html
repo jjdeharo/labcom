@@ -379,6 +379,30 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 \[r_{nk} = x_n\cdot x_k\]
 
+<h2>23. Validación e fiabilidade do diagnóstico (opcional)</h2>
+
+<p>As comprobacións desta sección non forman parte do fluxo obrigatorio: son unha capa opcional que aumenta a honestidade do diagnóstico sen necesidade de datos empíricos.</p>
+
+<h3>23.1 Axuste do patrón individual (person-fit \(l_z\))</h3>
+
+<p>Ao pechar o diagnóstico inicial, o sistema avalía se o patrón de respostas é coherente co nivel estimado. Para cada pregunta respondida durante o diagnóstico, con dificultade \(b_i\) e puntuación observada \(s_i\in[0,1]\), tómase \(\widehat{\theta}\) como a hipótese máis probable (MAP) do tipo correspondente e \(P_i = P(A\mid\widehat{\theta},\,b_i)\). O índice estandarizado de Drasgow é:</p>
+
+\[l_z = \frac{l_0 - E[l_0]}{\sqrt{\operatorname{Var}[l_0]}}\]
+
+<p>con:</p>
+
+\[l_0 = \sum_i \bigl[s_i\ln P_i + (1-s_i)\ln(1-P_i)\bigr]\]
+\[E[l_0] = \sum_i \bigl[P_i\ln P_i + (1-P_i)\ln(1-P_i)\bigr]\]
+\[\operatorname{Var}[l_0] = \sum_i P_i(1-P_i)\left[\ln\frac{P_i}{1-P_i}\right]^2\]
+
+<p>Un valor \(l_z\approx0\) indica bo axuste. Un valor moi negativo (orientativamente \(l_z&lt;-2\)) sinala respostas incoherentes coa dificultade —acertos no difícil e fallos no fácil, ou azar—, e o sistema marca o diagnóstico como provisional no informe. É un sinal de cautela, non unha proba formal; con poucas preguntas só é orientativo, polo que se calcula unicamente a partir de tres respostas.</p>
+
+<h3>23.2 Separabilidade do deseño (Monte Carlo)</h3>
+
+<p>Como propiedade do test (non do alumno), pódese estimar con que fiabilidade o banco distingue os niveis. Xéranse respondentes sintéticos situados no \(\theta\) de cada hipótese, pásaselles o test reutilizando a mesma selección adaptativa e constrúese a matriz de confusión (nivel real fronte a nivel diagnosticado). A diagonal recolle os acertos do deseño e a súa media é a exactitude.</p>
+
+<p>Hai que presentala como fiabilidade <strong>baixo o modelo</strong>, nunca como validez empírica: os respondentes saen do propio modelo, así que mide se o deseño discrimina os niveis, non se os parámetros reflicten a realidade. É unha ferramenta do creador do recurso, non do alumnado, e non se mostra na interface do alumno: vive nunha utilidade á parte (<code>validacion-banco.html</code>) que o autor pode executar ao deseñar ou revisar o banco.</p>
+
 <p style="margin-top:32px;font-size:.83rem;color:var(--text2)">
   Ver tamén: <a href="funcionamiento-ga.html" style="color:var(--accent)">Funcionamento bayesiano do sistema adaptativo de práctica</a>
 </p>

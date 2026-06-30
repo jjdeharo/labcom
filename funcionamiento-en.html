@@ -297,6 +297,8 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>The report shows: level at the end of diagnosis, current level, progress by type, strengths, types that need practice, personalised recommendation and skills diagnosis (separating problem reading and resolution steps).</p>
 
+<p>In addition, when the diagnosis closes the program checks whether the answers were consistent with difficulty. If it detects an odd pattern —getting hard items right and easy ones wrong, or answering at random—, it warns that the diagnosis is unreliable and should be taken as provisional. This consistency check (the <em>person-fit</em> index) is detailed in the mathematical appendix.</p>
+
 <h2>11. The full cycle</h2>
 
 \[\boxed{\text{current state} \rightarrow \text{adaptive selection} \rightarrow \text{partial answer} \rightarrow \text{score} \rightarrow \text{Bayes} \rightarrow \text{new state} \rightarrow \text{next selection}}\]

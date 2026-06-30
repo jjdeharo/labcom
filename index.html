@@ -3388,7 +3388,7 @@ function recordDiagnosticResponse(type,difficulty,score){
 // Versión suave: usa la puntuación parcial s∈[0,1] como respuesta observada, en línea
 // con la verosimilitud suave que usa el modelo. l_z≈0 indica buen ajuste; muy negativo
 // (< -2) señala respuestas incoherentes con la dificultad (azar, descuidos). Ver
-// matematicas.html §11.7. Es orientativo, no prueba formal, y con pocas preguntas más aún.
+// apendice.html §23.1. Es orientativo, no prueba formal, y con pocas preguntas más aún.
 function bayesPersonFitLz(diagLog,bayesState){
   if(!Array.isArray(diagLog)) return null;
   let l0=0,eL=0,varL=0,n=0;
