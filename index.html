@@ -2975,7 +2975,7 @@ function procComb(n,k){if(k>n||k<0)return 0;let r=1;for(let i=0;i<k;i++)r=r*(n-i
 
 const PROC_TEMPLATES={
   permutation:[
-    {ctx:{es:'{n} personas distintas deben ocupar {n} sillas en fila. ¿De cuántas formas pueden sentarse?',
+    {d:-1, ctx:{es:'{n} personas distintas deben ocupar {n} sillas en fila. ¿De cuántas formas pueden sentarse?',
           en:'{n} different people must sit in {n} chairs in a row. In how many ways can they sit?',
           ca:'{n} persones distintes han d\'ocupar {n} cadires en fila. De quantes formes poden seure?',
           ga:'{n} persoas distintas deben ocupar {n} cadeiras en fila. De cantas formas poden sentarse?',
@@ -2985,7 +2985,7 @@ const PROC_TEMPLATES={
            ca:'S\'ordenen tots els {n} elements; qualsevol canvi dona un ordre distint.',
            ga:'Ordénanse todos os {n} elementos; calquera cambio dá unha orde distinta.',
            eu:'{n} elementu guztiak ordenatzen dira; edozein aldaketak ordena ezberdin bat ematen du.'}},
-    {ctx:{es:'{n} libros distintos se colocan en una estantería. ¿Cuántos órdenes distintos son posibles?',
+    {d:-1, ctx:{es:'{n} libros distintos se colocan en una estantería. ¿Cuántos órdenes distintos son posibles?',
           en:'{n} different books are placed on a shelf. How many distinct orders are possible?',
           ca:'{n} llibres distints es col·loquen en una prestatgeria. Quants ordres distints són possibles?',
           ga:'{n} libros distintos colócanse nunha estantería. Cantos ordes distintos son posibles?',
@@ -2995,7 +2995,7 @@ const PROC_TEMPLATES={
            ca:'S\'ordenen tots els {n} llibres; el nombre de permutacions és {n}!.',
            ga:'Ordénanse todos os {n} libros; o número de permutacións é {n}!.',
            eu:'{n} liburu guztiak ordenatzen dira; permutazio kopurua {n}! da.'}},
-    {ctx:{es:'{n} corredores participan en una carrera. ¿De cuántas formas distintas puede quedar la clasificación final?',
+    {d:0, ctx:{es:'{n} corredores participan en una carrera. ¿De cuántas formas distintas puede quedar la clasificación final?',
           en:'{n} runners take part in a race. In how many distinct ways can the final ranking turn out?',
           ca:'{n} corredors participen en una cursa. De quantes formes distintes pot quedar la classificació final?',
           ga:'{n} corredores participan nunha carreira. De cantas formas distintas pode quedar a clasificación final?',
@@ -3005,7 +3005,7 @@ const PROC_TEMPLATES={
            ca:'La classificació és una ordenació de tots els {n} corredors.',
            ga:'A clasificación é unha ordenación de todos os {n} corredores.',
            eu:'Sailkapena {n} lasterlariren ordenazio bat da.'}},
-    {ctx:{es:'Se tienen {n} banderas de colores distintos colocadas todas en fila. ¿Cuántos diseños distintos hay?',
+    {d:-1, ctx:{es:'Se tienen {n} banderas de colores distintos colocadas todas en fila. ¿Cuántos diseños distintos hay?',
           en:'There are {n} flags of different colours, all placed in a row. How many distinct designs are there?',
           ca:'Hi ha {n} banderes de colors distints col·locades totes en fila. Quants dissenys distints hi ha?',
           ga:'Tense {n} bandeiras de cores distintas colocadas todas en fila. Cantos deseños distintos hai?',
@@ -3014,10 +3014,20 @@ const PROC_TEMPLATES={
            en:'Each distinct ordering of the {n} flags is a different design.',
            ca:'Cada ordenació distinta de les {n} banderes és un disseny diferent.',
            ga:'Cada ordenación distinta das {n} bandeiras é un deseño diferente.',
-           eu:'{n} banderen ordenazio bakoitza diseinu ezberdin bat da.'}}
+           eu:'{n} banderen ordenazio bakoitza diseinu ezberdin bat da.'}},
+    {d:1, ctx:{es:'¿Cuántos números distintos pueden formarse reordenando todas las cifras del número {digits}?',
+          en:'How many distinct numbers can be formed by rearranging all the digits of {digits}?',
+          ca:'Quants nombres distints es poden formar reordenant totes les xifres del nombre {digits}?',
+          ga:'Cantos números distintos poden formarse reordenando todas as cifras do número {digits}?',
+          eu:'Zenbat zenbaki ezberdin sor daitezke {digits} zenbakiaren zifra guztiak berrordenatuz?'},
+     hint:{es:'Cuenta las cifras de {digits}: son {n} y todas distintas, así que cada reordenación da un número diferente.',
+           en:'Count the digits of {digits}: there are {n} and all are different, so each rearrangement gives a different number.',
+           ca:'Compta les xifres de {digits}: són {n} i totes distintes, així que cada reordenació dona un nombre diferent.',
+           ga:'Conta as cifras de {digits}: son {n} e todas distintas, así que cada reordenación dá un número diferente.',
+           eu:'Zenbatu {digits} zenbakiaren zifrak: {n} dira eta guztiak ezberdinak, beraz berrordenazio bakoitzak zenbaki ezberdina ematen du.'}}
   ],
   variationRep:[
-    {ctx:{es:'Un código de seguridad tiene {k} posiciones y cada una puede ser cualquiera de {n} símbolos (con repetición). ¿Cuántos códigos distintos hay?',
+    {d:-1, ctx:{es:'Un código de seguridad tiene {k} posiciones y cada una puede ser cualquiera de {n} símbolos (con repetición). ¿Cuántos códigos distintos hay?',
           en:'A security code has {k} positions and each can be any of {n} symbols (repetition allowed). How many distinct codes are there?',
           ca:'Un codi de seguretat té {k} posicions i cadascuna pot ser qualsevol de {n} símbols (amb repetició). Quants codis distints hi ha?',
           ga:'Un código de seguridade ten {k} posicións e cada unha pode ser calquera de {n} símbolos (con repetición). Cantos códigos distintos hai?',
@@ -3027,7 +3037,7 @@ const PROC_TEMPLATES={
            ca:'Hi ha {n} opcions per a cadascuna de les {k} posicions i es pot repetir símbol.',
            ga:'Hai {n} opcións para cada unha das {k} posicións e pódese repetir símbolo.',
            eu:'{k} posizio bakoitzerako {n} aukera daude eta sinboloa errepika daiteke.'}},
-    {ctx:{es:'Se lanza un dado de {n} caras {k} veces. ¿Cuántas secuencias de resultados distintas son posibles?',
+    {d:0, ctx:{es:'Se lanza un dado de {n} caras {k} veces. ¿Cuántas secuencias de resultados distintas son posibles?',
           en:'A {n}-sided die is rolled {k} times. How many distinct sequences of results are possible?',
           ca:'Es llança un dau de {n} cares {k} vegades. Quantes seqüències de resultats distintes són possibles?',
           ga:'Lánzase un dado de {n} caras {k} veces. Cantas secuencias de resultados distintas son posibles?',
@@ -3037,7 +3047,7 @@ const PROC_TEMPLATES={
            ca:'En cada tirada hi ha {n} resultats possibles i pot repetir-se el mateix resultat.',
            ga:'En cada tirada hai {n} resultados posibles e pódese repetir o mesmo resultado.',
            eu:'Botaldi bakoitzean {n} emaitza posible daude eta emaitza bera errepika daiteke.'}},
-    {ctx:{es:'Una urna tiene bolas de {n} colores. Se sacan {k} bolas con reposición (cada bola extraída vuelve a la urna). ¿Cuántas secuencias distintas de colores son posibles?',
+    {d:0, ctx:{es:'Una urna tiene bolas de {n} colores. Se sacan {k} bolas con reposición (cada bola extraída vuelve a la urna). ¿Cuántas secuencias distintas de colores son posibles?',
           en:'An urn has balls of {n} colours. {k} balls are drawn with replacement (each ball is put back). How many distinct colour sequences are possible?',
           ca:'Una urna té boles de {n} colors. S\'extreuen {k} boles amb reposició (cada bola extreta torna a la urna). Quantes seqüències distintes de colors són possibles?',
           ga:'Unha urna ten bolas de {n} cores. Extráense {k} bolas con reposición (cada bola extraída volve á urna). Cantas secuencias distintas de cores son posibles?',
@@ -3047,7 +3057,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre importa i el color pot repetir-se perquè les boles es reposen.',
            ga:'A orde importa e a cor pódese repetir porque as bolas se repoñen.',
            eu:'Ordena garrantzitsua da eta kolorea errepika daiteke bolak ordezkatzen direlako.'}},
-    {ctx:{es:'Un sistema informático genera contraseñas de {k} caracteres eligiendo cada uno entre {n} posibles (con repetición). ¿Cuántas contraseñas distintas puede generar?',
+    {d:-1, ctx:{es:'Un sistema informático genera contraseñas de {k} caracteres eligiendo cada uno entre {n} posibles (con repetición). ¿Cuántas contraseñas distintas puede generar?',
           en:'A computer system generates passwords of {k} characters, each chosen from {n} possible ones (repetition allowed). How many distinct passwords can it generate?',
           ca:'Un sistema informàtic genera contrasenyes de {k} caràcters triant cadascun entre {n} possibles (amb repetició). Quantes contrasenyes distintes pot generar?',
           ga:'Un sistema informático xera contrasinais de {k} caracteres escollendo cada un entre {n} posibles (con repetición). Cantos contrasinais distintos pode xerar?',
@@ -3056,10 +3066,20 @@ const PROC_TEMPLATES={
            en:'There are {n} options per position and the same character can be used more than once.',
            ca:'Hi ha {n} opcions per posició i es pot usar el mateix caràcter més d\'una vegada.',
            ga:'Hai {n} opcións por posición e pódese usar o mesmo carácter máis dunha vez.',
-           eu:'Posizio bakoitzeko {n} aukera daude eta karaktere bera behin baino gehiagotan erabil daiteke.'}}
+           eu:'Posizio bakoitzeko {n} aukera daude eta karaktere bera behin baino gehiagotan erabil daiteke.'}},
+    {d:1, ctx:{es:'Un código tiene {k} posiciones y en cada una puede aparecer cualquier dígito del 0 al {nm1}. ¿Cuántos códigos distintos existen?',
+          en:'A code has {k} positions and each can be any digit from 0 to {nm1}. How many distinct codes exist?',
+          ca:'Un codi té {k} posicions i a cadascuna pot aparèixer qualsevol dígit del 0 al {nm1}. Quants codis distints hi ha?',
+          ga:'Un código ten {k} posicións e en cada unha pode aparecer calquera díxito do 0 ao {nm1}. Cantos códigos distintos existen?',
+          eu:'Kode batek {k} posizio ditu eta bakoitzean 0tik {nm1}era arteko edozein digitu ager daiteke. Zenbat kode ezberdin daude?'},
+     hint:{es:'Cuidado con el cero: del 0 al {nm1} hay {n} opciones por posición, y pueden repetirse.',
+           en:'Mind the zero: from 0 to {nm1} there are {n} options per position, and they can repeat.',
+           ca:'Compte amb el zero: del 0 al {nm1} hi ha {n} opcions per posició, i es poden repetir.',
+           ga:'Coidado co cero: do 0 ao {nm1} hai {n} opcións por posición, e poden repetirse.',
+           eu:'Kontuz zeroarekin: 0tik {nm1}era {n} aukera daude posizio bakoitzeko, eta errepika daitezke.'}}
   ],
   variation:[
-    {ctx:{es:'De un grupo de {n} candidatos se eligen {k} para ocupar {k} cargos distintos (cada cargo lo ocupa una persona diferente). ¿De cuántas formas puede hacerse?',
+    {d:-1, ctx:{es:'De un grupo de {n} candidatos se eligen {k} para ocupar {k} cargos distintos (cada cargo lo ocupa una persona diferente). ¿De cuántas formas puede hacerse?',
           en:'From a group of {n} candidates, {k} are chosen to fill {k} different posts (each held by a different person). In how many ways can this be done?',
           ca:'D\'un grup de {n} candidats s\'elegeixen {k} per ocupar {k} càrrecs distints (cada càrrec l\'ocupa una persona diferent). De quantes formes pot fer-se?',
           ga:'Dun grupo de {n} candidatos elíxense {k} para ocupar {k} cargos distintos (cada cargo ocupado por unha persoa diferente). De cantas formas pode facerse?',
@@ -3069,7 +3089,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre importa (càrrec A ≠ càrrec B) i no es pot repetir persona.',
            ga:'A orde importa (cargo A ≠ cargo B) e non se pode repetir persoa.',
            eu:'Ordena garrantzitsua da (kargu A ≠ kargu B) eta pertsona ezin da errepikatu.'}},
-    {ctx:{es:'En una carrera de {n} atletas se reparten {k} medallas distintas (oro, plata…). ¿De cuántas formas puede quedar el podio?',
+    {d:0, ctx:{es:'En una carrera de {n} atletas se reparten {k} medallas distintas (oro, plata…). ¿De cuántas formas puede quedar el podio?',
           en:'In a race with {n} athletes, {k} distinct medals are awarded (gold, silver…). In how many ways can the podium turn out?',
           ca:'En una cursa de {n} atletes es reparteixen {k} medalles distintes (or, plata…). De quantes formes pot quedar el podi?',
           ga:'Nunha carreira de {n} atletas repártense {k} medallas distintas (ouro, prata…). De cantas formas pode quedar o podio?',
@@ -3079,7 +3099,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre importa (or ≠ plata) i cada atleta només pot rebre una medalla.',
            ga:'A orde importa (ouro ≠ prata) e cada atleta só pode recibir unha medalla.',
            eu:'Ordena garrantzitsua da (urrea ≠ zilarra) eta atleta bakoitzak domina bat baino ezin du jaso.'}},
-    {ctx:{es:'Hay {n} cuadros distintos y {k} paredes numeradas donde colgarlos (un cuadro por pared). ¿De cuántas formas pueden distribuirse?',
+    {d:-1, ctx:{es:'Hay {n} cuadros distintos y {k} paredes numeradas donde colgarlos (un cuadro por pared). ¿De cuántas formas pueden distribuirse?',
           en:'There are {n} different paintings and {k} numbered walls to hang them on (one painting per wall). In how many ways can they be distributed?',
           ca:'Hi ha {n} quadres distints i {k} parets numerades per penjar-los (un quadre per paret). De quantes formes es poden distribuir?',
           ga:'Hai {n} cadros distintos e {k} paredes numeradas para colgar (un cadro por parede). De cantas formas poden distribuírse?',
@@ -3089,7 +3109,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre importa (paret 1 ≠ paret 2) i no es pot penjar el mateix quadre a dues parets.',
            ga:'A orde importa (parede 1 ≠ parede 2) e non se pode colgar o mesmo cadro en dúas paredes.',
            eu:'Ordena garrantzitsua da (horma 1 ≠ horma 2) eta koadro bera bi hormatan ezin da zintzilika.'}},
-    {ctx:{es:'Un fotógrafo tiene {n} modelos disponibles y hace una sesión con {k} de ellos en posiciones numeradas distintas. ¿Cuántos grupos ordenados de {k} modelos puede formar?',
+    {d:0, ctx:{es:'Un fotógrafo tiene {n} modelos disponibles y hace una sesión con {k} de ellos en posiciones numeradas distintas. ¿Cuántos grupos ordenados de {k} modelos puede formar?',
           en:'A photographer has {n} available models and shoots {k} of them in distinct numbered positions. How many ordered groups of {k} models can be formed?',
           ca:'Un fotògraf té {n} models disponibles i fa una sessió amb {k} en posicions numerades distintes. Quants grups ordenats de {k} models pot formar?',
           ga:'Un fotógrafo ten {n} modelos dispoñibles e fai unha sesión con {k} en posicións numeradas distintas. Cantos grupos ordenados de {k} modelos pode formar?',
@@ -3098,10 +3118,20 @@ const PROC_TEMPLATES={
            en:'The order of the models in the photo matters and the same model cannot appear twice.',
            ca:'L\'ordre dels models a la foto importa i no pot sortir el mateix model dues vegades.',
            ga:'A orde dos modelos na foto importa e non pode saír o mesmo modelo dúas veces.',
-           eu:'Argazkian modeloen ordena garrantzitsua da eta modelo bera birritan ezin da agertu.'}}
+           eu:'Argazkian modeloen ordena garrantzitsua da eta modelo bera birritan ezin da agertu.'}},
+    {d:1, ctx:{es:'En un concurso se sortean {k} premios diferentes entre {n} participantes y nadie puede ganar más de uno. ¿De cuántas formas pueden repartirse los premios?',
+          en:'In a contest, {k} different prizes are raffled among {n} participants and nobody can win more than one. In how many ways can the prizes be handed out?',
+          ca:'En un concurs se sortegen {k} premis diferents entre {n} participants i ningú no pot guanyar-ne més d\'un. De quantes formes es poden repartir els premis?',
+          ga:'Nun concurso sortéanse {k} premios diferentes entre {n} participantes e ninguén pode gañar máis dun. De cantas formas poden repartirse os premios?',
+          eu:'Lehiaketa batean {k} sari ezberdin zozketatzen dira {n} parte-hartzaileren artean eta inork ezin du bat baino gehiago irabazi. Zenbat modutan bana daitezke sariak?'},
+     hint:{es:'Parece que basta elegir {k} personas, pero los premios son diferentes: importa quién recibe cada premio.',
+           en:'It looks like choosing {k} people is enough, but the prizes are different: who gets each prize matters.',
+           ca:'Sembla que n\'hi ha prou triant {k} persones, però els premis són diferents: importa qui rep cada premi.',
+           ga:'Parece que abonda con elixir {k} persoas, pero os premios son diferentes: importa quen recibe cada premio.',
+           eu:'{k} pertsona aukeratzea nahikoa dirudi, baina sariak ezberdinak dira: nork zein sari jasotzen duen garrantzitsua da.'}}
   ],
   combination:[
-    {ctx:{es:'De un grupo de {n} personas se eligen {k} para formar un comité (sin cargos distintos). ¿Cuántos comités distintos hay?',
+    {d:-1, ctx:{es:'De un grupo de {n} personas se eligen {k} para formar un comité (sin cargos distintos). ¿Cuántos comités distintos hay?',
           en:'From a group of {n} people, {k} are chosen to form a committee (no distinct roles). How many distinct committees are there?',
           ca:'D\'un grup de {n} persones s\'elegeixen {k} per formar un comitè (sense càrrecs distints). Quants comitès distints hi ha?',
           ga:'Dun grupo de {n} persoas elíxense {k} para formar un comité (sen cargos distintos). Cantos comités distintos hai?',
@@ -3111,7 +3141,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre no importa: {A,B,C} és el mateix comitè que {C,B,A}.',
            ga:'A orde non importa: {A,B,C} é o mesmo comité que {C,B,A}.',
            eu:'Ordena ez da garrantzitsua: {A,B,C} batzordea {C,B,A} berdina da.'}},
-    {ctx:{es:'Un estudiante tiene {n} asignaturas optativas y debe elegir {k} para su plan de estudios. ¿De cuántas formas puede elegirlas?',
+    {d:0, ctx:{es:'Un estudiante tiene {n} asignaturas optativas y debe elegir {k} para su plan de estudios. ¿De cuántas formas puede elegirlas?',
           en:'A student has {n} optional subjects and must choose {k} for their study plan. In how many ways can they be chosen?',
           ca:'Un estudiant té {n} assignatures optatives i ha de triar-ne {k} per al seu pla d\'estudis. De quantes formes pot triar-les?',
           ga:'Un estudante ten {n} materias optativas e debe elixir {k} para o seu plan de estudos. De cantas formas pode elixilas?',
@@ -3121,7 +3151,7 @@ const PROC_TEMPLATES={
            ca:'El conjunt d\'assignatures no té ordre; només importa quines {k} es trien.',
            ga:'O conxunto de materias non ten orde; só importa cales {k} se elixen.',
            eu:'Ikasgai-multzoak ez du ordenarik; {k} zeintzuk aukeratzen diren bakarrik da garrantzitsua.'}},
-    {ctx:{es:'Hay {n} equipos en un torneo y se quieren elegir {k} para una fase especial. ¿Cuántas selecciones distintas de {k} equipos hay?',
+    {d:0, ctx:{es:'Hay {n} equipos en un torneo y se quieren elegir {k} para una fase especial. ¿Cuántas selecciones distintas de {k} equipos hay?',
           en:'There are {n} teams in a tournament and {k} are to be chosen for a special stage. How many distinct selections of {k} teams are there?',
           ca:'Hi ha {n} equips en un torneig i se\'n volen elegir {k} per a una fase especial. Quantes seleccions distintes de {k} equips hi ha?',
           ga:'Hai {n} equipos nun torneo e quérense elixir {k} para unha fase especial. Cantas seleccións distintas de {k} equipos hai?',
@@ -3131,19 +3161,29 @@ const PROC_TEMPLATES={
            ca:'La selecció és un conjunt; {A,B} és el mateix que {B,A}.',
            ga:'A selección é un conxunto; {A,B} é o mesmo que {B,A}.',
            eu:'Hautaketa multzo bat da; {A,B} {B,A} berdina da.'}},
-    {ctx:{es:'Una tienda tiene {n} productos distintos y un cliente quiere comprar {k}. ¿Cuántas selecciones distintas de {k} productos puede hacer?',
-          en:'A shop has {n} different products and a customer wants to buy {k}. How many distinct selections of {k} products can be made?',
-          ca:'Una botiga té {n} productes distints i un client vol comprar-ne {k}. Quantes seleccions distintes de {k} productes pot fer?',
-          ga:'Nunha tenda hai {n} produtos distintos e un cliente quere mercar {k}. Cantas seleccións distintas de {k} produtos pode facer?',
-          eu:'Denda batek {n} produktu ezberdin ditu eta bezero batek {k} erosi nahi ditu. Zenbat {k} produkturen hautaketa ezberdin egin ditzake?'},
+    {d:0, ctx:{es:'Una tienda tiene {n} productos distintos y un cliente quiere comprar {k} productos diferentes. ¿Cuántas selecciones distintas de {k} productos puede hacer?',
+          en:'A shop has {n} different products and a customer wants to buy {k} different products. How many distinct selections of {k} products can be made?',
+          ca:'Una botiga té {n} productes distints i un client vol comprar-ne {k} de diferents. Quantes seleccions distintes de {k} productes pot fer?',
+          ga:'Nunha tenda hai {n} produtos distintos e un cliente quere mercar {k} produtos diferentes. Cantas seleccións distintas de {k} produtos pode facer?',
+          eu:'Denda batek {n} produktu ezberdin ditu eta bezero batek {k} produktu desberdin erosi nahi ditu. Zenbat {k} produkturen hautaketa ezberdin egin ditzake?'},
      hint:{es:'El conjunto de productos comprados no tiene orden; solo importa cuáles son.',
            en:'The set of purchased products has no order; only which ones matter.',
            ca:'El conjunt de productes comprats no té ordre; només importa quins són.',
            ga:'O conxunto de produtos mercados non ten orde; só importa cales son.',
-           eu:'Erositako produktuen multzoak ez du ordenarik; zein diren bakarrik da garrantzitsua.'}}
+           eu:'Erositako produktuen multzoak ez du ordenarik; zein diren bakarrik da garrantzitsua.'}},
+    {d:1, ctx:{es:'De {n} obras candidatas se eligen {k} para una exposición y se colgarán una junto a otra en la sala. ¿Cuántas selecciones distintas de {k} obras pueden hacerse?',
+          en:'From {n} candidate works, {k} are chosen for an exhibition and will be hung side by side in the room. How many distinct selections of {k} works can be made?',
+          ca:'De {n} obres candidates se\'n trien {k} per a una exposició i es penjaran l\'una al costat de l\'altra a la sala. Quantes seleccions distintes de {k} obres es poden fer?',
+          ga:'De {n} obras candidatas elíxense {k} para unha exposición e colgaranse unha á beira da outra na sala. Cantas seleccións distintas de {k} obras poden facerse?',
+          eu:'{n} obra hautagaietatik {k} aukeratzen dira erakusketa baterako eta aretoan bata bestearen ondoan zintzilikatuko dira. Zenbat {k} obraren hautaketa ezberdin egin daitezke?'},
+     hint:{es:'La colocación en la sala no cambia qué obras se eligieron: solo cuenta el conjunto de {k}.',
+           en:'The placement in the room doesn\'t change which works were chosen: only the set of {k} counts.',
+           ca:'La col·locació a la sala no canvia quines obres s\'han triat: només compta el conjunt de {k}.',
+           ga:'A colocación na sala non cambia que obras se elixiron: só conta o conxunto de {k}.',
+           eu:'Aretoko kokapenak ez du aldatzen zein obra aukeratu diren: {k}ko multzoak bakarrik balio du.'}}
   ],
   combinationRep:[
-    {ctx:{es:'Una heladería tiene {n} sabores. Pides {k} bolas de helado pudiendo repetir sabor. ¿Cuántas combinaciones distintas de {k} bolas hay?',
+    {d:-1, ctx:{es:'Una heladería tiene {n} sabores. Pides {k} bolas de helado pudiendo repetir sabor. ¿Cuántas combinaciones distintas de {k} bolas hay?',
           en:'An ice cream parlour has {n} flavours. You order {k} scoops and may repeat a flavour. How many distinct combinations of {k} scoops are there?',
           ca:'Una gelateria té {n} gustos. Demanes {k} boles de gelat podent repetir gust. Quantes combinacions distintes de {k} boles hi ha?',
           ga:'Nunha xeadería hai {n} sabores. Pides {k} bolas de xeado podendo repetir sabor. Cantas combinacións distintas de {k} bolas hai?',
@@ -3153,7 +3193,7 @@ const PROC_TEMPLATES={
            ca:'L\'ordre de les boles no importa i es pot demanar-ne diverses del mateix gust.',
            ga:'A orde das bolas non importa e pódense pedir varias do mesmo sabor.',
            eu:'Bolen ordena ez da garrantzitsua eta zapore bereko bat baino gehiago eska daiteke.'}},
-    {ctx:{es:'Hay {n} variedades de fruta en un mercado. Compras {k} piezas pudiendo repetir variedad. ¿Cuántas compras distintas puedes hacer?',
+    {d:-1, ctx:{es:'Hay {n} variedades de fruta en un mercado. Compras {k} piezas pudiendo repetir variedad. ¿Cuántas compras distintas puedes hacer?',
           en:'A market has {n} fruit varieties. You buy {k} pieces and may repeat a variety. How many distinct purchases can you make?',
           ca:'Hi ha {n} varietats de fruita en un mercat. Compres {k} peces podent repetir varietat. Quantes compres distintes pots fer?',
           ga:'Hai {n} variedades de froita nun mercado. Compras {k} pezas podendo repetir variedade. Cantas compras distintas podes facer?',
@@ -3163,39 +3203,49 @@ const PROC_TEMPLATES={
            ca:'L\'ordre no importa i es pot comprar-ne diverses peces del mateix tipus.',
            ga:'A orde non importa e pódense comprar varias pezas do mesmo tipo.',
            eu:'Ordena ez da garrantzitsua eta mota bereko bat baino gehiago eros daiteke.'}},
-    {ctx:{es:'Una cafetería tiene {n} tipos de bebida. Pides {k} bebidas para un grupo pudiendo repetir tipo. ¿Cuántos pedidos distintos hay?',
-          en:'A café has {n} types of drink. You order {k} drinks for a group and may repeat a type. How many distinct orders are there?',
-          ca:'Una cafeteria té {n} tipus de beguda. Demanes {k} begudes per a un grup podent repetir tipus. Quantes comandes distintes hi ha?',
-          ga:'Nunha cafetería hai {n} tipos de bebida. Pides {k} bebidas para un grupo podendo repetir tipo. Cantos pedidos distintos hai?',
-          eu:'Kafetegi batek {n} edari mota ditu. {k} edari eskatzen dituzu talde baterako mota errepika dezakezula. Zenbat eskaera ezberdin daude?'},
+    {d:0, ctx:{es:'Una cafetería tiene {n} tipos de bebida. Pides {k} bebidas para un grupo. ¿Cuántos pedidos distintos hay?',
+          en:'A café has {n} types of drink. You order {k} drinks for a group. How many distinct orders are there?',
+          ca:'Una cafeteria té {n} tipus de beguda. Demanes {k} begudes per a un grup. Quantes comandes distintes hi ha?',
+          ga:'Nunha cafetería hai {n} tipos de bebida. Pides {k} bebidas para un grupo. Cantos pedidos distintos hai?',
+          eu:'Kafetegi batek {n} edari mota ditu. {k} edari eskatzen dituzu talde baterako. Zenbat eskaera ezberdin daude?'},
      hint:{es:'El orden de las bebidas no importa y se puede pedir el mismo tipo varias veces.',
            en:'The order of drinks doesn\'t matter and the same type can be ordered more than once.',
            ca:'L\'ordre de les begudes no importa i es pot demanar el mateix tipus diverses vegades.',
            ga:'A orde das bebidas non importa e pódese pedir o mesmo tipo varias veces.',
            eu:'Edarien ordena ez da garrantzitsua eta mota bera behin baino gehiagotan eska daiteke.'}},
-    {ctx:{es:'Una tienda de snacks tiene {n} variedades. Llevas una bolsa con {k} snacks pudiendo repetir. ¿Cuántas bolsas distintas puedes preparar?',
-          en:'A snack shop has {n} varieties. You fill a bag with {k} snacks, repeating if you like. How many distinct bags can you prepare?',
-          ca:'Una botiga de snacks té {n} varietats. Omples una bossa amb {k} snacks podent repetir. Quantes bosses distintes pots preparar?',
-          ga:'Nunha tenda de snacks hai {n} variedades. Enchas unha bolsa con {k} snacks podendo repetir. Cantas bolsas distintas podes preparar?',
-          eu:'Pintxo-dendak {n} barietate ditu. {k} pintxoz poltsatxo bat betetzen duzu errepika dezakezula. Zenbat poltsatxo ezberdin sor ditzakezu?'},
+    {d:0, ctx:{es:'Una tienda de snacks tiene {n} variedades. Llevas una bolsa con {k} snacks. ¿Cuántas bolsas distintas puedes preparar?',
+          en:'A snack shop has {n} varieties. You fill a bag with {k} snacks. How many distinct bags can you prepare?',
+          ca:'Una botiga de snacks té {n} varietats. Omples una bossa amb {k} snacks. Quantes bosses distintes pots preparar?',
+          ga:'Nunha tenda de snacks hai {n} variedades. Enchas unha bolsa con {k} snacks. Cantas bolsas distintas podes preparar?',
+          eu:'Pintxo-dendak {n} barietate ditu. {k} pintxoz poltsatxo bat betetzen duzu. Zenbat poltsatxo ezberdin sor ditzakezu?'},
      hint:{es:'El orden en la bolsa no importa y puedes coger varios de la misma variedad.',
            en:'Order in the bag doesn\'t matter and several of the same variety can be taken.',
            ca:'L\'ordre a la bossa no importa i pots agafar-ne diversos de la mateixa varietat.',
            ga:'A orde na bolsa non importa e podes coller varios da mesma variedade.',
-           eu:'Poltsatxoko ordena ez da garrantzitsua eta barietate bereko bat baino gehiago har dezakezu.'}}
+           eu:'Poltsatxoko ordena ez da garrantzitsua eta barietate bereko bat baino gehiago har dezakezu.'}},
+    {d:1, kgtn:true, ctx:{es:'Una pastelería vende {n} tipos de pastel. Encargas una caja con {k} pasteles. ¿Cuántas cajas distintas puedes encargar?',
+          en:'A bakery sells {n} types of cake. You order a box with {k} cakes. How many distinct boxes can you order?',
+          ca:'Una pastisseria ven {n} tipus de pastís. Encarregues una caixa amb {k} pastissos. Quantes caixes distintes pots encarregar?',
+          ga:'Unha pastelería vende {n} tipos de pastel. Encargas unha caixa con {k} pasteis. Cantas caixas distintas podes encargar?',
+          eu:'Gozotegi batek {n} pastel mota saltzen ditu. {k} pasteleko kutxa bat eskatzen duzu. Zenbat kutxa ezberdin eska ditzakezu?'},
+     hint:{es:'Hay más pasteles que tipos ({k} > {n}), así que algún tipo se repetirá seguro; el orden en la caja no importa.',
+           en:'There are more cakes than types ({k} > {n}), so some type will surely repeat; the order in the box doesn\'t matter.',
+           ca:'Hi ha més pastissos que tipus ({k} > {n}), així que algun tipus es repetirà segur; l\'ordre a la caixa no importa.',
+           ga:'Hai máis pasteis que tipos ({k} > {n}), así que algún tipo repetirase seguro; a orde na caixa non importa.',
+           eu:'Pastelak motak baino gehiago dira ({k} > {n}), beraz motaren bat ziur errepikatuko da; kutxako ordenak ez du garrantzirik.'}}
   ],
   permutationRep:[
-    {ctx:{es:'Tienes {n} bolas: {reps}. ¿De cuántas formas distintas puedes ordenarlas todas en fila?',
-          en:'You have {n} balls: {reps}. In how many distinct ways can you arrange them all in a row?',
-          ca:'Tens {n} boles: {reps}. De quantes formes distintes pots ordenar-les totes en fila?',
-          ga:'Tes {n} bolas: {reps}. De cantas formas distintas podes ordenalas todas en fila?',
-          eu:'{n} bola dituzu: {reps}. Zenbat modu ezberdinetan ordena ditzakezu guziak ilaran?'},
+    {d:-1, ctx:{es:'Tienes {n} bolas: {reps} (las del mismo color son idénticas). ¿De cuántas formas distintas puedes ordenarlas todas en fila?',
+          en:'You have {n} balls: {reps} (balls of the same colour are identical). In how many distinct ways can you arrange them all in a row?',
+          ca:'Tens {n} boles: {reps} (les del mateix color són idèntiques). De quantes formes distintes pots ordenar-les totes en fila?',
+          ga:'Tes {n} bolas: {reps} (as da mesma cor son idénticas). De cantas formas distintas podes ordenalas todas en fila?',
+          eu:'{n} bola dituzu: {reps} (kolore berekoak berdinak dira). Zenbat modu ezberdinetan ordena ditzakezu guziak ilaran?'},
      hint:{es:'Los objetos del mismo color son indistinguibles; divide por el factorial de cada grupo.',
            en:'Objects of the same colour are indistinguishable; divide by the factorial of each group.',
            ca:'Els objectes del mateix color son indistingibles; divideix pel factorial de cada grup.',
            ga:'Os obxectos da mesma cor son indistingibles; divide polo factorial de cada grupo.',
            eu:'Kolore bereko objektuak bereizezinak dira; talde bakoitzaren faktorialaz zatitu.'}},
-    {ctx:{es:'Una caja contiene {n} fichas: {reps}. Se colocan todas en fila. ¿Cuántos órdenes distintos hay?',
+    {d:0, ctx:{es:'Una caja contiene {n} fichas: {reps}. Se colocan todas en fila. ¿Cuántos órdenes distintos hay?',
           en:'A box contains {n} tiles: {reps}. They are all placed in a row. How many distinct orders are there?',
           ca:'Una caixa conté {n} fitxes: {reps}. Es col·loquen totes en fila. Quants ordres distints hi ha?',
           ga:'Nunha caixa hai {n} fichas: {reps}. Colócanse todas en fila. Cantos ordes distintos hai?',
@@ -3205,7 +3255,7 @@ const PROC_TEMPLATES={
            ca:'Les fitxes del mateix color son idèntiques; divideix pel factorial de cada grup repetit.',
            ga:'As fichas da mesma cor son idénticas; divide polo factorial de cada grupo repetido.',
            eu:'Kolore bereko fitxak berdinak dira; talde errepikatu bakoitzaren faktorialaz zatitu.'}},
-    {ctx:{es:'Hay {n} banderas: {reps}. Se colocan todas en un mástil. ¿Cuántas señales distintas pueden formarse?',
+    {d:0, ctx:{es:'Hay {n} banderas: {reps}. Se colocan todas en un mástil. ¿Cuántas señales distintas pueden formarse?',
           en:'There are {n} flags: {reps}. All are placed on a flagpole. How many distinct signals can be formed?',
           ca:'Hi ha {n} banderes: {reps}. Es col·loquen totes en un pal. Quants senyals distints es poden formar?',
           ga:'Hai {n} bandeiras: {reps}. Colócanse todas nun mastro. Cantas sinais distintas se poden formar?',
@@ -3215,7 +3265,7 @@ const PROC_TEMPLATES={
            ca:'Les banderes del mateix color son idèntiques; divideix pel factorial de cada color.',
            ga:'As bandeiras da mesma cor son idénticas; divide polo factorial de cada cor.',
            eu:'Kolore bereko banderak berdinak dira; kolore bakoitzaren faktorialaz zatitu.'}},
-    {ctx:{es:'Se ordenan {n} caramelos en fila: {reps} (los del mismo sabor son idénticos). ¿Cuántos órdenes distintos hay?',
+    {d:-1, ctx:{es:'Se ordenan {n} caramelos en fila: {reps} (los del mismo sabor son idénticos). ¿Cuántos órdenes distintos hay?',
           en:'{n} sweets are arranged in a row: {reps} (sweets of the same flavour are identical). How many distinct orders are there?',
           ca:'S\'ordenen {n} caramels en fila: {reps} (els del mateix sabor son idèntics). Quants ordres distints hi ha?',
           ga:'Ordénanse {n} caramelos en fila: {reps} (os do mesmo sabor son idénticos). Cantos ordes distintos hai?',
@@ -3224,7 +3274,17 @@ const PROC_TEMPLATES={
            en:'Identical sweets don\'t generate new orders; divide by the factorial of each group.',
            ca:'Els caramels idèntics no generen nous ordres; divideix pel factorial de cada grup.',
            ga:'Os caramelos idénticos non xeran novas ordes; divide polo factorial de cada grupo.',
-           eu:'Goxoki berdinak ez dute ordena berriak sortzen; talde bakoitzaren faktorialaz zatitu.'}}
+           eu:'Goxoki berdinak ez dute ordena berriak sortzen; talde bakoitzaren faktorialaz zatitu.'}},
+    {d:1, ctx:{es:'Se colocan en fila varias fichas: {reps}. ¿Cuántas filas distintas pueden formarse?',
+          en:'Several tokens are placed in a row: {reps}. How many distinct rows can be formed?',
+          ca:'Es col·loquen en fila diverses fitxes: {reps}. Quantes files distintes es poden formar?',
+          ga:'Colócanse en fila varias fichas: {reps}. Cantas filas distintas poden formarse?',
+          eu:'Hainbat fitxa lerroan jartzen dira: {reps}. Zenbat lerro ezberdin osa daitezke?'},
+     hint:{es:'Suma las fichas para obtener el total y divide por el factorial de cada grupo de color.',
+           en:'Add up the tokens to get the total and divide by the factorial of each colour group.',
+           ca:'Suma les fitxes per obtenir el total i divideix pel factorial de cada grup de color.',
+           ga:'Suma as fichas para obter o total e divide polo factorial de cada grupo de cor.',
+           eu:'Batu fitxak guztira zenbat diren jakiteko eta zatitu kolore-talde bakoitzaren faktorialaz.'}}
   ]
 };
 
@@ -3233,40 +3293,42 @@ function generateProceduralProblem(type){
   const tmpls=PROC_TEMPLATES[type];
   if(!tmpls||!tmpls.length) return null;
   const tmpl=tmpls[Math.floor(Math.random()*tmpls.length)];
-  let n,k,reps,calc,difficulty;
+  let n,k,reps,calc,digits;
   const id='proc-'+type+'-'+Date.now()+'-'+Math.floor(Math.random()*9999);
 
   if(type==='permutation'){
     n=4+Math.floor(Math.random()*6); // 4-9
     k=n;
+    // cifras distintas de 1-9 (sin 0 para evitar ceros a la izquierda)
+    digits=[1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5).slice(0,n).join('');
     calc=`$P_{${n}} = ${n}! = ${procFmt(procFact(n))}$`;
-    difficulty=n<=5?-1:n<=7?0:1;
   } else if(type==='variationRep'){
     n=2+Math.floor(Math.random()*7); // 2-8
     k=2+Math.floor(Math.random()*5); // 2-6
     const res=Math.pow(n,k);
     calc=`$VR_{${n},${k}} = ${n}^{${k}} = ${procFmt(res)}$`;
-    difficulty=res<=100?-1:res<=10000?0:1;
   } else if(type==='variation'){
     n=5+Math.floor(Math.random()*10); // 5-14
     k=2+Math.floor(Math.random()*Math.min(4,n-2)); // 2-5, k<n
     const terms=Array.from({length:k},(_,i)=>n-i);
     const res=terms.reduce((a,b)=>a*b,1);
     calc=`$V_{${n},${k}} = ${terms.join('\\cdot')} = ${procFmt(res)}$`;
-    difficulty=n<=7?-1:n<=12?0:1;
   } else if(type==='combination'){
     n=5+Math.floor(Math.random()*14); // 5-18
     k=2+Math.floor(Math.random()*4); // 2-5
     if(k>=n) k=n-1;
     const res=procComb(n,k);
     calc=`$C_{${n},${k}} = ${procFmt(res)}$`;
-    difficulty=n<=8?-1:n<=13?0:1;
   } else if(type==='combinationRep'){
-    n=2+Math.floor(Math.random()*8); // 2-9
-    k=2+Math.floor(Math.random()*5); // 2-6
+    if(tmpl.kgtn){
+      n=2+Math.floor(Math.random()*3); // 2-4
+      k=n+1+Math.floor(Math.random()*3); // n+1 a n+3: fuerza k>n
+    } else {
+      n=2+Math.floor(Math.random()*8); // 2-9
+      k=2+Math.floor(Math.random()*5); // 2-6
+    }
     const res=procComb(n+k-1,k);
     calc=`$CR_{${n},${k}} = \\dbinom{${n+k-1}}{${k}} = ${procFmt(res)}$`;
-    difficulty=n<=4&&k<=3?-1:n<=6?0:1;
   } else if(type==='permutationRep'){
     n=5+Math.floor(Math.random()*5); // 5-9
     reps=[];
@@ -3282,19 +3344,20 @@ function generateProceduralProblem(type){
     const denom=reps.map(r=>`${r}!`).join('\\cdot ');
     const res=Math.round(reps.reduce((acc,r)=>acc/procFact(r),procFact(n)));
     calc=`$\\dfrac{${n}!}{${denom}} = ${procFmt(res)}$`;
-    difficulty=n<=6?-1:n<=8?0:1;
   }
 
   const langObj={};
   for(const lang of LANGS){
-    const vars={n,k};
+    const vars={n,k,nm1:n-1,digits};
     if(type==='permutationRep') vars.reps=procRepDesc(reps,lang);
     langObj[lang]={
       context:procFill(tmpl.ctx[lang]||tmpl.ctx.es,vars),
       hint:   procFill(tmpl.hint[lang]||tmpl.hint.es,vars)
     };
   }
-  return {id,type,difficulty:difficulty||0,n,k,calc,formula:TYPE_FORMULAS[type],...langObj};
+  // La dificultad depende de la transparencia del enunciado de la plantilla,
+  // no del tamaño de los números: la tarea evaluada es clasificar e identificar n y k.
+  return {id,type,difficulty:tmpl.d??0,n,k,calc,formula:TYPE_FORMULAS[type],...langObj};
 }
 
 // ══════════════════════════════════════════════════════════════
