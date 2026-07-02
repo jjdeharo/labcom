@@ -597,6 +597,8 @@ const LANG = {
     practiceProgressLabel: 'Progreso del intento',
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto o deja que el sistema elija el que más necesitas mejorar.',
+    practiceHubSubtitleDiag: 'Primero diagnosticaremos tu nivel. Después podrás reforzar los tipos que menos domines.',
+    practiceDiagInfo: (done,total)=>`📋 Fase de diagnóstico: consta de ${total} ejercicios (llevas ${done}). Al completarla recibirás un informe y pasarás automáticamente a la fase de práctica y refuerzo.`,
     practiceBayesTitle: 'Tu nivel ahora por tipo',
     practiceBayesSubtitle: 'Qué probabilidad tienes ahora mismo de resolver bien un ejercicio de este tipo.',
     practiceBayesNoData: 'Aún sin datos',
@@ -605,7 +607,8 @@ const LANG = {
     practiceHubMultiHint: 'Selecciona varios si quieres compararlos y diferenciarlos mejor.',
     practiceStartSelected: count => `Practicar selección (${count})`,
     practiceAdaptiveBtn: 'Sistema inteligente de problemas (recomendado)',
-    practiceAdaptiveHint: 'Primero diagnostica y después refuerza lo que menos dominas',
+    practiceAdaptiveHint: 'Refuerza automáticamente lo que menos dominas',
+    practiceAdaptiveHintDiag: 'Empieza aquí: primero diagnosticaremos tu nivel en cada tipo',
     practiceMasteryNone: 'Sin datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -938,6 +941,8 @@ const LANG = {
     practiceProgressLabel: 'Attempt progress',
     practiceHubTitle: 'Practice',
     practiceHubSubtitle: 'Choose a specific type or let the system pick the one you need to improve most.',
+    practiceHubSubtitleDiag: 'First we will diagnose your level. Then you can reinforce the types you know least.',
+    practiceDiagInfo: (done,total)=>`📋 Diagnosis phase: it consists of ${total} exercises (you have done ${done}). When you complete it you will get a report and automatically move on to the practice and reinforcement phase.`,
     practiceBayesTitle: 'Your current level by type',
     practiceBayesSubtitle: 'How likely you are right now to solve an exercise of this type correctly.',
     practiceBayesNoData: 'No data yet',
@@ -946,7 +951,8 @@ const LANG = {
     practiceHubMultiHint: 'Select several if you want to compare them and tell them apart better.',
     practiceStartSelected: count => `Practise selection (${count})`,
     practiceAdaptiveBtn: 'Smart problem system (recommended)',
-    practiceAdaptiveHint: 'First diagnoses, then reinforces what you know least',
+    practiceAdaptiveHint: 'Automatically reinforces what you know least',
+    practiceAdaptiveHintDiag: 'Start here: we will first diagnose your level in each type',
     practiceMasteryNone: 'No data',
     practiceMasteryLow: 'Starting',
     practiceMasteryMid: 'In progress',
@@ -1216,6 +1222,8 @@ const LANG = {
     practiceProgressLabel: 'Progrés de l’intent',
     practiceHubTitle: 'Pràctica',
     practiceHubSubtitle: 'Practica un tipus concret o deixa que el sistema triï el que més necessites millorar.',
+    practiceHubSubtitleDiag: 'Primer diagnosticarem el teu nivell. Després podràs reforçar els tipus que menys dominis.',
+    practiceDiagInfo: (done,total)=>`📋 Fase de diagnòstic: consta de ${total} exercicis (en portes ${done}). En completar-la rebràs un informe i passaràs automàticament a la fase de pràctica i reforç.`,
     practiceBayesTitle: 'El teu nivell ara per tipus',
     practiceBayesSubtitle: 'Quina probabilitat tens ara mateix de resoldre bé un exercici d’aquest tipus.',
     practiceBayesNoData: 'Encara sense dades',
@@ -1224,7 +1232,8 @@ const LANG = {
     practiceHubMultiHint: 'Selecciona\'n diversos si vols comparar-los i diferenciar-los millor.',
     practiceStartSelected: count => `Practica la selecció (${count})`,
     practiceAdaptiveBtn: 'Sistema intel·ligent de problemes (recomanat)',
-    practiceAdaptiveHint: 'Primer diagnostica i després reforça el que menys domines',
+    practiceAdaptiveHint: 'Reforça automàticament el que menys domines',
+    practiceAdaptiveHintDiag: 'Comença aquí: primer diagnosticarem el teu nivell en cada tipus',
     practiceMasteryNone: 'Sense dades',
     practiceMasteryLow: 'Iniciant',
     practiceMasteryMid: 'En procés',
@@ -1477,6 +1486,8 @@ const LANG = {
     practiceProgressLabel: 'Progreso do intento',
     practiceHubTitle: 'Práctica',
     practiceHubSubtitle: 'Practica un tipo concreto ou deixa que o sistema escolle o que máis necesitas mellorar.',
+    practiceHubSubtitleDiag: 'Primeiro diagnosticaremos o teu nivel. Despois poderás reforzar os tipos que menos domines.',
+    practiceDiagInfo: (done,total)=>`📋 Fase de diagnóstico: consta de ${total} exercicios (levas ${done}). Ao completala recibirás un informe e pasarás automaticamente á fase de práctica e reforzo.`,
     practiceBayesTitle: 'O teu nivel agora por tipo',
     practiceBayesSubtitle: 'Que probabilidade tes agora mesmo de resolver ben un exercicio deste tipo.',
     practiceBayesNoData: 'Aínda sen datos',
@@ -1485,7 +1496,8 @@ const LANG = {
     practiceHubMultiHint: 'Selecciona varios se queres comparalos e diferencialos mellor.',
     practiceStartSelected: count => `Practicar selección (${count})`,
     practiceAdaptiveBtn: 'Sistema intelixente de problemas (recomendado)',
-    practiceAdaptiveHint: 'Primeiro diagnostica e despois reforza o que menos dominas',
+    practiceAdaptiveHint: 'Reforza automaticamente o que menos dominas',
+    practiceAdaptiveHintDiag: 'Comeza aquí: primeiro diagnosticaremos o teu nivel en cada tipo',
     practiceMasteryNone: 'Sen datos',
     practiceMasteryLow: 'Iniciando',
     practiceMasteryMid: 'En proceso',
@@ -1738,6 +1750,8 @@ const LANG = {
     practiceProgressLabel: 'Saiakeraren aurrerapena',
     practiceHubTitle: 'Praktika',
     practiceHubSubtitle: 'Mota zehatz bat praktikatu edo sistemak gehien hobetu behar duzuna hauta dezala.',
+    practiceHubSubtitleDiag: 'Lehenik zure maila diagnostikatuko dugu. Ondoren, gutxien dakizkizun motak indartu ahal izango dituzu.',
+    practiceDiagInfo: (done,total)=>`📋 Diagnostiko-fasea: guztira ${total} ariketa ditu (${done} egin dituzu). Amaitzean, txosten bat jasoko duzu eta praktika eta indartze fasera pasatuko zara automatikoki.`,
     practiceBayesTitle: 'Zure oraingo maila motaka',
     practiceBayesSubtitle: 'Mota honetako ariketa bat ondo ebazteko zer probabilitate duzun une honetan.',
     practiceBayesNoData: 'Oraindik daturik ez',
@@ -1746,7 +1760,8 @@ const LANG = {
     practiceHubMultiHint: 'Aukeratu batzuk elkarrekin konparatu eta hobeto bereizteko.',
     practiceStartSelected: count => `Landu hautaketa (${count})`,
     practiceAdaptiveBtn: 'Arazo sistema adimentsua (gomendatua)',
-    practiceAdaptiveHint: 'Lehenik diagnostikatu, gero gutxien dakizuna indartu',
+    practiceAdaptiveHint: 'Automatikoki indartzen du gutxien dakizuna',
+    practiceAdaptiveHintDiag: 'Hasi hemen: lehenik zure maila diagnostikatuko dugu mota bakoitzean',
     practiceMasteryNone: 'Daturik ez',
     practiceMasteryLow: 'Hasiera',
     practiceMasteryMid: 'Aurreratzen',
@@ -3776,6 +3791,9 @@ function renderPracticeHub(){
   const typeLabels=t('typeLabels');
   const hubUnderSampled=ALL_TYPE_KEYS.filter(type=>(bayesState[type]?.count||0)<BAYES_DIAGNOSIS_MIN_TRIES);
   const hubIsDiagnosis=hubUnderSampled.length>0;
+  const hubHasData=ALL_TYPE_KEYS.some(type=>(bayesState[type]?.count||0)>0);
+  const hubDiagTotal=ALL_TYPE_KEYS.length*BAYES_DIAGNOSIS_MIN_TRIES;
+  const hubDiagDone=ALL_TYPE_KEYS.reduce((s,type)=>s+Math.min(bayesState[type]?.count||0,BAYES_DIAGNOSIS_MIN_TRIES),0);
   const hubPhaseChip=`<span style="font-size:.7rem;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:8px;background:${hubIsDiagnosis?'var(--accent)':'#22a65a'};color:#fff;vertical-align:middle">${hubIsDiagnosis?t('practicePhaseDiagnosis'):t('practicePhaseReinforcement')}</span>`;
   const bayesItems=ALL_TYPE_KEYS.map(type=>{
     const pct=bayesDisplayEstimate(type,0);
@@ -3818,16 +3836,18 @@ function renderPracticeHub(){
   document.getElementById('prac-content').innerHTML=`
     <div class="card">
       <h2>${t('practiceHubTitle')}</h2>
-      <p style="color:var(--text2);margin-bottom:10px">${t('practiceHubSubtitle')}</p>
+      <p style="color:var(--text2);margin-bottom:10px">${hubIsDiagnosis?t('practiceHubSubtitleDiag'):t('practiceHubSubtitle')}</p>
       ${sessionBar}
       <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')" style="width:100%;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.18)">
         <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
         <span class="prac-hub-type-name" style="text-align:center;flex:1">
           ${t('practiceAdaptiveBtn')}
-          <span class="prac-hub-mastery">${t('practiceAdaptiveHint')}</span>
+          <span class="prac-hub-mastery">${hubIsDiagnosis?t('practiceAdaptiveHintDiag'):t('practiceAdaptiveHint')}</span>
         </span>
         <span style="font-size:1.1rem;flex-shrink:0;opacity:.75">→</span>
       </button>
+      ${hubIsDiagnosis?`<p style="font-size:.86rem;line-height:1.45;background:var(--bg2,rgba(127,127,127,.1));border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:12px;color:var(--text2)">${t('practiceDiagInfo')(hubDiagDone,hubDiagTotal)}</p>`:''}
+      ${hubIsDiagnosis?'':`
       <p style="font-size:.86rem;font-weight:600;margin-bottom:4px">${t('practiceHubChoose')}</p>
       ${selectionHint}
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:.78rem;color:var(--text2)">
@@ -3839,7 +3859,8 @@ function renderPracticeHub(){
       <div class="prac-hub-grid">
         ${typeBtns}
       </div>
-      ${selectionActions}
+      ${selectionActions}`}
+      ${hubHasData?`
       <div class="prac-progress-panel">
         <div class="prac-progress-title">${t('practiceBayesTitle')}${hubPhaseChip}</div>
         <div class="prac-progress-sub">${t('practiceBayesSubtitle')}</div>
@@ -3851,10 +3872,10 @@ function renderPracticeHub(){
             <div class="prac-progress-pcts">${bayesPcts}</div>
           </div>
         </div>
-      </div>
+      </div>`:''}
       <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         ${loadDiagnosticSnapshot()?`<button onclick="renderPracticeReport()" style="background:none;border:1.5px solid var(--accent);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--accent);font-family:inherit;font-weight:600;transition:all .15s" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='var(--accent)'">${t('practiceReportBtn')}</button>`:''}
-        <button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>
+        ${hubHasData?`<button onclick="resetBayesData()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 18px;cursor:pointer;font-size:.84rem;color:var(--text2);font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">${t('practiceResetData')}</button>`:''}
       </div>
     </div>`;
 }
@@ -4106,7 +4127,7 @@ function renderPractice(){
   const typeData=t('types')[prob.type];
   const formulaFb=formulaOk
     ?`<div class="feedback-box ok">${t('practiceFormulaOk')}</div>`
-    :`<div class="feedback-box err">${t('practiceFormulaErr')(typeLabels[prob.type])}</div>`;
+    :`<div class="feedback-box err">${t('practiceFormulaErr')(typeData.formula)}</div>`;
   // Banner resultado con fondo de progreso integrado
   const isPartial=!fullyCorrect&&score>0;
   const pct=Math.round(score*100);
