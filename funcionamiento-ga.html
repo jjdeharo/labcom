@@ -130,6 +130,8 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>Este punto é esencial: Bayes non converte automaticamente acertos en porcentaxes. O que fai é mover probabilidade entre hipóteses segundo o compatible que foi a resposta do alumno con cada unha delas.</p>
 
+<p><strong>Un matiz máis:</strong> na fase de reforzo o programa aplica un <em>esquecemento gradual</em> da evidencia antiga: antes de cada actualización atenúa lixeiramente a crenza acumulada (factor \(\lambda=0{,}95\)), de xeito que as respostas recentes pesan máis que as antigas. Sen isto, un alumno que mellora arrastraría indefinidamente os seus erros do principio; con isto, a estimación segue o seu estado actual, que é o que interesa nun recurso onde se aprende practicando. Durante o diagnóstico inicial non se aplica.</p>
+
 <h2>3. A parte IRT: nivel do alumno fronte a dificultade do exercicio</h2>
 
 <p>Para aplicar Bayes, o programa necesita estimar que probabilidade tería un alumno de certo nivel de acertar un exercicio de certa dificultade. Aí entra a parte tipo IRT.</p>

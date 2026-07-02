@@ -130,6 +130,8 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>Aquest punt és essencial: Bayes no converteix automàticament encerts en percentatges. El que fa és moure probabilitat entre hipòtesis segons com de compatible ha estat la resposta de l'alumne amb cadascuna d'elles.</p>
 
+<p><strong>Un matís més:</strong> en la fase de reforç el programa aplica un <em>oblit gradual</em> de l'evidència antiga: abans de cada actualització atenua lleugerament la creença acumulada (factor \(\lambda=0{,}95\)), de manera que les respostes recents pesen més que les antigues. Sense això, un alumne que millora arrossegaria indefinidament els seus errors del principi; amb això, l'estimació segueix el seu estat actual, que és el que interessa en un recurs on s'aprèn practicant. Durant el diagnòstic inicial no s'aplica.</p>
+
 <h2>3. La part IRT: nivell de l'alumne enfront de dificultat de l'exercici</h2>
 
 <p>Per aplicar Bayes, el programa necessita estimar quina probabilitat tindria un alumne d'un cert nivell d'encertar un exercici d'una certa dificultat. Aquí entra la part de tipus IRT.</p>

@@ -130,6 +130,8 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>This point is essential: Bayes does not automatically convert correct answers into percentages. What it does is move probability between hypotheses according to how compatible the student's response was with each one.</p>
 
+<p><strong>One more nuance:</strong> in the reinforcement phase the program applies a <em>gradual forgetting</em> of old evidence: before each update it slightly attenuates the accumulated belief (factor \(\lambda=0.95\)), so that recent responses weigh more than old ones. Without this, a student who improves would drag their early mistakes along indefinitely; with it, the estimate follows their current state, which is what matters in a resource where you learn by practising. It is not applied during the initial diagnosis.</p>
+
 <h2>3. The IRT part: student level vs exercise difficulty</h2>
 
 <p>To apply Bayes, the program needs to estimate the probability that a student of a certain level would answer an exercise of a certain difficulty correctly. This is where the IRT-type part comes in.</p>

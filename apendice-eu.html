@@ -171,6 +171,14 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 \[P_t^{\text{berria}}(\theta_i) = \frac{P_t^{\text{zaharra}}(\theta_i)\cdot L(\theta_i)}{\sum_j P_t^{\text{zaharra}}(\theta_j)\cdot L(\theta_j)}\]
 
+<h3>Ahanztura esponentziala indartze-fasean</h3>
+
+<p>Aurreko arauak pisu bera ematen die erantzun guztiei, lehenengoari eta azkenari. Hasierako diagnostikoan hori da zuzena. Baina indartze-fasean ikasleak praktikatu bitartean ikasten du —eta sinesmena saioen artean gordetzen da—; beraz, ebidentzia zaharrak estimazioa jada gainditutako egoera batean aingura dezake. Horregatik, indartze-fasean programak metatutako sinesmena arintzen du eguneratze bakoitzaren aurretik, \(\lambda=0{,}95\) berretzailera jasoz eta birnormalizatuz:</p>
+
+\[P_t^{\text{zaharra}}(\theta_i) \;\leftarrow\; \frac{\left[P_t^{\text{zaharra}}(\theta_i)\right]^{\lambda}}{\sum_j \left[P_t^{\text{zaharra}}(\theta_j)\right]^{\lambda}}\]
+
+<p>Horrela, duela \(k\) ariketako erantzunak \(\lambda^k\) pisua du eta sistemak azken \(1/(1-\lambda)=20\) erantzunak gogoratzen ditu modu eraginkorrean: estimazioak ikasleari jarrai diezaioke hobetzen duenean. Diagnostiko-fasean \(\lambda=1\) erabiltzen da (Bayes hutsa), hasierako txostena eta erantzun-patroiaren doikuntza ez desitxuratzeko.</p>
+
 <h2>9. Eguneratze adibide osoa</h2>
 
 <p>Zailtasun ertaineko ariketa (\(b=0\)), hasierako banaketa uniformea \(P^{\text{zaharra}}=(1/3,1/3,1/3)\). IRT asmate-probabilitate gutxi gorabeherakoak: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>

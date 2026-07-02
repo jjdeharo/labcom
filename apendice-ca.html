@@ -179,6 +179,14 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>Això és la regla de Bayes aplicada a les tres hipòtesis discretes.</p>
 
+<h3>Oblit exponencial en la fase de reforç</h3>
+
+<p>La regla anterior dona el mateix pes a totes les respostes, la primera i l'última. Durant el diagnòstic inicial això és el correcte. Però en la fase de reforç l'alumne aprèn mentre practica —i la creença es conserva entre sessions—, de manera que l'evidència antiga pot ancorar l'estimació en un estat ja superat. Per això, en la fase de reforç el programa atenua la creença acumulada abans de cada actualització, elevant-la a una potència \(\lambda=0{,}95\) i renormalitzant:</p>
+
+\[P_t^{\text{antic}}(\theta_i) \;\leftarrow\; \frac{\left[P_t^{\text{antic}}(\theta_i)\right]^{\lambda}}{\sum_j \left[P_t^{\text{antic}}(\theta_j)\right]^{\lambda}}\]
+
+<p>Així, la resposta de fa \(k\) exercicis pesa \(\lambda^k\) i el sistema recorda de manera efectiva les últimes \(1/(1-\lambda)=20\) respostes: l'estimació pot seguir l'alumne quan millora. Durant la fase diagnòstica es fa servir \(\lambda=1\) (Bayes pur), per no distorsionar l'informe inicial ni l'ajust del patró de respostes.</p>
+
 <h2>9. Exemple complet d'actualització</h2>
 
 <p>Exercici de dificultat mitjana (\(b=0\)) amb distribució inicial uniforme \(P^{\text{antic}}=(1/3,1/3,1/3)\). Probabilitats d'encert IRT aproximades: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>

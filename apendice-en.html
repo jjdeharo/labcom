@@ -179,6 +179,14 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>This is Bayes' rule applied to the three discrete hypotheses.</p>
 
+<h3>Exponential forgetting in the reinforcement phase</h3>
+
+<p>The rule above gives the same weight to every response, the first and the last. During the initial diagnosis that is the right thing to do. But in the reinforcement phase the student learns while practising —and the belief is kept between sessions—, so old evidence can anchor the estimate in a state the student has already moved past. For this reason, in the reinforcement phase the program attenuates the accumulated belief before each update, raising it to a power \(\lambda=0.95\) and renormalising:</p>
+
+\[P_t^{\text{old}}(\theta_i) \;\leftarrow\; \frac{\left[P_t^{\text{old}}(\theta_i)\right]^{\lambda}}{\sum_j \left[P_t^{\text{old}}(\theta_j)\right]^{\lambda}}\]
+
+<p>Thus, the response from \(k\) exercises ago weighs \(\lambda^k\) and the system effectively remembers the last \(1/(1-\lambda)=20\) responses: the estimate can follow the student as they improve. During the diagnostic phase \(\lambda=1\) is used (pure Bayes), so as not to distort the initial report or the response-pattern fit.</p>
+
 <h2>9. Complete update example</h2>
 
 <p>Medium-difficulty exercise (\(b=0\)) with uniform initial distribution \(P^{\text{old}}=(1/3,1/3,1/3)\). Approximate IRT correct-answer probabilities: \(P(A\mid -2,0)\approx0.40\), \(P(A\mid 0,0)\approx0.68\), \(P(A\mid 2,0)\approx0.97\).</p>

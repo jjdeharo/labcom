@@ -179,6 +179,14 @@ hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 
 <p>Isto é a regra de Bayes aplicada ás tres hipóteses discretas.</p>
 
+<h3>Esquecemento exponencial na fase de reforzo</h3>
+
+<p>A regra anterior dá o mesmo peso a todas as respostas, a primeira e a última. Durante o diagnóstico inicial iso é o correcto. Pero na fase de reforzo o alumno aprende mentres practica —e a crenza consérvase entre sesións—, de xeito que a evidencia antiga pode ancorar a estimación nun estado xa superado. Por iso, na fase de reforzo o programa atenúa a crenza acumulada antes de cada actualización, elevándoa a unha potencia \(\lambda=0{,}95\) e renormalizando:</p>
+
+\[P_t^{\text{antigo}}(\theta_i) \;\leftarrow\; \frac{\left[P_t^{\text{antigo}}(\theta_i)\right]^{\lambda}}{\sum_j \left[P_t^{\text{antigo}}(\theta_j)\right]^{\lambda}}\]
+
+<p>Así, a resposta de hai \(k\) exercicios pesa \(\lambda^k\) e o sistema lembra de forma efectiva as últimas \(1/(1-\lambda)=20\) respostas: a estimación pode seguir o alumno cando mellora. Durante a fase diagnóstica úsase \(\lambda=1\) (Bayes puro), para non distorsionar o informe inicial nin o axuste do patrón de respostas.</p>
+
 <h2>9. Exemplo completo de actualización</h2>
 
 <p>Exercicio de dificultade media (\(b=0\)) con distribución inicial uniforme \(P^{\text{antigo}}=(1/3,1/3,1/3)\). Probabilidades de acerto IRT aproximadas: \(P(A\mid -2,0)\approx0{,}40\), \(P(A\mid 0,0)\approx0{,}68\), \(P(A\mid 2,0)\approx0{,}97\).</p>

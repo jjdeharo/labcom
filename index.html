@@ -3319,6 +3319,18 @@ const TYPE_PROCESS_GUESS=
 const BAYES_MIN_TRIES_FOR_MID=2;
 const BAYES_MIN_TRIES_FOR_HIGH=4;
 const BAYES_DIAGNOSIS_MIN_TRIES=2;
+// Olvido exponencial: en la fase de refuerzo, la evidencia de hace k respuestas pesa
+// lambda^k, de modo que la estimación sigue el estado actual de un alumno que aprende
+// mientras practica (la creencia persiste entre sesiones). Memoria efectiva
+// ≈ 1/(1-lambda) = 20 respuestas. Durante el diagnóstico inicial se usa Bayes puro
+// (lambda=1) para no distorsionar el informe ni el person-fit. Ver apendice.html §8.
+const BAYES_FORGET_LAMBDA=0.95;
+function bayesForget(prior){
+  if(!loadDiagnosticSnapshot()) return prior;   // fase diagnóstica: sin olvido
+  const raw=prior.map(p=>Math.pow(Math.max(p,1e-12),BAYES_FORGET_LAMBDA));
+  const s=raw.reduce((a,b)=>a+b,0);
+  return raw.map(v=>v/s);
+}
 
 function bayesIRTc(theta,b,c){
   return c+(1-c)/(1+Math.exp(-BAYES_A*(theta-b)));
@@ -3369,7 +3381,7 @@ function loadDimState(){
 }
 function updateDim(dimKey,ok,difficulty){
   const state=loadDimState();
-  const prior=state[dimKey].prior;
+  const prior=bayesForget(state[dimKey].prior);
   const score=ok?1:0;
   const c=DIM_GUESS[dimKey];
   const veros=BAYES_THETA.map(th=>{ const pA=bayesIRTc(th,difficulty,c); return score*pA+(1-score)*(1-pA); });
@@ -3438,7 +3450,7 @@ function updateBayesType(type,score,difficulty){
   // Likelihood suave: L(θ) = score·P(A|θ) + (1-score)·P(F|θ)
   // Con score=0.5 el likelihood es constante → sin actualización
   const state=loadBayesState();
-  const prior=state[type].prior;
+  const prior=bayesForget(state[type].prior);
   const veros=BAYES_THETA.map(th=>{
     const pA=bayesIRT(th,difficulty);
     return score*pA+(1-score)*(1-pA);
