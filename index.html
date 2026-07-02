@@ -606,7 +606,8 @@ const LANG = {
     practiceHubChoose: 'O elige uno o varios tipos:',
     practiceHubMultiHint: 'Selecciona varios si quieres compararlos y diferenciarlos mejor.',
     practiceStartSelected: count => `Practicar selección (${count})`,
-    practiceAdaptiveBtn: 'Sistema inteligente de problemas (recomendado)',
+    practiceAdaptiveBtn: 'Sistema inteligente de problemas',
+    practiceAdaptiveRecommended: ' (recomendado)',
     practiceAdaptiveHint: 'Refuerza automáticamente lo que menos dominas',
     practiceAdaptiveHintDiag: 'Empieza aquí: primero diagnosticaremos tu nivel en cada tipo',
     practiceMasteryNone: 'Sin datos',
@@ -950,7 +951,8 @@ const LANG = {
     practiceHubChoose: 'Or choose one or more types:',
     practiceHubMultiHint: 'Select several if you want to compare them and tell them apart better.',
     practiceStartSelected: count => `Practise selection (${count})`,
-    practiceAdaptiveBtn: 'Smart problem system (recommended)',
+    practiceAdaptiveBtn: 'Smart problem system',
+    practiceAdaptiveRecommended: ' (recommended)',
     practiceAdaptiveHint: 'Automatically reinforces what you know least',
     practiceAdaptiveHintDiag: 'Start here: we will first diagnose your level in each type',
     practiceMasteryNone: 'No data',
@@ -1231,7 +1233,8 @@ const LANG = {
     practiceHubChoose: 'O tria un o diversos tipus:',
     practiceHubMultiHint: 'Selecciona\'n diversos si vols comparar-los i diferenciar-los millor.',
     practiceStartSelected: count => `Practica la selecció (${count})`,
-    practiceAdaptiveBtn: 'Sistema intel·ligent de problemes (recomanat)',
+    practiceAdaptiveBtn: 'Sistema intel·ligent de problemes',
+    practiceAdaptiveRecommended: ' (recomanat)',
     practiceAdaptiveHint: 'Reforça automàticament el que menys domines',
     practiceAdaptiveHintDiag: 'Comença aquí: primer diagnosticarem el teu nivell en cada tipus',
     practiceMasteryNone: 'Sense dades',
@@ -1495,7 +1498,8 @@ const LANG = {
     practiceHubChoose: 'Ou escolle un ou varios tipos:',
     practiceHubMultiHint: 'Selecciona varios se queres comparalos e diferencialos mellor.',
     practiceStartSelected: count => `Practicar selección (${count})`,
-    practiceAdaptiveBtn: 'Sistema intelixente de problemas (recomendado)',
+    practiceAdaptiveBtn: 'Sistema intelixente de problemas',
+    practiceAdaptiveRecommended: ' (recomendado)',
     practiceAdaptiveHint: 'Reforza automaticamente o que menos dominas',
     practiceAdaptiveHintDiag: 'Comeza aquí: primeiro diagnosticaremos o teu nivel en cada tipo',
     practiceMasteryNone: 'Sen datos',
@@ -1759,7 +1763,8 @@ const LANG = {
     practiceHubChoose: 'Edo aukeratu mota bat edo gehiago:',
     practiceHubMultiHint: 'Aukeratu batzuk elkarrekin konparatu eta hobeto bereizteko.',
     practiceStartSelected: count => `Landu hautaketa (${count})`,
-    practiceAdaptiveBtn: 'Arazo sistema adimentsua (gomendatua)',
+    practiceAdaptiveBtn: 'Arazo sistema adimentsua',
+    practiceAdaptiveRecommended: ' (gomendatua)',
     practiceAdaptiveHint: 'Automatikoki indartzen du gutxien dakizuna',
     practiceAdaptiveHintDiag: 'Hasi hemen: lehenik zure maila diagnostikatuko dugu mota bakoitzean',
     practiceMasteryNone: 'Daturik ez',
@@ -3807,6 +3812,7 @@ function renderPracticeHub(){
   const hubDiagTotal=ALL_TYPE_KEYS.length*BAYES_DIAGNOSIS_MIN_TRIES;
   const hubDiagDone=ALL_TYPE_KEYS.reduce((s,type)=>s+Math.min(bayesState[type]?.count||0,BAYES_DIAGNOSIS_MIN_TRIES),0);
   const hubPhaseChip=`<span style="font-size:.7rem;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:8px;background:${hubIsDiagnosis?'var(--accent)':'#22a65a'};color:#fff;vertical-align:middle">${hubIsDiagnosis?t('practicePhaseDiagnosis'):t('practicePhaseReinforcement')}</span>`;
+  const adaptiveBtnLabel=`${t('practiceAdaptiveBtn')}${hubIsDiagnosis?'':t('practiceAdaptiveRecommended')}`;
   const bayesItems=ALL_TYPE_KEYS.map(type=>{
     const pct=bayesDisplayEstimate(type,0);
     const count=bayesState[type]?.count||0;
@@ -3853,7 +3859,7 @@ function renderPracticeHub(){
       <button class="prac-hub-btn prac-hub-adaptive" onclick="startPracticeType('all')" style="width:100%;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.18)">
         <span style="font-size:1.2rem;flex-shrink:0">🎯</span>
         <span class="prac-hub-type-name" style="text-align:center;flex:1">
-          ${t('practiceAdaptiveBtn')}
+          ${adaptiveBtnLabel}
           <span class="prac-hub-mastery">${hubIsDiagnosis?t('practiceAdaptiveHintDiag'):t('practiceAdaptiveHint')}</span>
         </span>
         <span style="font-size:1.1rem;flex-shrink:0;opacity:.75">→</span>
